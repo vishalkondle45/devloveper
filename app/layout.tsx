@@ -8,7 +8,8 @@ import "@mantine/dropzone/styles.css";
 import "@mantine/nprogress/styles.css";
 import "@mantine/tiptap/styles.css";
 
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { ColorSchemeScript, Group, MantineProvider } from "@mantine/core";
+import ColorSchemeToggle from "@/components/ColorSchemeToggle";
 
 export const metadata = {
   title: "Devloveper",
@@ -28,6 +29,9 @@ export default function RootLayout({
       <body>
         <MantineProvider>
           <Notifications />
+          <Group p="xs" justify="right">
+            <ColorSchemeToggle />
+          </Group>
           {children}
         </MantineProvider>
       </body>
