@@ -3,22 +3,8 @@ import UserModel from "@/models/User";
 import { NextResponse } from "next/server";
 import Chance from "chance";
 import { sendMail } from "@/lib/sendMail";
-var chance = new Chance();
-
-interface NewUserRequest {
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface NewUserResponse {
-  id: string;
-  name: string;
-  email: string;
-  isAdmin: boolean;
-}
-
-type NewResponse = NextResponse<{ user?: NewUserResponse; error?: string }>;
+import { NewResponse, NewUserRequest } from "./users.types";
+const chance = new Chance();
 
 export const POST = async (req: Request): Promise<NewResponse> => {
   const body = (await req.json()) as NewUserRequest;
@@ -30,7 +16,7 @@ export const POST = async (req: Request): Promise<NewResponse> => {
   const oldUser = await UserModel.findOne({ email: body.email });
   if (oldUser)
     return NextResponse.json(
-      { error: "email is already in use!" },
+      { error: "Email is already in use!" },
       { status: 409 }
     );
 
