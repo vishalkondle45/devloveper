@@ -6,6 +6,8 @@ interface UserDocument extends Document {
   name: string;
   password: string;
   isAdmin: boolean;
+  verificationCode: string;
+  isVerified: boolean;
 }
 
 interface Methods {
@@ -17,6 +19,8 @@ const userSchema = new Schema<UserDocument, {}, Methods>({
   name: { type: String, required: true, trim: true },
   password: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
+  verificationCode: { type: String, required: true },
+  isVerified: { type: Boolean, default: false },
 });
 
 // Hash the password before saving
