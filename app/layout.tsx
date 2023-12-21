@@ -10,6 +10,7 @@ import "@mantine/tiptap/styles.css";
 
 import { ColorSchemeScript, Group, MantineProvider } from "@mantine/core";
 import ColorSchemeToggle from "@/components/ColorSchemeToggle";
+import AuthProvider from "@/components/Providers/AuthProvider";
 
 export const metadata = {
   title: "Devloveper",
@@ -22,19 +23,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <ColorSchemeScript />
-      </head>
-      <body>
-        <MantineProvider>
-          <Notifications />
-          <Group p="xs" justify="right">
-            <ColorSchemeToggle />
-          </Group>
-          {children}
-        </MantineProvider>
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <head>
+          <ColorSchemeScript />
+        </head>
+        <body>
+          <MantineProvider>
+            <Notifications />
+            <Group p="xs" justify="right">
+              <ColorSchemeToggle />
+            </Group>
+            {children}
+          </MantineProvider>
+        </body>
+      </html>
+    </AuthProvider>
   );
 }
