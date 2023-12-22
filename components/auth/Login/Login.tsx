@@ -54,17 +54,18 @@ export default function Login() {
       title: "Login success",
       message: "You logged in successfully.",
     });
+    router.push("/profile");
   };
 
   return (
     <Container size={420} pt={40}>
       <Title ta="center" className={classes.title}>
-        Welcome!
+        Welcome back !
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
-        Already have an account?{" "}
-        <Anchor component={Link} href="/auth/login">
-          Login
+        Don't have an account?{" "}
+        <Anchor component={Link} href="/auth/register">
+          Register
         </Anchor>
       </Text>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
