@@ -9,16 +9,16 @@ const Page = () => {
   const { data, status } = useSession();
 
   if (status === "loading") {
-    return <LoadingOverlay />;
+    return <LoadingOverlay visible={true} />;
   }
   if (status === "unauthenticated") {
     redirect("/auth/login");
   }
 
   return (
-    <div>
+    <>
       <Profile />
-    </div>
+    </>
   );
 };
 
