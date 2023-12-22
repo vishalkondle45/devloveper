@@ -1,20 +1,13 @@
 "use client";
-import { Button, Loader, Text } from "@mantine/core";
-import { signOut, useSession } from "next-auth/react";
+import { Button } from "@mantine/core";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import LoggedIn from "../auth/LoggedIn";
 
 const AuthButton = () => {
-  const { status } = useSession();
+  const { data, status } = useSession();
   const router = useRouter();
   const isAuth = status === "authenticated";
-  const handleClick = () => {
-    if (isAuth) {
-      signOut();
-    } else {
-      router.push("/auth/login");
-    }
-  };
 
   if (status === "loading") {
     return <></>;
@@ -22,9 +15,19 @@ const AuthButton = () => {
 
   return (
     <>
-      <Button size="xs" variant="filled" onClick={handleClick}>
-        {isAuth ? "Logout" : "Login"}
-      </Button>
+      {isAuth ? (
+        <>
+          <LoggedIn data={data} />
+        </>
+      ) : (
+        <Button
+          size="xs"
+          variant="filled"
+          onClick={() => router.push("/auth/login")}
+        >
+          Login
+        </Button>
+      )}
     </>
   );
 };
