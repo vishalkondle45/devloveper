@@ -21,8 +21,6 @@ export const authOptions: NextAuthOptions = {
         await startDb();
 
         const user = await UserModel.findOne({ email });
-        console.log(user);
-
         if (!user) throw Error("email/password mismatch!");
 
         const passwordMatch = await user.comparePassword(password);
@@ -42,6 +40,10 @@ export const authOptions: NextAuthOptions = {
       if (params.user?.isAdmin) {
         params.token.isAdmin = params.user.isAdmin;
         params.token._id = params.user._id;
+      }
+      if (params.trigger === "update") {
+        params.token.name = params.session.name;
+        params.token.email = params.session.email;
       }
       return params.token;
     },

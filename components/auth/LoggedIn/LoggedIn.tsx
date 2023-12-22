@@ -1,4 +1,6 @@
 "use client";
+import { colors } from "@/lib/constants";
+import { getDigitByString, getInitials } from "@/lib/functions";
 import {
   ActionIcon,
   Avatar,
@@ -22,6 +24,10 @@ import { useState } from "react";
 const LoggedIn = ({ data }: { data: Session }) => {
   const [opened, setOpened] = useState(false);
   const router = useRouter();
+  const logout = () => {
+    setOpened(false);
+    signOut();
+  };
   return (
     <>
       <Popover
@@ -34,14 +40,17 @@ const LoggedIn = ({ data }: { data: Session }) => {
         onChange={setOpened}
       >
         <PopoverTarget>
-          <Avatar
-            size="md"
-            src={null}
-            alt="Vishal Kondle"
-            onClick={() => setOpened((o) => !o)}
-          >
-            VK
-          </Avatar>
+          {data?.user?.name && (
+            <Avatar
+              size="md"
+              src={null}
+              alt="Vishal Kondle"
+              color={colors[getDigitByString(data?.user?.name)]}
+              onClick={() => setOpened((o) => !o)}
+            >
+              {getInitials(data?.user?.name)}
+            </Avatar>
+          )}
         </PopoverTarget>
         <PopoverDropdown px="xl">
           <Grid>
@@ -70,7 +79,10 @@ const LoggedIn = ({ data }: { data: Session }) => {
                 leftSection={<IconSettings width={18} />}
                 variant="outline"
                 radius="xl"
-                onClick={() => router.push("/profile")}
+                onClick={() => {
+                  setOpened(false);
+                  router.push("/profile");
+                }}
               >
                 Manage Account
               </Button>
@@ -78,7 +90,7 @@ const LoggedIn = ({ data }: { data: Session }) => {
                 leftSection={<IconLogout width={18} />}
                 variant="outline"
                 radius="xl"
-                onClick={() => signOut()}
+                onClick={logout}
               >
                 Logout
               </Button>

@@ -1,4 +1,5 @@
 "use client";
+import Profile from "@/components/Profile";
 import { LoadingOverlay } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -14,7 +15,11 @@ const Page = () => {
     redirect("/auth/login");
   }
 
-  return <div>{data?.user?.email}</div>;
+  return (
+    <div>
+      <Profile />
+    </div>
+  );
 };
 
 export default Page;
