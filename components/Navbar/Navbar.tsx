@@ -1,12 +1,9 @@
 "use client";
-import { Badge, Burger, Button, Group, Text, ThemeIcon } from "@mantine/core";
+import { Burger, Drawer, Group, rem } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconBraces, IconCode, IconCodeCircle2 } from "@tabler/icons-react";
 import AuthButton from "../AuthButton";
 import ColorSchemeToggle from "../ColorSchemeToggle";
-import Simple from "../Sidebars/Simple/Simple";
 import classes from "./Navbar.module.css";
-import Link from "next/link";
 import DevLovePer from "../DevLovePer";
 
 const Navbar = () => {
@@ -27,7 +24,19 @@ const Navbar = () => {
           <AuthButton />
         </Group>
       </Group>
-      <Simple close={close} opened={opened} />
+      <Drawer
+        opened={opened}
+        onClose={close}
+        size={rem(300)}
+        mt={rem(100)}
+        withCloseButton={false}
+      >
+        <Group justify="">
+          <Burger opened={opened} onClick={close} />
+          <DevLovePer />
+          {/* ToDo: Component according to path */}
+        </Group>
+      </Drawer>
     </>
   );
 };
