@@ -7,11 +7,9 @@ import "@mantine/carousel/styles.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/nprogress/styles.css";
 import "@mantine/tiptap/styles.css";
-
-import { ColorSchemeScript, Group, MantineProvider } from "@mantine/core";
-import ColorSchemeToggle from "@/components/ColorSchemeToggle";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import AuthProvider from "@/components/Providers/AuthProvider";
-import AuthButton from "@/components/AuthButton";
+import Navbar from "@/components/Navbar";
 
 export const metadata = {
   title: "Devloveper",
@@ -27,15 +25,18 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en">
         <head>
+          <link
+            rel="icon"
+            href="/devloveper-small.svg"
+            type="image/*"
+            sizes="any"
+          />
           <ColorSchemeScript />
         </head>
         <body>
-          <MantineProvider>
+          <MantineProvider theme={{ primaryColor: "teal" }}>
             <Notifications />
-            <Group p="xs" gap="xs" justify="right">
-              <ColorSchemeToggle />
-              <AuthButton />
-            </Group>
+            <Navbar />
             {children}
           </MantineProvider>
         </body>
