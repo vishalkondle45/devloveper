@@ -49,7 +49,7 @@ export default function Register() {
           title: "Account created",
           message: "Please check your email.",
         });
-        // router.push("/auth/login");
+        router.push("/auth/login");
       })
       .catch((error) =>
         notifications.show({
