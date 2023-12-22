@@ -11,6 +11,7 @@ import "@mantine/tiptap/styles.css";
 import { ColorSchemeScript, Group, MantineProvider } from "@mantine/core";
 import ColorSchemeToggle from "@/components/ColorSchemeToggle";
 import AuthProvider from "@/components/Providers/AuthProvider";
+import AuthButton from "@/components/AuthButton";
 
 export const metadata = {
   title: "Devloveper",
@@ -31,8 +32,9 @@ export default function RootLayout({
         <body>
           <MantineProvider>
             <Notifications />
-            <Group p="xs" justify="right">
+            <Group p="xs" gap="xs" justify="right">
               <ColorSchemeToggle />
+              <AuthButton />
             </Group>
             {children}
           </MantineProvider>
