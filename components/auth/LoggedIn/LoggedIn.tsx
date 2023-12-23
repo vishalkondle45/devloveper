@@ -30,14 +30,7 @@ const LoggedIn = ({ data }: { data: Session }) => {
   };
   return (
     <>
-      <Popover
-        width={350}
-        position="bottom-end"
-        offset={14}
-        shadow="md"
-        opened={opened}
-        onChange={setOpened}
-      >
+      <Popover position="bottom-end" opened={opened} onChange={setOpened}>
         <PopoverTarget>
           {data?.user?.name && (
             <Avatar

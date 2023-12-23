@@ -19,11 +19,11 @@ const Apps = () => {
   const [opened, setOpened] = useState(false);
   return (
     <>
-      <Popover opened={opened} onChange={setOpened}>
+      <Popover opened={opened} onChange={setOpened} position="bottom-end">
         <Popover.Target>
           <ActionIcon
             onClick={() => setOpened((o) => !o)}
-            color="gray"
+            color="grey"
             variant="outline"
             size="lg"
           >
