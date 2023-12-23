@@ -98,7 +98,7 @@ export default function Profile() {
       <Title ta="center" className={classes.title}>
         My Profile
       </Title>
-      <Paper withBorder p={30} mt={30} radius="md">
+      <Paper withBorder p={30} mt={30}>
         <LoadingOverlay
           visible={loadingProfile}
           zIndex={1000}

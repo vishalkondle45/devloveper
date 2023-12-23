@@ -31,7 +31,6 @@ const LoggedIn = ({ data }: { data: Session }) => {
   return (
     <>
       <Popover
-        radius="lg"
         width={350}
         position="bottom-end"
         withArrow
@@ -60,11 +59,7 @@ const LoggedIn = ({ data }: { data: Session }) => {
               </Text>
             </GridCol>
             <GridCol span={1}>
-              <ActionIcon
-                variant="subtle"
-                radius="xl"
-                onClick={() => setOpened(false)}
-              >
+              <ActionIcon variant="subtle" onClick={() => setOpened(false)}>
                 <IconX width={18} />
               </ActionIcon>
             </GridCol>
@@ -78,7 +73,6 @@ const LoggedIn = ({ data }: { data: Session }) => {
               <Button
                 leftSection={<IconSettings width={18} />}
                 variant="outline"
-                radius="xl"
                 onClick={() => {
                   setOpened(false);
                   router.push("/profile");
@@ -89,7 +83,6 @@ const LoggedIn = ({ data }: { data: Session }) => {
               <Button
                 leftSection={<IconLogout width={18} />}
                 variant="outline"
-                radius="xl"
                 onClick={logout}
               >
                 Logout

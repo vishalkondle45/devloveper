@@ -68,7 +68,7 @@ export default function Login() {
           Register
         </Anchor>
       </Text>
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+      <Paper withBorder shadow="md" p={30} mt={30}>
         <form onSubmit={form.onSubmit(handleLogin)}>
           <Stack gap="xs">
             <TextInput
