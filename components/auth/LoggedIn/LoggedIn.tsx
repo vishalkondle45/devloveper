@@ -33,7 +33,7 @@ const LoggedIn = ({ data }: { data: Session }) => {
       <Popover
         width={350}
         position="bottom-end"
-        withArrow
+        offset={14}
         shadow="md"
         opened={opened}
         onChange={setOpened}
