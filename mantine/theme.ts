@@ -2,7 +2,7 @@
 import { Loader, createTheme } from "@mantine/core";
 
 const theme = createTheme({
-  primaryColor: "gray",
+  primaryColor: "teal",
   defaultRadius: "xl",
   components: {
     Loader: Loader.extend({
