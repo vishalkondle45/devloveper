@@ -5,6 +5,7 @@ import {
   Avatar,
   Button,
   Container,
+  LoadingOverlay,
   Paper,
   Stack,
   TextInput,
@@ -23,6 +24,7 @@ import { Values } from "./Profile.types";
 
 export default function Profile() {
   const [loading, loadingHandlers] = useDisclosure(false);
+  const [loadingProfile, loadingProfileHandlers] = useDisclosure(true);
   const { update } = useSession();
   const router = useRouter();
 
@@ -40,6 +42,7 @@ export default function Profile() {
 
   useEffect(() => {
     const getProfile = async () => {
+      loadingProfileHandlers.open();
       axios
         .get("/api/auth/users/profile")
         .then((res) => {
@@ -54,6 +57,9 @@ export default function Profile() {
             message: error.response.data.error,
           });
           router.replace("/auth/login");
+        })
+        .finally(() => {
+          loadingProfileHandlers.close();
         });
     };
     getProfile();
@@ -93,6 +99,11 @@ export default function Profile() {
         My Profile
       </Title>
       <Paper withBorder p={30} mt={30} radius="md">
+        <LoadingOverlay
+          visible={loadingProfile}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+        />
         <form onSubmit={form.onSubmit(updateProfile)}>
           <Stack gap="xs">
             <Avatar
