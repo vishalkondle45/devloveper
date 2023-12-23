@@ -5,6 +5,7 @@ import AuthButton from "../AuthButton";
 import ColorSchemeToggle from "../ColorSchemeToggle";
 import classes from "./Navbar.module.css";
 import DevLovePer from "../DevLovePer";
+import Apps from "../Apps";
 
 const Navbar = () => {
   const [opened, { toggle, close }] = useDisclosure();
@@ -20,6 +21,7 @@ const Navbar = () => {
           <DevLovePer />
         </Group>
         <Group gap="xs" justify="right">
+          <Apps />
           <ColorSchemeToggle />
           <AuthButton />
         </Group>
