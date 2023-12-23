@@ -1,12 +1,6 @@
 import { Paper, Text, ThemeIcon } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
-
-interface Props {
-  icon: ReactNode;
-  text: string;
-  setOpened: (a: boolean) => void;
-}
+import { Props } from "./App.types";
 
 const App = ({ icon, text, setOpened }: Props) => {
   const router = useRouter();
