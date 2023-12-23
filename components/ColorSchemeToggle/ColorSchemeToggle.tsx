@@ -10,7 +10,12 @@ export default function ColorSchemeToggle() {
 
   if (loaded) {
     return (
-      <ActionIcon color="grey" variant="outline" onClick={toggleColorScheme}>
+      <ActionIcon
+        color="grey"
+        variant="outline"
+        onClick={toggleColorScheme}
+        size="lg"
+      >
         {colorScheme === "dark" ? (
           <IconMoon size={18} />
         ) : (
