@@ -1,15 +1,16 @@
-import { Notifications } from "@mantine/notifications";
-import "@mantine/core/styles.css";
-import "@mantine/code-highlight/styles.css";
-import "@mantine/notifications/styles.css";
-import "@mantine/spotlight/styles.css";
-import "@mantine/carousel/styles.css";
-import "@mantine/dropzone/styles.css";
-import "@mantine/nprogress/styles.css";
-import "@mantine/tiptap/styles.css";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import AuthProvider from "@/components/Providers/AuthProvider";
 import Navbar from "@/components/Navbar";
+import AuthProvider from "@/components/Providers/AuthProvider";
+import theme from "@/mantine/theme";
+import "@mantine/carousel/styles.css";
+import "@mantine/code-highlight/styles.css";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
+import "@mantine/dropzone/styles.css";
+import { Notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
+import "@mantine/nprogress/styles.css";
+import "@mantine/spotlight/styles.css";
+import "@mantine/tiptap/styles.css";
 
 export const metadata = {
   title: "Devloveper",
@@ -34,7 +35,7 @@ export default function RootLayout({
           <ColorSchemeScript />
         </head>
         <body>
-          <MantineProvider theme={{ primaryColor: "teal" }}>
+          <MantineProvider theme={theme}>
             <Notifications />
             <Navbar />
             {children}
