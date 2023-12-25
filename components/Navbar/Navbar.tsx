@@ -11,8 +11,14 @@ const Navbar = () => {
   const [opened, { toggle, close }] = useDisclosure();
   return (
     <>
-      <Group className={classes.navbar} px="md" py="xs" justify="space-between">
-        <Group>
+      <Group
+        className={classes.navbar}
+        px="md"
+        py="xs"
+        justify="space-between"
+        wrap="nowrap"
+      >
+        <Group gap="xs" wrap="nowrap">
           <Burger
             opened={opened}
             onClick={toggle}
@@ -20,7 +26,7 @@ const Navbar = () => {
           />
           <DevLovePer />
         </Group>
-        <Group gap="xs" justify="right">
+        <Group gap="xs" justify="right" wrap="nowrap">
           <Apps />
           <ColorSchemeToggle />
           <AuthButton />

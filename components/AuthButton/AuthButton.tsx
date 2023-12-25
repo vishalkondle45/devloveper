@@ -20,13 +20,7 @@ const AuthButton = () => {
           <LoggedIn data={data} />
         </>
       ) : (
-        <Button
-          size="xs"
-          variant="filled"
-          onClick={() => router.push("/auth/login")}
-        >
-          Login
-        </Button>
+        <Button onClick={() => router.push("/auth/login")}>Login</Button>
       )}
     </>
   );
