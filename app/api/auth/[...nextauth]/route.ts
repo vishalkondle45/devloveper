@@ -36,22 +36,21 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt(params: any) {
-      if (params.user?.isAdmin) {
-        params.token.isAdmin = params.user.isAdmin;
-        params.token._id = params.user._id;
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update") {
+        token.name = session.name;
+        token.email = session.email;
       }
-      if (params.trigger === "update") {
-        params.token.name = params.session.name;
-        params.token.email = params.session.email;
+      if (user) {
+        token._id = user._id;
+        token.isAdmin = user.isAdmin;
       }
-      return params.token;
+      return token;
     },
     session({ session, token }) {
-      if (session.user) {
-        (session.user as { _id: string })._id = token._id as string;
-        (session.user as { isAdmin: boolean }).isAdmin =
-          token.isAdmin as boolean;
+      if (token && session.user) {
+        session.user._id = token._id;
+        session.user.isAdmin = token.isAdmin;
       }
       return session;
     },

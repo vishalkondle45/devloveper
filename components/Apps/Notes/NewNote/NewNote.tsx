@@ -3,6 +3,8 @@ import { Button, Group, Modal, Stack, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import { IconCheck, IconPlus } from "@tabler/icons-react";
+import axios from "axios";
 import { Values } from "./NewNote.types";
 
 const NewNote = () => {
@@ -25,7 +27,18 @@ const NewNote = () => {
   };
 
   const handleSubmit = (values: Values) => {
-    console.log(values);
+    axios
+      .post("/api/notes", values)
+      .then((res) => {
+        notifications.show({
+          message: "Note created successfully",
+          icon: <IconCheck />,
+          color: "green",
+        });
+        close();
+        form.reset();
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -68,7 +81,9 @@ const NewNote = () => {
           </Stack>
         </form>
       </Modal>
-      <Button onClick={open}>Open modal</Button>
+      <Button onClick={open} leftSection={<IconPlus />}>
+        New Note
+      </Button>
     </>
   );
 };
