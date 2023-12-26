@@ -58,7 +58,7 @@ const Page = () => {
 
   return (
     <Container size="md">
-      {status === "loading" && <LoadingOverlay visible />}
+      <LoadingOverlay visible={status === "loading"} />
       <Group my="md" justify="space-between" wrap="nowrap">
         <Text fz={rem(40)} fw={700}>
           Notes
