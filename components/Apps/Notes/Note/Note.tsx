@@ -1,4 +1,13 @@
-import { ActionIcon, Divider, Group, Paper, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Divider,
+  Group,
+  Paper,
+  Text,
+  parseThemeColor,
+  useMantineColorScheme,
+  useMantineTheme,
+} from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import {
   IconColorSwatch,
@@ -11,17 +20,24 @@ import { NoteProps } from "./Note.types";
 
 const Note = ({ note, updateNote, cloneNote }: NoteProps) => {
   const { hovered, ref } = useHover();
+  const { colorScheme } = useMantineColorScheme();
+  const theme = useMantineTheme();
+  const parsedColor = parseThemeColor({ color: note.color, theme });
   const pin = () => updateNote(note._id, { pinned: !note.pinned });
   const clone = () =>
     cloneNote({ title: note.title, note: note.note, color: note.color });
+  const textColor = colorScheme === "dark" ? "white" : "dark";
+  const bgColor = parsedColor.isThemeColor
+    ? `var(${parsedColor.variable})`
+    : parsedColor.value;
 
   return (
     <>
       <Paper
         ref={ref}
         px="md"
-        bg={note.color}
-        c="white"
+        bg={bgColor}
+        c={textColor}
         shadow="xl"
         withBorder
         pb="md"
@@ -29,7 +45,7 @@ const Note = ({ note, updateNote, cloneNote }: NoteProps) => {
         {note.title && (
           <>
             <Text dangerouslySetInnerHTML={{ __html: note?.title }}></Text>
-            <Divider c={"white"} />
+            <Divider color={textColor} />
           </>
         )}
         {note.note && (
@@ -37,16 +53,16 @@ const Note = ({ note, updateNote, cloneNote }: NoteProps) => {
         )}
         {hovered && (
           <Group justify="space-around" ref={ref}>
-            <ActionIcon color="white" onClick={pin} variant="transparent">
+            <ActionIcon color={textColor} onClick={pin} variant="transparent">
               {note.pinned ? <IconPinnedFilled /> : <IconPinned />}
             </ActionIcon>
-            <ActionIcon color="white" onClick={clone} variant="transparent">
+            <ActionIcon color={textColor} onClick={clone} variant="transparent">
               <IconCopy />
             </ActionIcon>
-            <ActionIcon color="white" variant="transparent">
+            <ActionIcon color={textColor} variant="transparent">
               <IconTrash />
             </ActionIcon>
-            <ActionIcon color="white" variant="transparent">
+            <ActionIcon color={textColor} variant="transparent">
               <IconColorSwatch />
             </ActionIcon>
           </Group>
