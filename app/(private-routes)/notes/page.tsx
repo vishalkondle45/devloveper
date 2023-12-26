@@ -44,9 +44,9 @@ const Page = () => {
   }, []);
 
   return (
-    <Container size="lg">
+    <Container size="md">
       <LoadingOverlay visible={status === "loading"} />
-      <Group justify="space-between" wrap="nowrap">
+      <Group my="md" justify="space-between" wrap="nowrap">
         <Text fz={rem(40)} fw={700}>
           Notes
         </Text>
