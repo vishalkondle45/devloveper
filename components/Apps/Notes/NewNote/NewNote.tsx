@@ -3,7 +3,7 @@ import { Button, Group, Modal, Stack, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconPlus } from "@tabler/icons-react";
+import { IconCheck, IconPlus, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { Props, Values } from "./NewNote.types";
 
@@ -18,7 +18,13 @@ const NewNote = ({ getNotes }: Props) => {
 
     validate: {
       note: (value) =>
-        value.length ? null : notifications.show({ message: "error" }),
+        value.length
+          ? null
+          : notifications.show({
+              message: "Please enter note field.",
+              icon: <IconX />,
+              color: "red",
+            }),
     },
   });
 
