@@ -34,6 +34,11 @@ const Page = () => {
     getNotes();
   };
 
+  const deleteNote = async (_id: Types.ObjectId) => {
+    await axios.delete(`/api/notes?_id=${_id}`);
+    getNotes();
+  };
+
   useEffect(() => {
     getNotes();
   }, []);
@@ -50,7 +55,12 @@ const Page = () => {
       <Grid align="flex-start">
         {notes.map((note) => (
           <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={String(note._id)}>
-            <Note note={note} updateNote={updateNote} cloneNote={cloneNote} />
+            <Note
+              note={note}
+              updateNote={updateNote}
+              cloneNote={cloneNote}
+              deleteNote={deleteNote}
+            />
           </Grid.Col>
         ))}
       </Grid>

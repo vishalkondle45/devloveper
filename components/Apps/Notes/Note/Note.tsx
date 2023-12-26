@@ -18,7 +18,7 @@ import {
 } from "@tabler/icons-react";
 import { NoteProps } from "./Note.types";
 
-const Note = ({ note, updateNote, cloneNote }: NoteProps) => {
+const Note = ({ note, updateNote, cloneNote, deleteNote }: NoteProps) => {
   const { hovered, ref } = useHover();
   const { colorScheme } = useMantineColorScheme();
   const theme = useMantineTheme();
@@ -26,6 +26,7 @@ const Note = ({ note, updateNote, cloneNote }: NoteProps) => {
   const pin = () => updateNote(note._id, { pinned: !note.pinned });
   const clone = () =>
     cloneNote({ title: note.title, note: note.note, color: note.color });
+  const remove = () => deleteNote(note._id);
   const textColor = colorScheme === "dark" ? "white" : "dark";
   const bgColor = parsedColor.isThemeColor
     ? `var(${parsedColor.variable})`
@@ -59,7 +60,11 @@ const Note = ({ note, updateNote, cloneNote }: NoteProps) => {
             <ActionIcon color={textColor} onClick={clone} variant="transparent">
               <IconCopy />
             </ActionIcon>
-            <ActionIcon color={textColor} variant="transparent">
+            <ActionIcon
+              color={textColor}
+              onClick={remove}
+              variant="transparent"
+            >
               <IconTrash />
             </ActionIcon>
             <ActionIcon color={textColor} variant="transparent">
