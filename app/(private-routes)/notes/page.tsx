@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import axios from "axios";
+import { Types } from "mongoose";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 const Page = () => {
@@ -21,6 +22,11 @@ const Page = () => {
   const getNotes = async () => {
     const res = await axios.get("/api/notes");
     handlers.setState(res.data);
+  };
+
+  const updateNote = async (_id: Types.ObjectId, values: any) => {
+    await axios.put(`/api/notes?_id=${_id}`, values);
+    getNotes();
   };
 
   useEffect(() => {
@@ -39,7 +45,7 @@ const Page = () => {
       <Grid align="flex-start">
         {notes.map((note) => (
           <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={String(note._id)}>
-            <Note note={note} />
+            <Note note={note} updateNote={updateNote} />
           </Grid.Col>
         ))}
       </Grid>
