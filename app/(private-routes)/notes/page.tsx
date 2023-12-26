@@ -11,13 +11,13 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 const Page = () => {
   const { status } = useSession();
-  const [notes, handlers] = useListState<NoteType>([]);
+  const [notes, setNotes] = useState<NoteType[] | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [note, setNote] = useState(null);
 
   const getNotes = async () => {
     const res = await axios.get("/api/notes");
-    handlers.setState(res.data);
+    setNotes(res.data);
   };
 
   const updateNote = async (_id: Types.ObjectId, values: any) => {
@@ -51,64 +51,75 @@ const Page = () => {
 
   return (
     <Container size="md">
-      <LoadingOverlay visible={status === "loading"} />
-      <Group mt="md" mb="xl" justify="right" wrap="nowrap">
-        <NewNote getNotes={getNotes} />
-      </Group>
-      {Boolean(notes.filter(({ pinned }) => pinned).length) && (
-        <Badge variant="transparent">Pinned</Badge>
+      {!notes ? (
+        <LoadingOverlay visible={status === "loading"} />
+      ) : (
+        <>
+          <Group mt="md" mb="xl" justify="right" wrap="nowrap">
+            <NewNote getNotes={getNotes} />
+          </Group>
+          {Boolean(notes?.filter(({ pinned }) => pinned).length) && (
+            <Badge variant="transparent">Pinned</Badge>
+          )}
+          {note && (
+            <EditNote
+              getNotes={getNotes}
+              opened={opened}
+              note={note}
+              editClose={editClose}
+            />
+          )}
+          <Grid align="flex-start">
+            {notes
+              .filter(({ pinned }) => pinned)
+              .map((note) => (
+                <Grid.Col
+                  span={{ base: 12, sm: 6, md: 4 }}
+                  key={String(note._id)}
+                >
+                  <Note
+                    note={note}
+                    updateNote={updateNote}
+                    cloneNote={cloneNote}
+                    deleteNote={deleteNote}
+                    editNote={editNote}
+                  />
+                </Grid.Col>
+              ))}
+          </Grid>
+          {Boolean(notes.filter(({ pinned }) => pinned).length) && (
+            <Badge mt="xl" variant="transparent">
+              Others
+            </Badge>
+          )}
+          {note && (
+            <EditNote
+              getNotes={getNotes}
+              opened={opened}
+              note={note}
+              editClose={editClose}
+            />
+          )}
+          <Grid align="flex-start">
+            {notes
+              .filter(({ pinned }) => !pinned)
+              .map((note) => (
+                <Grid.Col
+                  span={{ base: 12, sm: 6, md: 4 }}
+                  key={String(note._id)}
+                >
+                  <Note
+                    note={note}
+                    updateNote={updateNote}
+                    cloneNote={cloneNote}
+                    deleteNote={deleteNote}
+                    editNote={editNote}
+                  />
+                </Grid.Col>
+              ))}
+          </Grid>
+        </>
       )}
-      {note && (
-        <EditNote
-          getNotes={getNotes}
-          opened={opened}
-          note={note}
-          editClose={editClose}
-        />
-      )}
-      <Grid align="flex-start">
-        {notes
-          .filter(({ pinned }) => pinned)
-          .map((note) => (
-            <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={String(note._id)}>
-              <Note
-                note={note}
-                updateNote={updateNote}
-                cloneNote={cloneNote}
-                deleteNote={deleteNote}
-                editNote={editNote}
-              />
-            </Grid.Col>
-          ))}
-      </Grid>
-      {Boolean(notes.filter(({ pinned }) => pinned).length) && (
-        <Badge mt="xl" variant="transparent">
-          Others
-        </Badge>
-      )}
-      {note && (
-        <EditNote
-          getNotes={getNotes}
-          opened={opened}
-          note={note}
-          editClose={editClose}
-        />
-      )}
-      <Grid align="flex-start">
-        {notes
-          .filter(({ pinned }) => !pinned)
-          .map((note) => (
-            <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={String(note._id)}>
-              <Note
-                note={note}
-                updateNote={updateNote}
-                cloneNote={cloneNote}
-                deleteNote={deleteNote}
-                editNote={editNote}
-              />
-            </Grid.Col>
-          ))}
-      </Grid>
     </Container>
   );
 };
