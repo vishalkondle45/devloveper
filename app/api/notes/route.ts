@@ -22,7 +22,7 @@ export const POST = async (req: Request): Promise<any> => {
   return NextResponse.json(create, { status: 201 });
 };
 
-export const GET = async (): Promise<any> => {
+export const GET = async (req: NextRequest): Promise<any> => {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json(
@@ -31,9 +31,13 @@ export const GET = async (): Promise<any> => {
     );
   }
   await startDb();
-  const notes = await NoteModel.find({ user: session.user?._id }).sort(
-    "-createdAt"
-  );
+  const notes = await NoteModel.find({
+    user: session.user?._id,
+    $and: [
+      { pinned: req.nextUrl.searchParams.get("pinned") !== null },
+      { trashed: req.nextUrl.searchParams.get("trashed") !== null },
+    ],
+  }).sort("-createdAt");
   return NextResponse.json(notes, { status: 200 });
 };
 
