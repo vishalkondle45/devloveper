@@ -33,10 +33,7 @@ export const GET = async (req: NextRequest): Promise<any> => {
   await startDb();
   const notes = await NoteModel.find({
     user: session.user?._id,
-    $and: [
-      { pinned: req.nextUrl.searchParams.get("pinned") !== null },
-      { trashed: req.nextUrl.searchParams.get("trashed") !== null },
-    ],
+    $and: [{ trashed: req.nextUrl.searchParams.get("trashed") !== null }],
   }).sort("-createdAt");
   return NextResponse.json(notes, { status: 200 });
 };
