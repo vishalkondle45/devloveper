@@ -14,14 +14,17 @@ interface Methods {
   comparePassword(password: string): Promise<boolean>;
 }
 
-const userSchema = new Schema<UserDocument, {}, Methods>({
-  email: { type: String, required: true, unique: true },
-  name: { type: String, required: true, trim: true },
-  password: { type: String, required: true },
-  isAdmin: { type: Boolean, default: false },
-  verificationCode: { type: String, required: true },
-  isVerified: { type: Boolean, default: false },
-});
+const userSchema = new Schema<UserDocument, {}, Methods>(
+  {
+    email: { type: String, required: true, unique: true },
+    name: { type: String, required: true, trim: true },
+    password: { type: String, required: true },
+    isAdmin: { type: Boolean, default: false },
+    verificationCode: { type: String, required: true },
+    isVerified: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
 // Hash the password before saving
 userSchema.pre("save", async function (next) {
