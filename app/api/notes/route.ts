@@ -21,3 +21,16 @@ export const POST = async (req: Request): Promise<any> => {
   });
   return NextResponse.json(note, { status: 201 });
 };
+
+export const GET = async (): Promise<any> => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { error: "You are not authenticated!" },
+      { status: 401 }
+    );
+  }
+  await startDb();
+  const notes = await NoteModel.find({ user: session.user?._id });
+  return NextResponse.json(notes, { status: 201 });
+};

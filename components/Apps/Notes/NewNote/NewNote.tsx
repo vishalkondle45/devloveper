@@ -5,9 +5,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconPlus } from "@tabler/icons-react";
 import axios from "axios";
-import { Values } from "./NewNote.types";
+import { Props, Values } from "./NewNote.types";
 
-const NewNote = () => {
+const NewNote = ({ getNotes }: Props) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   const form = useForm({
@@ -30,6 +30,7 @@ const NewNote = () => {
     axios
       .post("/api/notes", values)
       .then((res) => {
+        getNotes();
         notifications.show({
           message: "Note created successfully",
           icon: <IconCheck />,
