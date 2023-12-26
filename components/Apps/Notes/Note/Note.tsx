@@ -17,6 +17,7 @@ import { useHover } from "@mantine/hooks";
 import {
   IconColorSwatch,
   IconCopy,
+  IconPencil,
   IconPinned,
   IconPinnedFilled,
   IconTrash,
@@ -24,7 +25,13 @@ import {
 import { useState } from "react";
 import { NoteProps } from "./Note.types";
 
-const Note = ({ note, updateNote, cloneNote, deleteNote }: NoteProps) => {
+const Note = ({
+  note,
+  updateNote,
+  cloneNote,
+  deleteNote,
+  editNote,
+}: NoteProps) => {
   const [opened, setOpened] = useState(false);
   const { hovered, ref } = useHover();
   const { colorScheme } = useMantineColorScheme();
@@ -68,6 +75,13 @@ const Note = ({ note, updateNote, cloneNote, deleteNote }: NoteProps) => {
             </ActionIcon>
             <ActionIcon color={textColor} onClick={clone} variant="transparent">
               <IconCopy />
+            </ActionIcon>
+            <ActionIcon
+              color={textColor}
+              variant="transparent"
+              onClick={() => editNote(note)}
+            >
+              <IconPencil />
             </ActionIcon>
             <ActionIcon
               color={textColor}
