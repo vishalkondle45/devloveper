@@ -13,4 +13,5 @@ export interface NoteType {
 export interface NoteProps {
   note: NoteType;
   updateNote: (_id: Types.ObjectId, values: any) => Promise<void>;
+  cloneNote: (values: any) => Promise<void>;
 }

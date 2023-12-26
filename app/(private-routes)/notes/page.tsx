@@ -29,6 +29,11 @@ const Page = () => {
     getNotes();
   };
 
+  const cloneNote = async (values: any) => {
+    await axios.post(`/api/notes`, values);
+    getNotes();
+  };
+
   useEffect(() => {
     getNotes();
   }, []);
@@ -45,7 +50,7 @@ const Page = () => {
       <Grid align="flex-start">
         {notes.map((note) => (
           <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={String(note._id)}>
-            <Note note={note} updateNote={updateNote} />
+            <Note note={note} updateNote={updateNote} cloneNote={cloneNote} />
           </Grid.Col>
         ))}
       </Grid>

@@ -15,11 +15,11 @@ export const POST = async (req: Request): Promise<any> => {
   }
   const body = await req.json();
   await startDb();
-  const note = await NoteModel.create({
+  const create = await NoteModel.create({
     ...body,
     user: new mongoose.Types.ObjectId(session?.user?._id),
   });
-  return NextResponse.json(note, { status: 201 });
+  return NextResponse.json(create, { status: 201 });
 };
 
 export const GET = async (): Promise<any> => {
@@ -31,8 +31,10 @@ export const GET = async (): Promise<any> => {
     );
   }
   await startDb();
-  const notes = await NoteModel.find({ user: session.user?._id });
-  return NextResponse.json(notes, { status: 201 });
+  const notes = await NoteModel.find({ user: session.user?._id }).sort(
+    "-createdAt"
+  );
+  return NextResponse.json(notes, { status: 200 });
 };
 
 export const PUT = async (req: NextRequest): Promise<any> => {
@@ -47,5 +49,5 @@ export const PUT = async (req: NextRequest): Promise<any> => {
   const body = await req.json();
   await startDb();
   const note = await NoteModel.findByIdAndUpdate(_id, body);
-  return NextResponse.json(note, { status: 201 });
+  return NextResponse.json(note, { status: 200 });
 };
