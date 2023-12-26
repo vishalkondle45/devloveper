@@ -1,8 +1,13 @@
+import ColorSwatcher from "@/components/Color/ColorSwatcher";
+import { colors } from "@/lib/constants";
 import {
   ActionIcon,
   Divider,
   Group,
   Paper,
+  Popover,
+  PopoverDropdown,
+  PopoverTarget,
   Text,
   parseThemeColor,
   useMantineColorScheme,
@@ -16,9 +21,11 @@ import {
   IconPinnedFilled,
   IconTrash,
 } from "@tabler/icons-react";
+import { useState } from "react";
 import { NoteProps } from "./Note.types";
 
 const Note = ({ note, updateNote, cloneNote, deleteNote }: NoteProps) => {
+  const [opened, setOpened] = useState(false);
   const { hovered, ref } = useHover();
   const { colorScheme } = useMantineColorScheme();
   const theme = useMantineTheme();
@@ -27,6 +34,8 @@ const Note = ({ note, updateNote, cloneNote, deleteNote }: NoteProps) => {
   const clone = () =>
     cloneNote({ title: note.title, note: note.note, color: note.color });
   const remove = () => deleteNote(note._id);
+  const updateColor = (color: string) => updateNote(note._id, { color });
+
   const textColor = colorScheme === "dark" ? "white" : "dark";
   const bgColor = parsedColor.isThemeColor
     ? `var(${parsedColor.variable})`
@@ -67,9 +76,39 @@ const Note = ({ note, updateNote, cloneNote, deleteNote }: NoteProps) => {
             >
               <IconTrash />
             </ActionIcon>
-            <ActionIcon color={textColor} variant="transparent">
-              <IconColorSwatch />
-            </ActionIcon>
+            <Popover
+              width={330}
+              position="top-end"
+              opened={opened}
+              onChange={setOpened}
+            >
+              <PopoverTarget>
+                <ActionIcon
+                  color={textColor}
+                  variant="transparent"
+                  onClick={() => setOpened((o) => !o)}
+                >
+                  <IconColorSwatch />
+                </ActionIcon>
+              </PopoverTarget>
+              <PopoverDropdown>
+                <Group wrap="wrap">
+                  {colors.map((color) => (
+                    <ColorSwatcher
+                      key={color}
+                      selected={color == note.color}
+                      color={color}
+                      updateColor={updateColor}
+                    />
+                  ))}
+                  <ColorSwatcher
+                    selected={note.color == ""}
+                    color=""
+                    updateColor={updateColor}
+                  />
+                </Group>
+              </PopoverDropdown>
+            </Popover>
           </Group>
         )}
       </Paper>
