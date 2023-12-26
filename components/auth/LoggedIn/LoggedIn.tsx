@@ -36,7 +36,8 @@ const LoggedIn = ({ data }: { data: Session }) => {
             <Avatar
               size="md"
               src={null}
-              alt="Vishal Kondle"
+              alt={data?.user?.name || ""}
+              variant="filled"
               color={colors[getDigitByString(data?.user?.name)]}
               onClick={() => setOpened((o) => !o)}
             >
@@ -58,10 +59,16 @@ const LoggedIn = ({ data }: { data: Session }) => {
             </GridCol>
           </Grid>
           <Stack align="center" mt="md">
-            <Avatar size="xl" src={null} alt="Vishal Kondle">
-              VK
+            <Avatar
+              size="xl"
+              src={null}
+              alt={data?.user?.name || ""}
+              variant="filled"
+              color={colors[getDigitByString(data?.user?.name)]}
+            >
+              {getInitials(data?.user?.name)}
             </Avatar>
-            <Title order={3}>Hi, Vishal</Title>
+            <Title order={3}>Hi, {data?.user?.name?.split(" ")[0]}</Title>
             <Group justify="space-between" wrap="nowrap">
               <Button
                 leftSection={<IconSettings width={18} />}

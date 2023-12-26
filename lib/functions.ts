@@ -1,4 +1,4 @@
-export const getInitials = (name: string | undefined) => {
+export const getInitials = (name: string | undefined | null) => {
   if (name) {
     let nameArray = name.trim()?.split(" ");
     return nameArray?.length < 2
@@ -27,7 +27,7 @@ function getSum(n: number) {
   return sum;
 }
 
-export function getDigitByString(str: string | undefined) {
+export function getDigitByString(str: string | undefined | null) {
   if (!str) return 0;
   let sum = 0;
   for (let i = 0; i < str?.length; i++) {
