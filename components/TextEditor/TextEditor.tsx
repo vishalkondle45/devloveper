@@ -17,6 +17,8 @@ export default function TextEditor({
   name,
   label,
   placeholder,
+  withImage = true,
+  withParagraph = true,
 }: any) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -27,7 +29,7 @@ export default function TextEditor({
       Superscript,
       SubScript,
       Highlight,
-      Image,
+      withImage && Image,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Link.configure({
         HTMLAttributes: {
@@ -40,6 +42,11 @@ export default function TextEditor({
       }),
       Placeholder.configure({ placeholder }),
     ],
+    editorProps: {
+      handleKeyDown(view, { code }) {
+        return (code === "Enter" || code === "NumpadEnter") && !withParagraph;
+      },
+    },
     content: text,
     onUpdate({ editor }) {
       handleText(name, editor.getText() ? editor.getHTML() : "");

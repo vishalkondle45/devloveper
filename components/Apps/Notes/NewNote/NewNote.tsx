@@ -69,6 +69,8 @@ const NewNote = ({ getNotes }: Props) => {
               label="Title"
               placeholder="Title"
               handleText={handleText}
+              withImage={false}
+              withParagraph={false}
             />
             <TextEditor
               text={form.values.note}
