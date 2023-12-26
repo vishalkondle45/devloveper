@@ -3,7 +3,7 @@ import NoteModel from "@/models/Note";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "../auth/[...nextauth]/authOptions";
 
 export const POST = async (req: Request): Promise<any> => {
   const session = await getServerSession(authOptions);
