@@ -38,7 +38,7 @@ const Page = () => {
   };
 
   const deleteNote = async (_id: Types.ObjectId) => {
-    await axios.delete(`/api/notes?_id=${_id}`);
+    await axios.put(`/api/notes?_id=${_id}`, { trashed: true });
     getNotes();
   };
 

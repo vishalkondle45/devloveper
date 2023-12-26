@@ -6,6 +6,7 @@ import "@mantine/code-highlight/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
+import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/notifications/styles.css";
 import "@mantine/nprogress/styles.css";
@@ -36,9 +37,11 @@ export default function RootLayout({
         </head>
         <body>
           <MantineProvider theme={theme}>
-            <Notifications />
-            <Navbar />
-            {children}
+            <ModalsProvider>
+              <Notifications />
+              <Navbar />
+              {children}
+            </ModalsProvider>
           </MantineProvider>
         </body>
       </html>
