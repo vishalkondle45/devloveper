@@ -22,7 +22,11 @@ export const PUT = async (
   const label = await LabelModel.findById(_id);
   if (!label?.user || String(label?.user) === String(session.user?._id)) {
     return NextResponse.json(
-      { error: "Access denied!", label, user: session.user },
+      {
+        error: "Access denied!",
+        label: _id,
+        note: params._id,
+      },
       { status: 401 }
     );
   }
