@@ -2,7 +2,7 @@ import { Button, Group, Modal, Stack, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconTag } from "@tabler/icons-react";
+import { IconCheck, IconHash, IconTag } from "@tabler/icons-react";
 import axios from "axios";
 import { Props, Values } from "./NewTag.types";
 
@@ -56,6 +56,7 @@ const NewTag = ({ getTags }: Props) => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <Stack gap="xs">
             <TextInput
+              leftSection={<IconHash />}
               label="Title"
               fw={700}
               placeholder="Title"

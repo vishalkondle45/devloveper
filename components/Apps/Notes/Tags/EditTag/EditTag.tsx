@@ -1,7 +1,7 @@
 import { Button, Group, Modal, Stack, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconHash, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { useEffect } from "react";
 import { Props, TagType } from "./EditTag.types";
@@ -53,6 +53,7 @@ const EditTag = ({ getTags, opened, tag, editClose }: Props) => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <Stack gap="xs">
             <TextInput
+              leftSection={<IconHash />}
               name="title"
               label="Title"
               placeholder="Title"
