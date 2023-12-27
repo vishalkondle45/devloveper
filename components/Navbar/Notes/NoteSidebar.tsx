@@ -17,7 +17,7 @@ const NoteSidebar = ({ navigate }: NoteSidebarProps) => {
   const getLabels = async () => {
     await axios.get("/api/notes/labels").then((res) => {
       let labels = res.data.map(({ _id, title }: any) => ({
-        path: "/" + _id,
+        path: "/notes/labels/" + _id,
         title,
       }));
       handlers.append(...labels);

@@ -94,17 +94,6 @@ const NewNote = ({ getNotes, labels }: Props) => {
               placeholder="Note"
               handleText={handleText}
             />
-            {/* <MultiSelect
-              searchable
-              {...form.getInputProps("labels")}
-              data={labels?.map(
-                ({ _id, title }: { _id: string; title: string }) => ({
-                  value: _id,
-                  label: title,
-                })
-              )}
-            /> */}
-            <InputLabel>Tags</InputLabel>
             <Group>
               {form.values.labels?.map((label) => (
                 <Badge

@@ -7,14 +7,18 @@ import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import {
   Badge,
   Box,
+  Center,
   Container,
   Grid,
   Group,
   LoadingOverlay,
+  Stack,
   Text,
+  ThemeIcon,
   rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconNote, IconTag } from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
 import { useSession } from "next-auth/react";
@@ -71,10 +75,28 @@ const Page = () => {
     { title: "Notes", href: "/notes" },
   ];
 
+  if (status === "loading" || !notes) {
+    return <LoadingOverlay visible />;
+  }
+
   return (
     <Container my="md" size="md">
-      {!notes ? (
-        <LoadingOverlay visible={status === "loading"} />
+      <BreadcrumbsComp breadcrumbs={breadcrumbs} />
+      <Group justify="space-between">
+        <Text fz={rem(40)} fw={700}>
+          Notes
+        </Text>
+        <NewNote getNotes={getNotes} labels={labels} />
+      </Group>
+      {!notes.length ? (
+        <Center h={500}>
+          <Stack align="center">
+            <ThemeIcon color="gray" variant="transparent" size={rem(100)}>
+              <IconNote style={{ width: rem(100), height: rem(100) }} />
+            </ThemeIcon>
+            <Text size="xl">No notes created yet.</Text>
+          </Stack>
+        </Center>
       ) : (
         <>
           {note && (
@@ -85,13 +107,6 @@ const Page = () => {
               editClose={editClose}
             />
           )}
-          <BreadcrumbsComp breadcrumbs={breadcrumbs} />
-          <Group justify="space-between">
-            <Text fz={rem(40)} fw={700}>
-              Notes
-            </Text>
-            <NewNote getNotes={getNotes} labels={labels} />
-          </Group>
           {Boolean(notes?.filter(({ pinned }) => pinned).length) && (
             <Badge variant="transparent">Pinned</Badge>
           )}

@@ -102,22 +102,24 @@ const Note = ({
         {note.note && (
           <Text dangerouslySetInnerHTML={{ __html: note?.note }}></Text>
         )}
-        <Group gap="xs" mb="xs">
-          {note?.labels?.map((label) => (
-            <Badge
-              variant="default"
-              rightSection={
-                <IconX
-                  style={{ width: rem(16), height: rem(16) }}
-                  onClick={() => updateLabel(label)}
-                />
-              }
-              ref={ref}
-            >
-              {labels?.find((item) => item?._id === label)?.title}
-            </Badge>
-          ))}
-        </Group>
+        {labels && (
+          <Group gap="xs" mb="xs">
+            {note?.labels?.map((label) => (
+              <Badge
+                variant="default"
+                rightSection={
+                  <IconX
+                    style={{ width: rem(16), height: rem(16) }}
+                    onClick={() => updateLabel(label)}
+                  />
+                }
+                ref={ref}
+              >
+                {labels?.find((item) => item?._id === label)?.title}
+              </Badge>
+            ))}
+          </Group>
+        )}
         {hovered && (
           <Group justify="space-between" ref={ref}>
             {note.trashed ? (

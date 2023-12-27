@@ -30,10 +30,18 @@ export const GET = async (req: NextRequest): Promise<any> => {
       { status: 401 }
     );
   }
+  console.log({ labels: req.nextUrl.searchParams.get("label") || [] });
   await startDb();
   const notes = await NoteModel.find({
     user: session.user?._id,
-    $and: [{ trashed: req.nextUrl.searchParams.get("trashed") !== null }],
+    $and: [
+      { trashed: req.nextUrl.searchParams.get("trashed") !== null },
+      Boolean(req.nextUrl.searchParams.get("label"))
+        ? {
+            labels: req.nextUrl.searchParams.get("label") || undefined,
+          }
+        : {},
+    ],
   }).sort("-createdAt");
   return NextResponse.json(notes, { status: 200 });
 };
