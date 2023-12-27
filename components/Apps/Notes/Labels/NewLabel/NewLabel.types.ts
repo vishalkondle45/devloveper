@@ -5,5 +5,5 @@ export interface Values {
   title: string;
 }
 export interface Props {
-  getTags: () => void;
+  getLabels: () => void;
 }

@@ -1,7 +1,7 @@
 "use client";
-import EditTag from "@/components/Apps/Notes/Tags/EditTag";
-import NewTag from "@/components/Apps/Notes/Tags/NewTag";
-import { Values } from "@/components/Apps/Notes/Tags/NewTag/NewTag.types";
+import EditLabel from "@/components/Apps/Notes/Labels/EditLabel";
+import NewLabel from "@/components/Apps/Notes/Labels/NewLabel";
+import { Values } from "@/components/Apps/Notes/Labels/NewLabel/NewLabel.types";
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import {
   ActionIcon,
@@ -24,33 +24,33 @@ import { useEffect, useState } from "react";
 
 const Page = () => {
   const { status } = useSession();
-  const [tags, setTags] = useState<Values[] | null>(null);
+  const [labels, setLabels] = useState<Values[] | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
-  const [tag, setTag] = useState(null);
+  const [label, setLabel] = useState(null);
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Notes", href: "/notes" },
-    { title: "Tags", href: "/tags" },
+    { title: "Labels", href: "/labels" },
   ];
   const editClose = () => {
     close();
-    setTag(null);
+    setLabel(null);
   };
 
-  const editTag = (tag: any) => {
+  const editLabel = (label: any) => {
     open();
-    setTag(tag);
+    setLabel(label);
   };
 
-  const getTags = async () => {
+  const getLabels = async () => {
     axios
-      .get("/api/notes/tags")
+      .get("/api/notes/labels")
       .then((res) => {
-        setTags(res.data);
+        setLabels(res.data);
       })
       .catch((err) => {
         notifications.show({
-          message: "Error while fetching tags",
+          message: "Error while fetching labels",
           icon: <IconX />,
           color: "red",
         });
@@ -58,17 +58,17 @@ const Page = () => {
   };
 
   useEffect(() => {
-    getTags();
+    getLabels();
   }, []);
 
   const deleteNote = async (_id?: Types.ObjectId) => {
     modals.openConfirmModal({
-      title: <Text size="lg">Delete tag forever?</Text>,
+      title: <Text size="lg">Delete label forever?</Text>,
       labels: { confirm: "Delete", cancel: "Cancel" },
       centered: true,
       onConfirm: async () => {
-        await axios.delete(`/api/notes/tags?_id=${_id}`);
-        getTags();
+        await axios.delete(`/api/notes/labels?_id=${_id}`);
+        getLabels();
       },
     });
   };
@@ -79,27 +79,27 @@ const Page = () => {
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
       <Group justify="space-between">
         <Text fz={rem(40)} fw={700}>
-          Tags
+          Labels
         </Text>
-        <NewTag getTags={getTags} />
-        {tag && (
-          <EditTag
-            getTags={getTags}
+        <NewLabel getLabels={getLabels} />
+        {label && (
+          <EditLabel
+            getLabels={getLabels}
             opened={opened}
-            tag={tag}
+            label={label}
             editClose={editClose}
           />
         )}
       </Group>
       <Container size="xs">
         <Stack>
-          {tags?.map((item) => (
+          {labels?.map((item) => (
             <Paper key={item?.title} shadow="xl" withBorder>
               <Group px="xl" py="md" justify="space-between">
                 <Text fw={700}>#{item?.title}</Text>
                 <Group>
                   <ActionIcon
-                    onClick={() => editTag(item)}
+                    onClick={() => editLabel(item)}
                     variant="transparent"
                     color="blue"
                   >

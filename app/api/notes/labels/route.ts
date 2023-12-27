@@ -1,5 +1,5 @@
 import startDb from "@/lib/db";
-import TagModel from "@/models/Tag";
+import LabelModel from "@/models/Label";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,7 +15,7 @@ export const POST = async (req: NextRequest): Promise<any> => {
   }
   const { title } = await req.json();
   await startDb();
-  const create = await TagModel.create({
+  const create = await LabelModel.create({
     title,
     user: new mongoose.Types.ObjectId(session?.user?._id),
   });
@@ -31,10 +31,10 @@ export const GET = async (req: NextRequest): Promise<any> => {
     );
   }
   await startDb();
-  const tags = await TagModel.find({ user: session.user?._id }).sort(
+  const labels = await LabelModel.find({ user: session.user?._id }).sort(
     "-createdAt"
   );
-  return NextResponse.json(tags, { status: 200 });
+  return NextResponse.json(labels, { status: 200 });
 };
 
 export const PUT = async (req: NextRequest): Promise<any> => {
@@ -48,8 +48,8 @@ export const PUT = async (req: NextRequest): Promise<any> => {
   const _id = req.nextUrl.searchParams.get("_id");
   const body = await req.json();
   await startDb();
-  const tag = await TagModel.findByIdAndUpdate(_id, body);
-  return NextResponse.json(tag, { status: 200 });
+  const label = await LabelModel.findByIdAndUpdate(_id, body);
+  return NextResponse.json(label, { status: 200 });
 };
 
 export const DELETE = async (req: NextRequest): Promise<any> => {
@@ -62,6 +62,6 @@ export const DELETE = async (req: NextRequest): Promise<any> => {
   }
   const _id = req.nextUrl.searchParams.get("_id");
   await startDb();
-  const tag = await TagModel.findByIdAndDelete(_id);
-  return NextResponse.json(tag, { status: 200 });
+  const label = await LabelModel.findByIdAndDelete(_id);
+  return NextResponse.json(label, { status: 200 });
 };

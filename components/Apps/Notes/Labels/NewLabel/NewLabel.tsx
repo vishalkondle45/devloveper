@@ -4,9 +4,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconHash, IconTag } from "@tabler/icons-react";
 import axios from "axios";
-import { Props, Values } from "./NewTag.types";
+import { Props, Values } from "./NewLabel.types";
 
-const NewTag = ({ getTags }: Props) => {
+const NewLabel = ({ getLabels }: Props) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   const form = useForm({
@@ -21,11 +21,11 @@ const NewTag = ({ getTags }: Props) => {
 
   const handleSubmit = (values: Values) => {
     axios
-      .post("/api/notes/tags", values)
+      .post("/api/notes/labels", values)
       .then((res) => {
-        getTags();
+        getLabels();
         notifications.show({
-          message: "Tag created successfully",
+          message: "Label created successfully",
           icon: <IconCheck />,
           color: "green",
         });
@@ -48,7 +48,7 @@ const NewTag = ({ getTags }: Props) => {
         onClose={handleClose}
         title={
           <Text fw={700} fz={28}>
-            New Tag
+            New Label
           </Text>
         }
         centered
@@ -74,10 +74,10 @@ const NewTag = ({ getTags }: Props) => {
         </form>
       </Modal>
       <Button onClick={open} leftSection={<IconTag />}>
-        New Tag
+        New Label
       </Button>
     </>
   );
 };
 
-export default NewTag;
+export default NewLabel;

@@ -8,7 +8,7 @@ const NoteSidebar = ({ navigate }: NoteSidebarProps) => {
   const list = [
     { path: "/notes", icon: IconNote, title: "Notes" },
     { path: "/notes/trash", icon: IconTrash, title: "Trash" },
-    { path: "/notes/tags", icon: IconTags, title: "Tags" },
+    { path: "/notes/labels", icon: IconTags, title: "Labels" },
   ];
 
   return (

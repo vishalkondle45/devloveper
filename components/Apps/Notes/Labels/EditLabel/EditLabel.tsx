@@ -4,12 +4,12 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconHash, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { useEffect } from "react";
-import { Props, TagType } from "./EditTag.types";
+import { Props, LabelType } from "./EditLabel.types";
 
-const EditTag = ({ getTags, opened, tag, editClose }: Props) => {
+const EditLabel = ({ getLabels, opened, label, editClose }: Props) => {
   const form = useForm({
     initialValues: {
-      title: tag?.title,
+      title: label?.title,
     },
 
     validate: {
@@ -17,13 +17,13 @@ const EditTag = ({ getTags, opened, tag, editClose }: Props) => {
     },
   });
 
-  const handleSubmit = (values: TagType) => {
+  const handleSubmit = (values: LabelType) => {
     axios
-      .put(`/api/notes/tags?_id=${tag?._id}`, values)
+      .put(`/api/notes/labels?_id=${label?._id}`, values)
       .then((res) => {
-        getTags();
+        getLabels();
         notifications.show({
-          message: "Tag updated successfully",
+          message: "Label updated successfully",
           icon: <IconCheck />,
           color: "green",
         });
@@ -34,8 +34,8 @@ const EditTag = ({ getTags, opened, tag, editClose }: Props) => {
   };
 
   useEffect(() => {
-    form.setFieldValue("title", tag?.title || "");
-  }, [tag]);
+    form.setFieldValue("title", label?.title || "");
+  }, [label]);
 
   return (
     <>
@@ -45,7 +45,7 @@ const EditTag = ({ getTags, opened, tag, editClose }: Props) => {
         onClose={editClose}
         title={
           <Text fw={700} fz={28}>
-            Edit Tag
+            Edit Label
           </Text>
         }
         centered
@@ -74,4 +74,4 @@ const EditTag = ({ getTags, opened, tag, editClose }: Props) => {
   );
 };
 
-export default EditTag;
+export default EditLabel;

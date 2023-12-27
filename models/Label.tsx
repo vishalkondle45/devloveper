@@ -1,11 +1,11 @@
 import { Document, Model, Schema, Types, model, models } from "mongoose";
 
-interface TagDocument extends Document {
+interface LabelDocument extends Document {
   title?: string;
   user?: Types.ObjectId;
 }
 
-const tagSchema = new Schema<TagDocument>(
+const labelSchema = new Schema<LabelDocument>(
   {
     title: { type: String, required: true, trim: true },
     user: { type: Types.ObjectId, required: false },
@@ -13,6 +13,6 @@ const tagSchema = new Schema<TagDocument>(
   { timestamps: true }
 );
 
-const TagModel = models.Tag || model("Tag", tagSchema);
+const LabelModel = models.Label || model("Label", labelSchema);
 
-export default TagModel as Model<TagDocument>;
+export default LabelModel as Model<LabelDocument>;

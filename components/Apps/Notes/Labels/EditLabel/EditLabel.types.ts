@@ -1,13 +1,13 @@
 import { Types } from "mongoose";
 
-export interface TagType {
+export interface LabelType {
   _id?: Types.ObjectId;
   title?: string;
 }
 
 export interface Props {
   opened: boolean;
-  getTags: () => void;
-  tag: TagType | null;
+  getLabels: () => void;
+  label: LabelType | null;
   editClose: () => void;
 }

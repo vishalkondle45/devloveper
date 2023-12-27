@@ -7,7 +7,7 @@ interface NoteDocument extends Document {
   color?: string;
   pinned: boolean;
   trashed: boolean;
-  tags: Types.ObjectId[];
+  labels: Types.ObjectId[];
 }
 
 const noteSchema = new Schema<NoteDocument>(
@@ -18,7 +18,7 @@ const noteSchema = new Schema<NoteDocument>(
     user: { type: Types.ObjectId, required: false },
     pinned: { type: Boolean, default: false },
     trashed: { type: Boolean, default: false },
-    tags: { type: [Types.ObjectId], default: [] },
+    labels: { type: [Types.ObjectId], default: [] },
   },
   { timestamps: true }
 );
