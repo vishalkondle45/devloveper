@@ -2,12 +2,14 @@ import ColorSwatcher from "@/components/Color/ColorSwatcher";
 import { colors } from "@/lib/constants";
 import {
   ActionIcon,
+  Checkbox,
   Divider,
   Group,
   Paper,
   Popover,
   PopoverDropdown,
   PopoverTarget,
+  Stack,
   Text,
   parseThemeColor,
   useMantineColorScheme,
@@ -21,20 +23,26 @@ import {
   IconPencil,
   IconPinned,
   IconPinnedFilled,
+  IconTags,
   IconTrash,
 } from "@tabler/icons-react";
+import axios from "axios";
+import { Types } from "mongoose";
 import { useState } from "react";
+import Label from "../Labels/Label";
 import { NoteProps } from "./Note.types";
-
 const Note = ({
   note,
+  labels,
   updateNote,
   cloneNote,
   deleteNote,
   editNote,
   recoverNote,
+  getNotes,
 }: NoteProps) => {
   const [opened, setOpened] = useState(false);
+  const [opened1, setOpened1] = useState(false);
   const { hovered, ref } = useHover();
   const { colorScheme } = useMantineColorScheme();
   const theme = useMantineTheme();
@@ -53,6 +61,17 @@ const Note = ({
   const bgColor = parsedColor.isThemeColor
     ? `var(${parsedColor.variable})`
     : parsedColor.value;
+
+  const updateLabel = async (_id: Types.ObjectId | undefined) => {
+    await axios
+      .put(`/api/notes/${note._id}/update-label?_id=${_id}`)
+      .then((res) => {
+        if (getNotes) getNotes();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -74,6 +93,16 @@ const Note = ({
         {note.note && (
           <Text dangerouslySetInnerHTML={{ __html: note?.note }}></Text>
         )}
+        <Group gap="xs" mb="xs">
+          {note?.labels?.map((label) => (
+            <Label
+              key={String(label)}
+              labels={labels}
+              label={label}
+              updateLabel={updateLabel}
+            />
+          ))}
+        </Group>
         {hovered && (
           <Group justify="space-between" ref={ref}>
             {note.trashed ? (
@@ -145,6 +174,38 @@ const Note = ({
                         updateColor={updateColor}
                       />
                     </Group>
+                  </PopoverDropdown>
+                </Popover>
+                <Popover
+                  width={250}
+                  position="top-end"
+                  opened={opened1}
+                  onChange={setOpened1}
+                >
+                  <PopoverTarget>
+                    <ActionIcon
+                      color={textColor}
+                      variant="transparent"
+                      onClick={() => setOpened1((o) => !o)}
+                      title="Update Labels"
+                    >
+                      <IconTags />
+                    </ActionIcon>
+                  </PopoverTarget>
+                  <PopoverDropdown>
+                    <Stack gap="xs">
+                      {labels?.map((label) => (
+                        <Group key={String(label._id)}>
+                          <Checkbox
+                            checked={Boolean(
+                              note.labels.find((i) => i === label._id)
+                            )}
+                            onClick={() => updateLabel(label?._id)}
+                          />
+                          <Text>{label?.title}</Text>
+                        </Group>
+                      ))}
+                    </Stack>
                   </PopoverDropdown>
                 </Popover>
               </>

@@ -4,4 +4,5 @@ export interface Values {
 }
 export interface Props {
   getNotes: () => void;
+  labels?: any[];
 }

@@ -1,9 +1,10 @@
 import TextEditor from "@/components/TextEditor";
-import { Button, Group, Modal, Stack, Text } from "@mantine/core";
+import { Button, Group, Modal, MultiSelect, Stack, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import axios from "axios";
+import { Types } from "mongoose";
 import { useEffect } from "react";
 import { NoteType, Props } from "./EditNote.types";
 
@@ -12,6 +13,7 @@ const EditNote = ({ getNotes, opened, note, editClose }: Props) => {
     initialValues: {
       title: "",
       note: "",
+      labels: [] as Types.ObjectId[],
     },
 
     validate: {
@@ -49,6 +51,7 @@ const EditNote = ({ getNotes, opened, note, editClose }: Props) => {
   useEffect(() => {
     form.setFieldValue("title", note?.title || "");
     form.setFieldValue("note", note?.note || "");
+    form.setFieldValue("labels", note?.labels || []);
   }, [note]);
 
   return (
@@ -82,6 +85,7 @@ const EditNote = ({ getNotes, opened, note, editClose }: Props) => {
               placeholder="Note"
               handleText={handleText}
             />
+            <MultiSelect searchable {...form.getInputProps("labels")} />
             <Group wrap="nowrap" my="xs">
               <Button onClick={editClose} fullWidth>
                 Cancel

@@ -8,6 +8,7 @@ export interface NoteType {
   color?: string;
   pinned?: boolean;
   trashed?: boolean;
+  labels?: Types.ObjectId[] | null;
 }
 
 export interface Props {

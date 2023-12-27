@@ -8,6 +8,7 @@ export interface NoteType {
   color?: string;
   pinned: boolean;
   trashed: boolean;
+  labels: Types.ObjectId[];
 }
 
 export interface NoteProps {
@@ -17,4 +18,6 @@ export interface NoteProps {
   deleteNote: (_id: Types.ObjectId) => Promise<void>;
   recoverNote?: (_id: Types.ObjectId) => Promise<void>;
   editNote?: (note: NoteType) => void;
+  labels?: any[];
+  getNotes?: () => void;
 }

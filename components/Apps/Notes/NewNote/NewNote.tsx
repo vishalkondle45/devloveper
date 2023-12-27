@@ -1,19 +1,29 @@
 import TextEditor from "@/components/TextEditor";
-import { Button, Group, Modal, Stack, Text } from "@mantine/core";
+import {
+  Badge,
+  Button,
+  Group,
+  InputLabel,
+  Modal,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconPlus, IconX } from "@tabler/icons-react";
 import axios from "axios";
+import { Types } from "mongoose";
 import { Props, Values } from "./NewNote.types";
 
-const NewNote = ({ getNotes }: Props) => {
+const NewNote = ({ getNotes, labels }: Props) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   const form = useForm({
     initialValues: {
       title: "",
       note: "",
+      labels: [] as Types.ObjectId[],
     },
 
     validate: {
@@ -48,6 +58,11 @@ const NewNote = ({ getNotes }: Props) => {
       .catch((error) => console.log(error));
   };
 
+  const removeLabel = (_id: Types.ObjectId) => {
+    let labels = form.values.labels.filter((id) => id !== _id);
+    form.setFieldValue("labels", labels);
+  };
+
   return (
     <>
       <Modal
@@ -79,8 +94,32 @@ const NewNote = ({ getNotes }: Props) => {
               placeholder="Note"
               handleText={handleText}
             />
+            {/* <MultiSelect
+              searchable
+              {...form.getInputProps("labels")}
+              data={labels?.map(
+                ({ _id, title }: { _id: string; title: string }) => ({
+                  value: _id,
+                  label: title,
+                })
+              )}
+            /> */}
+            <InputLabel>Tags</InputLabel>
+            <Group>
+              {form.values.labels?.map((label) => (
+                <Badge
+                  variant="dot"
+                  size="lg"
+                  rightSection={
+                    <IconX onClick={() => removeLabel(label._id)} size={18} />
+                  }
+                >
+                  {labels?.find(({ _id }) => _id === label._id)?.title}
+                </Badge>
+              ))}
+            </Group>
             <Group wrap="nowrap" my="xs">
-              <Button onClick={close} fullWidth>
+              <Button color="red" onClick={close} fullWidth>
                 Cancel
               </Button>
               <Button type="submit" fullWidth>
