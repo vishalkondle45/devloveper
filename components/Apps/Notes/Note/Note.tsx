@@ -203,12 +203,14 @@ const Note = ({
                   <PopoverDropdown>
                     <Stack gap="xs">
                       {labels?.map((label) => (
-                        <Group key={String(label._id)}>
+                        <Group
+                          key={String(label._id)}
+                          onClick={() => updateLabel(label?._id)}
+                        >
                           <Checkbox
                             checked={Boolean(
                               note.labels.find((i) => i === label._id)
                             )}
-                            onClick={() => updateLabel(label?._id)}
                           />
                           <Text>{label?.title}</Text>
                         </Group>
