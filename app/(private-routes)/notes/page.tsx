@@ -3,8 +3,18 @@ import EditNote from "@/components/Apps/Notes/EditNote";
 import NewNote from "@/components/Apps/Notes/NewNote";
 import Note from "@/components/Apps/Notes/Note";
 import { NoteType } from "@/components/Apps/Notes/Note/Note.types";
-import { Badge, Container, Grid, Group, LoadingOverlay } from "@mantine/core";
-import { useDisclosure, useListState } from "@mantine/hooks";
+import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
+import {
+  Badge,
+  Box,
+  Container,
+  Grid,
+  Group,
+  LoadingOverlay,
+  Text,
+  rem,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import axios from "axios";
 import { Types } from "mongoose";
 import { useSession } from "next-auth/react";
@@ -49,13 +59,22 @@ const Page = () => {
     getNotes();
   }, []);
 
+  const breadcrumbs = [
+    { title: "Home", href: "/" },
+    { title: "Notes", href: "/notes" },
+  ];
+
   return (
-    <Container size="md">
+    <Container my="md" size="md">
       {!notes ? (
         <LoadingOverlay visible={status === "loading"} />
       ) : (
         <>
-          <Group mt="md" mb="xl" justify="right" wrap="nowrap">
+          <BreadcrumbsComp breadcrumbs={breadcrumbs} />
+          <Group justify="space-between">
+            <Text fz={rem(40)} fw={700}>
+              Notes
+            </Text>
             <NewNote getNotes={getNotes} />
           </Group>
           {Boolean(notes?.filter(({ pinned }) => pinned).length) && (
@@ -87,37 +106,37 @@ const Page = () => {
                 </Grid.Col>
               ))}
           </Grid>
-          {Boolean(notes.filter(({ pinned }) => pinned).length) && (
-            <Badge mt="xl" variant="transparent">
-              Others
-            </Badge>
-          )}
-          {note && (
-            <EditNote
-              getNotes={getNotes}
-              opened={opened}
-              note={note}
-              editClose={editClose}
-            />
-          )}
-          <Grid align="flex-start">
-            {notes
-              .filter(({ pinned }) => !pinned)
-              .map((note) => (
-                <Grid.Col
-                  span={{ base: 12, sm: 6, md: 4 }}
-                  key={String(note._id)}
-                >
-                  <Note
-                    note={note}
-                    updateNote={updateNote}
-                    cloneNote={cloneNote}
-                    deleteNote={deleteNote}
-                    editNote={editNote}
-                  />
-                </Grid.Col>
-              ))}
-          </Grid>
+          <Box mt="xs">
+            {Boolean(notes.filter(({ pinned }) => pinned).length) && (
+              <Badge variant="transparent">Others</Badge>
+            )}
+            {note && (
+              <EditNote
+                getNotes={getNotes}
+                opened={opened}
+                note={note}
+                editClose={editClose}
+              />
+            )}
+            <Grid align="flex-start">
+              {notes
+                .filter(({ pinned }) => !pinned)
+                .map((note) => (
+                  <Grid.Col
+                    span={{ base: 12, sm: 6, md: 4 }}
+                    key={String(note._id)}
+                  >
+                    <Note
+                      note={note}
+                      updateNote={updateNote}
+                      cloneNote={cloneNote}
+                      deleteNote={deleteNote}
+                      editNote={editNote}
+                    />
+                  </Grid.Col>
+                ))}
+            </Grid>
+          </Box>
         </>
       )}
     </Container>

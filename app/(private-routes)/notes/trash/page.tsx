@@ -1,6 +1,7 @@
 "use client";
 import Note from "@/components/Apps/Notes/Note";
 import { NoteType } from "@/components/Apps/Notes/Note/Note.types";
+import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import { Container, Grid, LoadingOverlay, Text, rem } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import axios from "axios";
@@ -11,6 +12,11 @@ import { useEffect, useState } from "react";
 const Page = () => {
   const { status } = useSession();
   const [notes, setNotes] = useState<NoteType[] | null>();
+  const breadcrumbs = [
+    { title: "Home", href: "/" },
+    { title: "Notes", href: "/notes" },
+    { title: "Trash", href: "/trash" },
+  ];
 
   const getNotes = async () => {
     const res = await axios.get("/api/notes?trashed");
@@ -39,9 +45,10 @@ const Page = () => {
   }, []);
 
   return (
-    <Container size="md">
+    <Container my="md" size="md">
       <LoadingOverlay visible={status === "loading" || !notes} />
-      <Text my="md" fz={rem(40)} fw={700}>
+      <BreadcrumbsComp breadcrumbs={breadcrumbs} />
+      <Text fz={rem(40)} fw={700}>
         Trash
       </Text>
       <Grid align="flex-start">

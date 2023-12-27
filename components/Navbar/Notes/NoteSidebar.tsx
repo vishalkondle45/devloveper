@@ -1,5 +1,5 @@
 import { Button, Group } from "@mantine/core";
-import { IconNote, IconTrash } from "@tabler/icons-react";
+import { IconNote, IconTags, IconTrash } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
 import { NoteSidebarProps } from "./NoteSidebar.types";
 
@@ -8,6 +8,7 @@ const NoteSidebar = ({ navigate }: NoteSidebarProps) => {
   const list = [
     { path: "/notes", icon: IconNote, title: "Notes" },
     { path: "/notes/trash", icon: IconTrash, title: "Trash" },
+    { path: "/notes/tags", icon: IconTags, title: "Tags" },
   ];
 
   return (
