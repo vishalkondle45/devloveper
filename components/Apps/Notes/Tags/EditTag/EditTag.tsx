@@ -13,14 +13,7 @@ const EditTag = ({ getTags, opened, tag, editClose }: Props) => {
     },
 
     validate: {
-      title: (value) =>
-        value?.length
-          ? null
-          : notifications.show({
-              message: "Please enter title field.",
-              icon: <IconX />,
-              color: "red",
-            }),
+      title: (value) => (value?.length ? null : "Please enter title field."),
     },
   });
 
