@@ -15,7 +15,9 @@ const App = ({ icon, text, setOpened }: Props) => {
       ta="center"
       bg="transparent"
     >
-      <ThemeIcon variant="transparent">{icon}</ThemeIcon>
+      <ThemeIcon size="xl" variant="filled">
+        {icon}
+      </ThemeIcon>
       <Text>{text}</Text>
     </Paper>
   );
