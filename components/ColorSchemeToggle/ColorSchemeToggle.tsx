@@ -1,11 +1,16 @@
 "use client";
 
 import { useLoaded } from "@/hooks/useLoaded";
-import { ActionIcon, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon } from "@mantine/core";
 import { IconMoon, IconSun } from "@tabler/icons-react";
 
-export default function ColorSchemeToggle() {
-  const { toggleColorScheme, colorScheme } = useMantineColorScheme();
+export default function ColorSchemeToggle({
+  colorScheme,
+  toggleColorScheme,
+}: {
+  toggleColorScheme: () => void;
+  colorScheme: "dark" | "light" | "auto";
+}) {
   const loaded = useLoaded();
 
   if (loaded) {

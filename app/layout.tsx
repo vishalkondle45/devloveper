@@ -3,7 +3,7 @@ import AuthProvider from "@/components/Providers/AuthProvider";
 import theme from "@/mantine/theme";
 import "@mantine/carousel/styles.css";
 import "@mantine/code-highlight/styles.css";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Box, ColorSchemeScript, MantineProvider, rem } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import { ModalsProvider } from "@mantine/modals";
@@ -40,7 +40,7 @@ export default function RootLayout({
             <ModalsProvider>
               <Notifications />
               <Navbar />
-              {children}
+              <Box pt={rem(60)}>{children}</Box>
             </ModalsProvider>
           </MantineProvider>
         </body>
