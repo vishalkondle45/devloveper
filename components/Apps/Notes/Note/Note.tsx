@@ -69,7 +69,7 @@ const Note = ({
   const updateLabel = async (_id: Types.ObjectId | undefined) => {
     handlers.open();
     await axios
-      .put(`/api/notes/${note._id}/update-label?_id=${_id}`)
+      .put(`/api/notes/${note._id}/update-label/${_id}`)
       .then((res) => {
         if (getNotes) {
           getNotes();
