@@ -70,6 +70,14 @@ const Page = () => {
         <LoadingOverlay visible={status === "loading"} />
       ) : (
         <>
+          {note && (
+            <EditNote
+              getNotes={getNotes}
+              opened={opened}
+              note={note}
+              editClose={editClose}
+            />
+          )}
           <BreadcrumbsComp breadcrumbs={breadcrumbs} />
           <Group justify="space-between">
             <Text fz={rem(40)} fw={700}>
@@ -79,14 +87,6 @@ const Page = () => {
           </Group>
           {Boolean(notes?.filter(({ pinned }) => pinned).length) && (
             <Badge variant="transparent">Pinned</Badge>
-          )}
-          {note && (
-            <EditNote
-              getNotes={getNotes}
-              opened={opened}
-              note={note}
-              editClose={editClose}
-            />
           )}
           <Grid align="flex-start">
             {notes
@@ -109,14 +109,6 @@ const Page = () => {
           <Box mt="xs">
             {Boolean(notes.filter(({ pinned }) => pinned).length) && (
               <Badge variant="transparent">Others</Badge>
-            )}
-            {note && (
-              <EditNote
-                getNotes={getNotes}
-                opened={opened}
-                note={note}
-                editClose={editClose}
-              />
             )}
             <Grid align="flex-start">
               {notes
