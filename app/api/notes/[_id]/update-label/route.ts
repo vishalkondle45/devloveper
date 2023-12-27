@@ -20,7 +20,7 @@ export const PUT = async (
   const _id = req.nextUrl.searchParams.get("_id");
   await startDb();
   const label = await LabelModel.findById(_id);
-  if (!label?.user || label?.user === session.user?._id) {
+  if (!label?.user || String(label?.user) === String(session.user?._id)) {
     return NextResponse.json({ error: "Access denied!" }, { status: 401 });
   }
   const note = await NoteModel.findById(params._id);
