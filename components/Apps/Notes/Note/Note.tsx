@@ -6,6 +6,7 @@ import {
   Checkbox,
   Divider,
   Group,
+  LoadingOverlay,
   Paper,
   Popover,
   PopoverDropdown,
@@ -17,7 +18,7 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { useHover } from "@mantine/hooks";
+import { useDisclosure, useHover } from "@mantine/hooks";
 import {
   IconArrowBackUp,
   IconColorSwatch,
@@ -45,6 +46,7 @@ const Note = ({
 }: NoteProps) => {
   const [opened, setOpened] = useState(false);
   const [opened1, setOpened1] = useState(false);
+  const [opened2, handlers] = useDisclosure();
   const { hovered, ref } = useHover();
   const { colorScheme } = useMantineColorScheme();
   const theme = useMantineTheme();
@@ -65,10 +67,14 @@ const Note = ({
     : parsedColor.value;
 
   const updateLabel = async (_id: Types.ObjectId | undefined) => {
+    handlers.open();
     await axios
       .put(`/api/notes/${note._id}/update-label?_id=${_id}`)
       .then((res) => {
-        if (getNotes) getNotes();
+        if (getNotes) {
+          getNotes();
+          handlers.close();
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -77,6 +83,7 @@ const Note = ({
 
   return (
     <>
+      <LoadingOverlay visible={opened2} />
       <Paper
         ref={ref}
         px="md"
