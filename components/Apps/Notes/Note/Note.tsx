@@ -2,6 +2,7 @@ import ColorSwatcher from "@/components/Color/ColorSwatcher";
 import { colors } from "@/lib/constants";
 import {
   ActionIcon,
+  Badge,
   Checkbox,
   Divider,
   Group,
@@ -12,6 +13,7 @@ import {
   Stack,
   Text,
   parseThemeColor,
+  rem,
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
@@ -25,11 +27,11 @@ import {
   IconPinnedFilled,
   IconTags,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
 import { useState } from "react";
-import Label from "../Labels/Label";
 import { NoteProps } from "./Note.types";
 const Note = ({
   note,
@@ -95,12 +97,18 @@ const Note = ({
         )}
         <Group gap="xs" mb="xs">
           {note?.labels?.map((label) => (
-            <Label
-              key={String(label)}
-              labels={labels}
-              label={label}
-              updateLabel={updateLabel}
-            />
+            <Badge
+              variant="default"
+              rightSection={
+                <IconX
+                  style={{ width: rem(16), height: rem(16) }}
+                  onClick={() => updateLabel(label)}
+                />
+              }
+              ref={ref}
+            >
+              {labels?.find((item) => item?._id === label)?.title}
+            </Badge>
           ))}
         </Group>
         {hovered && (
