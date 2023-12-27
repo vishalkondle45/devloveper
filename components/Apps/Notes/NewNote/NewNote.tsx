@@ -1,13 +1,5 @@
 import TextEditor from "@/components/TextEditor";
-import {
-  Badge,
-  Button,
-  Group,
-  InputLabel,
-  Modal,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Badge, Button, Group, Modal, Stack, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
