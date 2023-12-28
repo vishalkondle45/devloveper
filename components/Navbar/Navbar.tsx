@@ -16,6 +16,7 @@ import ColorSchemeToggle from "../ColorSchemeToggle";
 import DevLovePer from "../DevLovePer";
 import classes from "./Navbar.module.css";
 import NoteSidebar from "./Notes";
+import TodoSidebar from "./Todos";
 
 const Navbar = () => {
   const [opened, { toggle, close }] = useDisclosure();
@@ -32,6 +33,8 @@ const Navbar = () => {
     switch (page) {
       case "notes":
         return <NoteSidebar navigate={navigate} />;
+      case "todos":
+        return <TodoSidebar navigate={navigate} />;
       default:
         return <Text>Please select app</Text>;
     }
