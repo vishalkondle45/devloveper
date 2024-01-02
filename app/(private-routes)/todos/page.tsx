@@ -1,6 +1,7 @@
 "use client";
-import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import NewTodo from "@/components/Apps/Todos/NewTodo";
+import Todo from "@/components/Apps/Todos/Todo";
+import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import {
   Center,
   Container,
@@ -57,7 +58,11 @@ const Page = () => {
         </Center>
       ) : (
         <>
-          <Text>{todos.length}</Text>
+          <Stack mt="md">
+            {todos?.map((todo) => (
+              <Todo todo={todo} key={todo.todo} />
+            ))}
+          </Stack>
         </>
       )}
     </Container>
