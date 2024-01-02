@@ -40,7 +40,13 @@ import { TodoProps } from "./Todo.types";
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 
-const Todo = ({ todo, getTodos }: TodoProps) => {
+const Todo = ({
+  todo,
+  getTodos,
+  withMyDay = true,
+  withDueDate = true,
+  withListName = true,
+}: TodoProps) => {
   const [opened, setOpened] = useState(false);
   const [opened2, setOpened2] = useState(false);
 
@@ -78,11 +84,12 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
             <Stack gap={0}>
               <Text>{todo?.todo}</Text>
               <Group gap="xs" wrap="nowrap">
-                {todo?.myday && (
+                {todo?.myday && withMyDay && (
                   <Badge
                     size="xs"
                     p={0}
                     variant="transparent"
+                    c="gray"
                     leftSection={
                       <IconSun style={{ width: rem(16), height: rem(16) }} />
                     }
@@ -90,7 +97,7 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                     My Day
                   </Badge>
                 )}
-                {todo?.date && (
+                {todo?.date && withDueDate && (
                   <Badge
                     size="xs"
                     p={0}
