@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const getInitials = (name: string | undefined | null) => {
   if (name) {
     let nameArray = name.trim()?.split(" ");
@@ -35,3 +37,5 @@ export function getDigitByString(str: string | undefined | null) {
   }
   return getSum(sum);
 }
+
+export const formatDate = (date?: string) => dayjs(date).format("MM-DD-YYYY");

@@ -31,6 +31,12 @@ import axios from "axios";
 import { useState } from "react";
 import { TodoUpdateTypes } from "../Todo.types";
 import { TodoProps } from "./Todo.types";
+import dayjs from "dayjs";
+import isToday from "dayjs/plugin/isToday";
+import isTomorrow from "dayjs/plugin/isTomorrow";
+import { formatDate } from "@/lib/functions";
+dayjs.extend(isToday);
+dayjs.extend(isTomorrow);
 
 const Todo = ({ todo, getTodos }: TodoProps) => {
   const [opened, setOpened] = useState(false);
@@ -46,6 +52,12 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
         getTodos();
       })
       .catch((error) => {});
+  };
+
+  const getDueDate = (date: any) => {
+    if (dayjs(date).isToday()) return "Today";
+    if (dayjs(date).isTomorrow()) return "Tomorrow";
+    return dayjs(todo.date).format("dddd, MMMM D");
   };
 
   return (
@@ -73,6 +85,17 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                     }
                   >
                     My Day
+                  </Badge>
+                )}
+                {todo?.date && (
+                  <Badge
+                    p={0}
+                    variant="transparent"
+                    leftSection={
+                      <IconSun style={{ width: rem(16), height: rem(16) }} />
+                    }
+                  >
+                    Due {getDueDate(todo.date)}
                   </Badge>
                 )}
               </Group>
@@ -132,6 +155,7 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                       style={{ width: rem(16), height: rem(16) }}
                     />
                   }
+                  onClick={() => update({ date: formatDate() })}
                 >
                   Due today
                 </MenuItem>
@@ -140,6 +164,9 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                     <IconCalendarMonth
                       style={{ width: rem(16), height: rem(16) }}
                     />
+                  }
+                  onClick={() =>
+                    update({ date: formatDate(String(dayjs().add(1, "day"))) })
                   }
                 >
                   Due tomorrow
