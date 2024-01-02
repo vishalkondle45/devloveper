@@ -13,6 +13,7 @@ import {
   Text,
   rem,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import {
   IconCalendarMonth,
   IconCalendarUp,
@@ -24,19 +25,40 @@ import {
   IconStarFilled,
   IconSun,
 } from "@tabler/icons-react";
+import axios from "axios";
 import { useState } from "react";
-import { TodoType } from "../Todo.types";
+import { TodoUpdateTypes } from "../Todo.types";
+import { TodoProps } from "./Todo.types";
 
-const Todo = ({ todo }: { todo: TodoType }) => {
+const Todo = ({ todo, getTodos }: TodoProps) => {
   const [opened, setOpened] = useState(false);
   const [opened2, setOpened2] = useState(false);
+
+  const update = async (object: TodoUpdateTypes) => {
+    await axios
+      .put(`/api/todos?_id=${todo._id}`, object)
+      .then((res) => {
+        showNotification({
+          message: "Updated Successfully",
+        });
+        getTodos();
+      })
+      .catch((error) => {});
+  };
 
   return (
     <>
       <Paper p="lg" radius="xs" withBorder>
         <Group justify="space-between">
           <Group>
-            <Checkbox checked={Boolean(todo?.completedOn)} />
+            <Checkbox
+              checked={Boolean(todo?.completedOn)}
+              onChange={() =>
+                update({
+                  completedOn: Boolean(todo?.completedOn) ? "" : "02-01-2024",
+                })
+              }
+            />
             <Text>{todo?.todo}</Text>
           </Group>
           <Group>

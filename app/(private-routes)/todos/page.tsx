@@ -60,7 +60,7 @@ const Page = () => {
         <>
           <Stack mt="md">
             {todos?.map((todo) => (
-              <Todo todo={todo} key={todo.todo} />
+              <Todo todo={todo} getTodos={getTodos} key={todo.todo} />
             ))}
           </Stack>
         </>

@@ -36,3 +36,18 @@ export const GET = async (req: NextRequest): Promise<any> => {
   );
   return NextResponse.json(todos, { status: 200 });
 };
+
+export const PUT = async (req: NextRequest): Promise<any> => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { error: "You are not authenticated!" },
+      { status: 401 }
+    );
+  }
+  const _id = req.nextUrl.searchParams.get("_id");
+  const body = await req.json();
+  await startDb();
+  const todo = await TodoModel.findByIdAndUpdate(_id, body);
+  return NextResponse.json(todo, { status: 200 });
+};
