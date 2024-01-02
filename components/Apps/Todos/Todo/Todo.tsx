@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/functions";
 import {
   ActionIcon,
   Badge,
@@ -28,13 +29,12 @@ import {
   IconSun,
 } from "@tabler/icons-react";
 import axios from "axios";
-import { useState } from "react";
-import { TodoUpdateTypes } from "../Todo.types";
-import { TodoProps } from "./Todo.types";
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
-import { formatDate } from "@/lib/functions";
+import { useState } from "react";
+import { TodoUpdateTypes } from "../Todo.types";
+import { TodoProps } from "./Todo.types";
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 
@@ -92,8 +92,11 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                     p={0}
                     variant="transparent"
                     leftSection={
-                      <IconSun style={{ width: rem(16), height: rem(16) }} />
+                      <IconCalendarMonth
+                        style={{ width: rem(16), height: rem(16) }}
+                      />
                     }
+                    c={dayjs(todo.date).isToday() ? "" : "grey"}
                   >
                     Due {getDueDate(todo.date)}
                   </Badge>
