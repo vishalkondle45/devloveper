@@ -41,6 +41,7 @@ const NewTodo = () => {
             radius="xs"
             leftSection={<Checkbox checked={false} readOnly />}
             classNames={{ input: classes.input }}
+            placeholder="Add a task"
             {...form.getInputProps("todo")}
           />
           <Group p="xs" justify="space-between">
