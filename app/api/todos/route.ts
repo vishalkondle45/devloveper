@@ -21,3 +21,18 @@ export const POST = async (req: NextRequest): Promise<any> => {
   });
   return NextResponse.json(create, { status: 201 });
 };
+
+export const GET = async (req: NextRequest): Promise<any> => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { error: "You are not authenticated!" },
+      { status: 401 }
+    );
+  }
+  await startDb();
+  const todos = await TodoModel.find({ user: session.user?._id }).sort(
+    "-createdAt"
+  );
+  return NextResponse.json(todos, { status: 200 });
+};

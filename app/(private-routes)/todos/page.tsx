@@ -1,6 +1,6 @@
 "use client";
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
-import NewTodo from "@/components/Todos/NewTodo";
+import NewTodo from "@/components/Apps/Todos/NewTodo";
 import {
   Center,
   Container,
@@ -25,7 +25,7 @@ const Page = () => {
   };
 
   useEffect(() => {
-    // getTodos();
+    getTodos();
   }, []);
 
   const breadcrumbs = [
@@ -33,9 +33,9 @@ const Page = () => {
     { title: "Todos", href: "/todos" },
   ];
 
-  // if (status === "loading" || !todos) {
-  //   return <LoadingOverlay visible />;
-  // }
+  if (status === "loading" || !todos) {
+    return <LoadingOverlay visible />;
+  }
 
   return (
     <Container my="md" size="md">
@@ -46,7 +46,7 @@ const Page = () => {
         </Text>
       </Group>
       <NewTodo />
-      {/* {!todos?.length ? (
+      {!todos?.length ? (
         <Center h={500}>
           <Stack align="center">
             <ThemeIcon color="gray" variant="transparent" size={rem(100)}>
@@ -56,8 +56,10 @@ const Page = () => {
           </Stack>
         </Center>
       ) : (
-        <></>
-      )} */}
+        <>
+          <Text>{todos.length}</Text>
+        </>
+      )}
     </Container>
   );
 };
