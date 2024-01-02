@@ -26,7 +26,9 @@ import {
   IconPlaylistAdd,
   IconStar,
   IconStarFilled,
+  IconStarOff,
   IconSun,
+  IconSunOff,
 } from "@tabler/icons-react";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -62,22 +64,23 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
 
   return (
     <>
-      <Paper px="lg" radius="xs" withBorder>
-        <Group justify="space-between" align="center" h={rem(60)}>
-          <Group>
+      <Paper px="xs" radius="xs" withBorder>
+        <Group justify="space-between" align="center" h={rem(60)} wrap="nowrap">
+          <Group wrap="nowrap" gap="xs">
             <Checkbox
               checked={Boolean(todo?.completedOn)}
               onChange={() =>
                 update({
-                  completedOn: Boolean(todo?.completedOn) ? "" : "02-01-2024",
+                  completedOn: Boolean(todo?.completedOn) ? "" : formatDate(),
                 })
               }
             />
             <Stack gap={0}>
               <Text>{todo?.todo}</Text>
-              <Group>
+              <Group gap="xs" wrap="nowrap">
                 {todo?.myday && (
                   <Badge
+                    size="xs"
                     p={0}
                     variant="transparent"
                     leftSection={
@@ -89,6 +92,7 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                 )}
                 {todo?.date && (
                   <Badge
+                    size="xs"
                     p={0}
                     variant="transparent"
                     leftSection={
@@ -104,7 +108,7 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
               </Group>
             </Stack>
           </Group>
-          <Group>
+          <Group justify="right" wrap="nowrap" gap={0}>
             <ActionIcon
               variant="transparent"
               onClick={() => update({ favorite: !todo.favorite })}
@@ -129,18 +133,29 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
               <Menu.Dropdown>
                 <MenuItem
                   leftSection={
-                    <IconSun style={{ width: rem(16), height: rem(16) }} />
+                    todo.myday ? (
+                      <IconSunOff style={{ width: rem(16), height: rem(16) }} />
+                    ) : (
+                      <IconSun style={{ width: rem(16), height: rem(16) }} />
+                    )
                   }
                   onClick={() => update({ myday: !todo.myday })}
                 >
-                  Add to My Day
+                  {todo.myday ? "Remove from" : "Add to"} My Day
                 </MenuItem>
                 <MenuItem
                   leftSection={
-                    <IconStar style={{ width: rem(16), height: rem(16) }} />
+                    todo.favorite ? (
+                      <IconStarOff
+                        style={{ width: rem(16), height: rem(16) }}
+                      />
+                    ) : (
+                      <IconStar style={{ width: rem(16), height: rem(16) }} />
+                    )
                   }
+                  onClick={() => update({ favorite: !todo.favorite })}
                 >
-                  Mark as favorite
+                  {todo.favorite ? "Remove from" : "Add to"} favorites
                 </MenuItem>
                 <MenuItem
                   leftSection={
@@ -148,8 +163,15 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                       style={{ width: rem(16), height: rem(16) }}
                     />
                   }
+                  onClick={() =>
+                    update({
+                      completedOn: Boolean(todo?.completedOn)
+                        ? ""
+                        : formatDate(),
+                    })
+                  }
                 >
-                  Mark as completed
+                  Mark as {Boolean(todo?.completedOn) && "not"} completed
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
