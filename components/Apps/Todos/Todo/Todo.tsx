@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Badge,
   Checkbox,
   Group,
   Menu,
@@ -10,6 +11,7 @@ import {
   Popover,
   PopoverDropdown,
   PopoverTarget,
+  Stack,
   Text,
   rem,
 } from "@mantine/core";
@@ -48,8 +50,8 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
 
   return (
     <>
-      <Paper p="lg" radius="xs" withBorder>
-        <Group justify="space-between">
+      <Paper px="lg" radius="xs" withBorder>
+        <Group justify="space-between" align="center" h={rem(60)}>
           <Group>
             <Checkbox
               checked={Boolean(todo?.completedOn)}
@@ -59,7 +61,22 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                 })
               }
             />
-            <Text>{todo?.todo}</Text>
+            <Stack gap={0}>
+              <Text>{todo?.todo}</Text>
+              <Group>
+                {todo?.myday && (
+                  <Badge
+                    p={0}
+                    variant="transparent"
+                    leftSection={
+                      <IconSun style={{ width: rem(16), height: rem(16) }} />
+                    }
+                  >
+                    My Day
+                  </Badge>
+                )}
+              </Group>
+            </Stack>
           </Group>
           <Group>
             <ActionIcon
@@ -88,6 +105,7 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                   leftSection={
                     <IconSun style={{ width: rem(16), height: rem(16) }} />
                   }
+                  onClick={() => update({ myday: !todo.myday })}
                 >
                   Add to My Day
                 </MenuItem>
