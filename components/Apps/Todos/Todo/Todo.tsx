@@ -62,11 +62,14 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
             <Text>{todo?.todo}</Text>
           </Group>
           <Group>
-            <ActionIcon variant="transparent">
-              {Boolean(todo?.completedOn) ? (
-                <IconStar style={{ width: rem(20), height: rem(20) }} />
-              ) : (
+            <ActionIcon
+              variant="transparent"
+              onClick={() => update({ favorite: !todo.favorite })}
+            >
+              {Boolean(todo?.favorite) ? (
                 <IconStarFilled style={{ width: rem(20), height: rem(20) }} />
+              ) : (
+                <IconStar style={{ width: rem(20), height: rem(20) }} />
               )}
             </ActionIcon>
             <Menu radius="xs" opened={opened} onChange={setOpened}>
@@ -93,7 +96,7 @@ const Todo = ({ todo, getTodos }: TodoProps) => {
                     <IconStar style={{ width: rem(16), height: rem(16) }} />
                   }
                 >
-                  Mark as important
+                  Mark as favorite
                 </MenuItem>
                 <MenuItem
                   leftSection={
