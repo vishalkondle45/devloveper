@@ -12,6 +12,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/nprogress/styles.css";
 import "@mantine/spotlight/styles.css";
 import "@mantine/tiptap/styles.css";
+import "@mantine/dates/styles.css";
 
 export const metadata = {
   title: "Devloveper",
@@ -40,7 +41,9 @@ export default function RootLayout({
             <ModalsProvider>
               <Notifications />
               <Navbar />
-              <Box pt={rem(60)}>{children}</Box>
+              <Box pt={rem(60)} pb={rem(4)}>
+                {children}
+              </Box>
             </ModalsProvider>
           </MantineProvider>
         </body>

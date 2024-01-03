@@ -39,3 +39,9 @@ export function getDigitByString(str: string | undefined | null) {
 }
 
 export const formatDate = (date?: string) => dayjs(date).format("MM-DD-YYYY");
+
+export const getDueDate = (date: any) => {
+  if (dayjs(date).isToday()) return "Today";
+  if (dayjs(date).isTomorrow()) return "Tomorrow";
+  return dayjs(date).format("dddd, MMMM D");
+};

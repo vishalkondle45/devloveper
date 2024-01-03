@@ -1,4 +1,4 @@
-import { formatDate } from "@/lib/functions";
+import { formatDate, getDueDate } from "@/lib/functions";
 import {
   ActionIcon,
   Badge,
@@ -9,9 +9,6 @@ import {
   MenuItem,
   MenuTarget,
   Paper,
-  Popover,
-  PopoverDropdown,
-  PopoverTarget,
   Stack,
   Text,
   rem,
@@ -22,8 +19,6 @@ import {
   IconCalendarUp,
   IconCircleCheck,
   IconDotsVertical,
-  IconList,
-  IconPlaylistAdd,
   IconStar,
   IconStarFilled,
   IconStarOff,
@@ -62,15 +57,9 @@ const Todo = ({
       .catch((error) => {});
   };
 
-  const getDueDate = (date: any) => {
-    if (dayjs(date).isToday()) return "Today";
-    if (dayjs(date).isTomorrow()) return "Tomorrow";
-    return dayjs(todo.date).format("dddd, MMMM D");
-  };
-
   return (
     <>
-      <Paper px="xs" radius="xs" withBorder>
+      <Paper shadow="xl" px="xs" radius="xs" withBorder>
         <Group justify="space-between" align="center" h={rem(60)} wrap="nowrap">
           <Group wrap="nowrap" gap="xs">
             <Checkbox
@@ -203,34 +192,6 @@ const Todo = ({
                 >
                   Due tomorrow
                 </MenuItem>
-                <MenuDivider />
-                <MenuItem
-                  leftSection={
-                    <IconPlaylistAdd
-                      style={{ width: rem(16), height: rem(16) }}
-                    />
-                  }
-                >
-                  Create new list from this task
-                </MenuItem>
-                <Popover opened={opened2}>
-                  <PopoverTarget>
-                    <MenuItem
-                      leftSection={
-                        <IconList style={{ width: rem(16), height: rem(16) }} />
-                      }
-                      rightSection={
-                        <IconList
-                          onChange={() => setOpened2((o) => !o)}
-                          style={{ width: rem(16), height: rem(16) }}
-                        />
-                      }
-                    >
-                      Move task to...
-                    </MenuItem>
-                  </PopoverTarget>
-                  <PopoverDropdown>Dropdown</PopoverDropdown>
-                </Popover>
               </Menu.Dropdown>
             </Menu>
           </Group>

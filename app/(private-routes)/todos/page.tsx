@@ -39,14 +39,14 @@ const Page = () => {
   }
 
   return (
-    <Container my="md" size="md">
+    <Container mt="md" size="md">
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
       <Group justify="space-between">
         <Text fz={rem(40)} fw={700}>
           Todos
         </Text>
       </Group>
-      <NewTodo />
+      <NewTodo getTodos={getTodos} />
       {!todos?.length ? (
         <Center h={500}>
           <Stack align="center">
@@ -58,7 +58,7 @@ const Page = () => {
         </Center>
       ) : (
         <>
-          <Stack mt="md">
+          <Stack my="md">
             {todos?.map((todo) => (
               <Todo todo={todo} getTodos={getTodos} key={todo.todo} />
             ))}
