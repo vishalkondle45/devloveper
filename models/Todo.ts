@@ -7,6 +7,8 @@ interface TodoDocument extends Document {
   myday: boolean;
   completedOn: string;
   date: string;
+  category: Array<any | null> | any;
+  note: string;
 }
 
 const todoSchema = new Schema<TodoDocument>(
@@ -17,6 +19,8 @@ const todoSchema = new Schema<TodoDocument>(
     favorite: { type: Boolean, default: false },
     myday: { type: Boolean, default: false },
     date: { type: String, default: "" },
+    category: { type: Array, default: [] },
+    note: { type: String, default: "" },
   },
   { timestamps: true }
 );

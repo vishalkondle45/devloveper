@@ -8,6 +8,8 @@ export interface TodoType {
   myday?: boolean;
   completedOn?: string;
   date?: string;
+  category?: Array<any | null> | any;
+  note?: string;
 }
 
 export interface TodoUpdateTypes {
@@ -18,4 +20,14 @@ export interface TodoUpdateTypes {
   myday?: boolean;
   completedOn?: string;
   date?: string;
+  category?: Array<any | null> | any;
+  note?: string;
+}
+export interface EditTodoProps {
+  close: any;
+  form: any;
+  update: (
+    _id: Types.ObjectId | undefined,
+    object: TodoUpdateTypes
+  ) => Promise<void>;
 }
