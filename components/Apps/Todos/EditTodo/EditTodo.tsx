@@ -33,7 +33,7 @@ const EditTodo = ({ close, form, update }: EditTodoProps) => {
 
   useEffect(() => {
     update(form.values._id, { todo });
-  }, [todo]);
+  }, [form.values.todo]);
 
   return (
     <>
@@ -43,7 +43,7 @@ const EditTodo = ({ close, form, update }: EditTodoProps) => {
             <Checkbox
               {...form.getInputProps("completedOn", { type: "checkbox" })}
             />
-            <TextInput
+            <Textarea
               styles={{
                 root: { width: "100%" },
                 input: {
@@ -98,7 +98,7 @@ const EditTodo = ({ close, form, update }: EditTodoProps) => {
               <DatePicker value={value} onChange={setValue} />
             </Popover.Dropdown>
           </Popover>
-          <Category />
+          <Category update={update} />
           <Textarea
             placeholder="Add note"
             radius="xs"

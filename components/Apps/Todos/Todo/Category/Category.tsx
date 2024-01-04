@@ -15,8 +15,11 @@ import {
   rem,
   useCombobox,
 } from "@mantine/core";
+import { useDebouncedState } from "@mantine/hooks";
 import { IconTag } from "@tabler/icons-react";
+import { Types } from "mongoose";
 import { useState } from "react";
+import { TodoUpdateTypes } from "../../Todo.types";
 
 const categories = [
   {
@@ -45,26 +48,34 @@ const categories = [
   },
 ];
 
-export default function Category() {
+export default function Category({
+  update,
+}: {
+  update: (
+    _id: Types.ObjectId | undefined,
+    object: TodoUpdateTypes
+  ) => Promise<void>;
+}) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
 
   const [search, setSearch] = useState("");
-  const [value, setValue] = useState<string[]>([]);
+  // const [value, setValue] = useState<string[]>([]);
+  const [value, setValue] = useDebouncedState<any>([], 200);
 
   const handleValueSelect = (val: string) =>
-    setValue((current) =>
+    setValue((current: any) =>
       current.includes(val)
-        ? current.filter((v) => v !== val)
+        ? current.filter((v: any) => v !== val)
         : [...current, val]
     );
 
   const handleValueRemove = (val: string) =>
-    setValue((current) => current.filter((v) => v !== val));
+    setValue((current: any) => current.filter((v: any) => v !== val));
 
-  const values = value.map((item) => (
+  const values = value.map((item: any) => (
     <Pill key={item} withRemoveButton onRemove={() => handleValueRemove(item)}>
       {categories.find((i) => i.value === item)?.label}
     </Pill>
