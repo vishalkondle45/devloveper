@@ -26,10 +26,12 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { Types } from "mongoose";
 import { useEffect } from "react";
 import { EditTodoProps, TodoUpdateTypes } from "../Todo.types";
 import DueDate from "../Todo/DueDate/DueDate";
+dayjs.extend(relativeTime);
 
 const EditTodo = ({ close, form, update, todo, remove }: EditTodoProps) => {
   const { hovered, ref } = useHover();
@@ -202,7 +204,7 @@ const EditTodo = ({ close, form, update, todo, remove }: EditTodoProps) => {
             }}
           />
           <Text c="gray" fz="sm" px="sm">
-            Updated 5 minutes ago
+            Updated {dayjs(todo?.updatedAt).fromNow()}
           </Text>
         </Paper>
       </Stack>
