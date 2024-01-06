@@ -50,91 +50,98 @@ const DueDate = ({ update, todo }: DueDateProps) => {
 
   return (
     <>
-      <Menu
-        opened={opened}
-        onChange={setOpened}
-        radius="xs"
-        shadow="md"
-        width={200}
-        closeOnItemClick={false}
-        position="bottom-start"
-      >
-        <MenuTarget>
-          <Group wrap="nowrap" justify="space-between" ref={ref}>
-            <Button
-              px={0}
-              variant="transparent"
-              justify="left"
+      {todo && (
+        <Menu
+          opened={opened}
+          onChange={setOpened}
+          radius="xs"
+          shadow="md"
+          width={200}
+          closeOnItemClick={false}
+          position="bottom-start"
+        >
+          <MenuTarget>
+            <Group wrap="nowrap" justify="space-between" ref={ref}>
+              <Button
+                px={0}
+                variant="transparent"
+                justify="left"
+                leftSection={
+                  <IconCalendarMonth
+                    style={{ width: rem(18), height: rem(18) }}
+                  />
+                }
+                color={value ? undefined : "gray"}
+                fullWidth
+              >
+                {value ? getDueDate(value) : "Add due date"}
+              </Button>
+              {Boolean(value) && hovered && (
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => onUpdate(null)}
+                >
+                  <IconX />
+                </ActionIcon>
+              )}
+            </Group>
+          </MenuTarget>
+          <Menu.Dropdown>
+            <Menu.Label>
+              <Text fw={700} size="md" ta="center">
+                Due
+              </Text>
+            </Menu.Label>
+            <Menu.Divider />
+            <Menu.Item
               leftSection={
-                <IconCalendarMonth
+                <IconCalendarUp style={{ width: rem(18), height: rem(18) }} />
+              }
+              onClick={() => onUpdate(dayjs())}
+            >
+              Today
+            </Menu.Item>
+            <Menu.Item
+              leftSection={
+                <IconCalendarShare
                   style={{ width: rem(18), height: rem(18) }}
                 />
               }
-              color={value ? undefined : "gray"}
-              fullWidth
+              onClick={() => onUpdate(dayjs().add(1, "day"))}
             >
-              {value ? getDueDate(value) : "Add due date"}
-            </Button>
-            {Boolean(value) && hovered && (
-              <ActionIcon variant="transparent" onClick={() => onUpdate(null)}>
-                <IconX />
-              </ActionIcon>
-            )}
-          </Group>
-        </MenuTarget>
-        <Menu.Dropdown>
-          <Menu.Label>
-            <Text fw={700} size="md" ta="center">
-              Due
-            </Text>
-          </Menu.Label>
-          <Menu.Divider />
-          <Menu.Item
-            leftSection={
-              <IconCalendarUp style={{ width: rem(18), height: rem(18) }} />
-            }
-            onClick={() => onUpdate(dayjs())}
-          >
-            Today
-          </Menu.Item>
-          <Menu.Item
-            leftSection={
-              <IconCalendarShare style={{ width: rem(18), height: rem(18) }} />
-            }
-            onClick={() => onUpdate(dayjs().add(1, "day"))}
-          >
-            Tomorrow
-          </Menu.Item>
-          <Menu.Item
-            leftSection={
-              <IconCalendarDown style={{ width: rem(18), height: rem(18) }} />
-            }
-            onClick={() => onUpdate(dayjs().weekday(0).add(8, "days"))}
-          >
-            Next week
-          </Menu.Item>
-          <Menu.Divider />
-          <Menu.Item
-            leftSection={
-              <IconCalendarTime style={{ width: rem(18), height: rem(18) }} />
-            }
-          >
-            <DatePickerInput
-              placeholder="Pick a date"
-              value={value}
-              onChange={setValue}
-              styles={{
-                input: {
-                  border: "none",
-                  padding: 0,
-                  backgroundColor: "transparent",
-                },
-              }}
-              radius="xs"
-            />
-          </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
+              Tomorrow
+            </Menu.Item>
+            <Menu.Item
+              leftSection={
+                <IconCalendarDown style={{ width: rem(18), height: rem(18) }} />
+              }
+              onClick={() => onUpdate(dayjs().weekday(0).add(8, "days"))}
+            >
+              Next week
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Item
+              leftSection={
+                <IconCalendarTime style={{ width: rem(18), height: rem(18) }} />
+              }
+            >
+              <DatePickerInput
+                placeholder="Pick a date"
+                value={value}
+                onChange={setValue}
+                styles={{
+                  input: {
+                    border: "none",
+                    padding: 0,
+                    backgroundColor: "transparent",
+                  },
+                }}
+                radius="xs"
+              />
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      )}
     </>
   );
 };
