@@ -1,20 +1,28 @@
-import { formatDate, getDueDate, removeSpaces } from "@/lib/functions";
+import {
+  convertToSingleSpace,
+  formatDate,
+  getDueDate,
+  removeSpaces,
+} from "@/lib/functions";
 import {
   ActionIcon,
   Button,
   Checkbox,
   Group,
-  Popover,
-  PopoverTarget,
+  Menu,
   Stack,
   Text,
   Textarea,
   rem,
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DateInput, DatePickerInput } from "@mantine/dates";
 import { useHover } from "@mantine/hooks";
 import {
+  IconCalendarDown,
   IconCalendarMonth,
+  IconCalendarShare,
+  IconCalendarTime,
+  IconCalendarUp,
   IconLayoutSidebarRightCollapse,
   IconStar,
   IconStarFilled,
@@ -26,9 +34,9 @@ import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import { EditTodoProps, TodoUpdateTypes } from "../Todo.types";
 import Category from "../Todo/Category";
-
+import dayjs from "dayjs";
 const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
-  const [opened1, setOpened1] = useState(false);
+  const [opened, setOpened] = useState(false);
   const [value, setValue] = useState<Date | null>(null);
   const { hovered, ref } = useHover();
 
@@ -56,11 +64,16 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
   };
 
   useEffect(() => {
+    if (value) {
+      if (!dayjs(value).isSame(todo?.date)) {
+        update(todo?._id, { date: formatDate(value) });
+      }
+    }
+  }, [value]);
+
+  useEffect(() => {
     if (form.values.todo.includes("  ")) {
-      form.setFieldValue(
-        "todo",
-        form.values.todo.split("  ").join(" ").trim() + " "
-      );
+      form.setFieldValue("todo", convertToSingleSpace(form.values.todo) + " ");
     }
   }, [form.values.todo]);
 
@@ -130,13 +143,17 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
               </ActionIcon>
             )}
           </Group>
-          <Popover
-            opened={opened1}
-            onChange={setOpened1}
-            position="bottom-start"
+          <Menu
+            opened={opened}
+            onChange={setOpened}
+            radius="xs"
+            shadow="md"
+            width={200}
+            closeOnItemClick={false}
           >
-            <PopoverTarget>
+            <Menu.Target>
               <Button
+                px={0}
                 variant="transparent"
                 justify="left"
                 leftSection={
@@ -144,17 +161,59 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
                     style={{ width: rem(18), height: rem(18) }}
                   />
                 }
-                px={0}
-                onClick={() => setOpened1((o) => !o)}
-                fullWidth
               >
                 Add due date
               </Button>
-            </PopoverTarget>
-            <Popover.Dropdown>
-              <DatePicker value={value} onChange={setValue} />
-            </Popover.Dropdown>
-          </Popover>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>
+                <Text fw={700} size="md" ta="center">
+                  Due
+                </Text>
+              </Menu.Label>
+              <Menu.Divider />
+              <Menu.Item
+                leftSection={
+                  <IconCalendarUp style={{ width: rem(18), height: rem(18) }} />
+                }
+              >
+                Today
+              </Menu.Item>
+              <Menu.Item
+                leftSection={
+                  <IconCalendarShare
+                    style={{ width: rem(18), height: rem(18) }}
+                  />
+                }
+              >
+                Tomorrow
+              </Menu.Item>
+              <Menu.Item
+                leftSection={
+                  <IconCalendarDown
+                    style={{ width: rem(18), height: rem(18) }}
+                  />
+                }
+              >
+                Next week
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item
+                leftSection={
+                  <IconCalendarTime
+                    style={{ width: rem(18), height: rem(18) }}
+                  />
+                }
+              >
+                <DatePickerInput
+                  value={value}
+                  onChange={setValue}
+                  styles={{ input: { border: "none" } }}
+                  radius="xs"
+                />
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
           <Category update={update} />
           <Textarea
             placeholder="Add note"

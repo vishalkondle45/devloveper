@@ -42,7 +42,8 @@ export function getDigitByString(str: string | undefined | null) {
   return getSum(sum);
 }
 
-export const formatDate = (date?: string) => dayjs(date).format("MM-DD-YYYY");
+export const formatDate = (date?: string | Date) =>
+  dayjs(date).format("MM-DD-YYYY");
 
 export const getDueDate = (date: any) => {
   if (dayjs(date).isToday()) return "Today";
@@ -52,3 +53,6 @@ export const getDueDate = (date: any) => {
 
 export const removeSpaces = (string: string | undefined) =>
   string?.split("\n").join(" ").trim();
+
+export const convertToSingleSpace = (string: string | undefined) =>
+  string?.split("  ").join(" ").trim();
