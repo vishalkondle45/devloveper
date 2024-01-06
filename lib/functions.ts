@@ -49,3 +49,6 @@ export const getDueDate = (date: any) => {
   if (dayjs(date).isTomorrow()) return "Tomorrow";
   return dayjs(date).format("dddd, MMMM D");
 };
+
+export const removeSpaces = (string: string | undefined) =>
+  string?.split("\n").join(" ").trim();

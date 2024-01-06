@@ -1,4 +1,4 @@
-import { getDueDate } from "@/lib/functions";
+import { formatDate, getDueDate, removeSpaces } from "@/lib/functions";
 import {
   ActionIcon,
   Button,
@@ -8,12 +8,11 @@ import {
   PopoverTarget,
   Stack,
   Text,
-  TextInput,
   Textarea,
   rem,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
-import { useDebouncedValue } from "@mantine/hooks";
+import { useHover } from "@mantine/hooks";
 import {
   IconCalendarMonth,
   IconLayoutSidebarRightCollapse,
@@ -21,18 +20,48 @@ import {
   IconStarFilled,
   IconSun,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
+import { Types } from "mongoose";
 import { useEffect, useState } from "react";
-import { EditTodoProps } from "../Todo.types";
+import { EditTodoProps, TodoUpdateTypes } from "../Todo.types";
 import Category from "../Todo/Category";
 
-const EditTodo = ({ close, form, update }: EditTodoProps) => {
+const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
   const [opened1, setOpened1] = useState(false);
   const [value, setValue] = useState<Date | null>(null);
-  const [todo] = useDebouncedValue(form.values.todo, 200);
+  const { hovered, ref } = useHover();
+
+  const onTitleBlur = async () => {
+    if (!form.values.todo) {
+      update(form.values._id, {
+        todo: removeSpaces(todo?.todo),
+      }).then(() => form.setFieldValue("todo", removeSpaces(todo?.todo)));
+    } else {
+      if (form.values.todo !== todo?.todo) {
+        update(form.values._id, { todo: removeSpaces(form.values.todo) }).then(
+          () => form.setFieldValue("todo", removeSpaces(form.values.todo))
+        );
+      }
+    }
+  };
+
+  const onUpdate = async (
+    _id: Types.ObjectId | undefined,
+    object: TodoUpdateTypes
+  ) => {
+    update(todo?._id, object).then(() =>
+      form.setValues({ ...form.values, ...object })
+    );
+  };
 
   useEffect(() => {
-    update(form.values._id, { todo });
+    if (form.values.todo.includes("  ")) {
+      form.setFieldValue(
+        "todo",
+        form.values.todo.split("  ").join(" ").trim() + " "
+      );
+    }
   }, [form.values.todo]);
 
   return (
@@ -42,6 +71,13 @@ const EditTodo = ({ close, form, update }: EditTodoProps) => {
           <Group align="center" gap={0} wrap="nowrap">
             <Checkbox
               {...form.getInputProps("completedOn", { type: "checkbox" })}
+              onChange={() =>
+                onUpdate(todo?._id, {
+                  completedOn: Boolean(form.values?.completedOn)
+                    ? ""
+                    : formatDate(),
+                })
+              }
             />
             <Textarea
               styles={{
@@ -52,9 +88,18 @@ const EditTodo = ({ close, form, update }: EditTodoProps) => {
                   fontWeight: 700,
                 },
               }}
+              autosize
+              minRows={1}
               {...form.getInputProps("todo")}
+              onBlur={onTitleBlur}
             />
-            <ActionIcon size="sm" variant="transparent">
+            <ActionIcon
+              size="sm"
+              variant="transparent"
+              onClick={() =>
+                onUpdate(todo?._id, { favorite: !form.values?.favorite })
+              }
+            >
               {form.values.favorite ? (
                 <IconStarFilled stroke={1.5} />
               ) : (
@@ -62,17 +107,29 @@ const EditTodo = ({ close, form, update }: EditTodoProps) => {
               )}
             </ActionIcon>
           </Group>
-          <Button
-            variant="transparent"
-            justify="left"
-            leftSection={
-              <IconSun style={{ width: rem(18), height: rem(18) }} />
-            }
-            px={0}
-            fullWidth
-          >
-            Add to My Day
-          </Button>
+          <Group wrap="nowrap" justify="space-between" ref={ref}>
+            <Button
+              variant="transparent"
+              justify="left"
+              leftSection={
+                <IconSun style={{ width: rem(18), height: rem(18) }} />
+              }
+              px={0}
+              fullWidth
+              onClick={() => onUpdate(todo?._id, { myday: true })}
+              style={{ cursor: form.values.myday && "default" }}
+            >
+              {Boolean(form.values.myday) ? "Remove from" : "Add to"} My Day
+            </Button>
+            {Boolean(form.values.myday) && hovered && (
+              <ActionIcon
+                variant="transparent"
+                onClick={() => onUpdate(todo?._id, { myday: false })}
+              >
+                <IconX />
+              </ActionIcon>
+            )}
+          </Group>
           <Popover
             opened={opened1}
             onChange={setOpened1}

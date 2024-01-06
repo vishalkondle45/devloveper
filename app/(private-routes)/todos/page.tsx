@@ -17,7 +17,6 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
 import { IconNote } from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
@@ -27,6 +26,7 @@ const Page = () => {
   const { status } = useSession();
   const [todos, setTodos] = useState<any[] | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const [todo, setTodo] = useState<TodoUpdateTypes | null>(null);
 
   const form = useForm({
     initialValues: {
@@ -47,6 +47,7 @@ const Page = () => {
   const editTodo = (todo: TodoType) => {
     open();
     form.setValues(todo);
+    setTodo(todo);
   };
 
   useEffect(() => {
@@ -65,9 +66,6 @@ const Page = () => {
     await axios
       .put(`/api/todos?_id=${_id}`, object)
       .then((res) => {
-        showNotification({
-          message: "Updated Successfully",
-        });
         getTodos();
       })
       .catch((error) => {});
@@ -117,7 +115,7 @@ const Page = () => {
         onClose={close}
         position="right"
       >
-        <EditTodo close={close} form={form} update={update} />
+        <EditTodo close={close} form={form} update={update} todo={todo} />
       </Drawer>
     </Container>
   );
