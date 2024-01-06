@@ -5,6 +5,7 @@ import "@mantine/carousel/styles.css";
 import "@mantine/code-highlight/styles.css";
 import { Box, ColorSchemeScript, MantineProvider, rem } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import "@mantine/dropzone/styles.css";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
@@ -12,11 +13,11 @@ import "@mantine/notifications/styles.css";
 import "@mantine/nprogress/styles.css";
 import "@mantine/spotlight/styles.css";
 import "@mantine/tiptap/styles.css";
-import "@mantine/dates/styles.css";
 
 export const metadata = {
   title: "Devloveper",
   description: "The developer who loves to develop web applications.",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
 export default function RootLayout({
@@ -35,10 +36,6 @@ export default function RootLayout({
             sizes="any"
           />
           <ColorSchemeScript />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1"
-          />
         </head>
         <body>
           <MantineProvider theme={theme}>
