@@ -22,6 +22,7 @@ export interface TodoUpdateTypes {
   date?: string;
   category?: Array<any | null> | any;
   note?: string;
+  createdAt?: string;
 }
 export interface EditTodoProps {
   close: any;

@@ -189,13 +189,16 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
                 input: { border: "none", backgroundColor: "transparent" },
               }}
             />
+            <Text c="gray" fz="sm" px="sm">
+              Updated 5 minutes ago
+            </Text>
           </Paper>
         </Stack>
-        <Group justify="space-between">
+        <Group mb="xl" justify="space-between">
           <ActionIcon variant="transparent" onClick={close}>
             <IconLayoutSidebarRightCollapse />
           </ActionIcon>
-          <Text size="sm">Created - {getDueDate(form.values.date)}</Text>
+          <Text size="sm">Created - {getDueDate(todo?.createdAt)}</Text>
           <ActionIcon color="red" variant="transparent">
             <IconTrash />
           </ActionIcon>
