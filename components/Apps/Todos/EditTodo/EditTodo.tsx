@@ -114,6 +114,7 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
               fullWidth
               onClick={() => onUpdate(todo?._id, { myday: true })}
               style={{ cursor: form.values.myday && "default" }}
+              color={form.values.myday ? undefined : "gray"}
             >
               {Boolean(form.values.myday) ? "Remove from" : "Add to"} My Day
             </Button>
