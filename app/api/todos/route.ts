@@ -51,3 +51,17 @@ export const PUT = async (req: NextRequest): Promise<any> => {
   const todo = await TodoModel.findByIdAndUpdate(_id, body);
   return NextResponse.json(todo, { status: 200 });
 };
+
+export const DELETE = async (req: NextRequest): Promise<any> => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { error: "You are not authenticated!" },
+      { status: 401 }
+    );
+  }
+  const _id = req.nextUrl.searchParams.get("_id");
+  await startDb();
+  const todo = await TodoModel.findByIdAndDelete(_id);
+  return NextResponse.json(todo, { status: 200 });
+};

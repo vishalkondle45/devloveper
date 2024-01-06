@@ -31,7 +31,7 @@ import { useEffect } from "react";
 import { EditTodoProps, TodoUpdateTypes } from "../Todo.types";
 import DueDate from "../Todo/DueDate/DueDate";
 
-const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
+const EditTodo = ({ close, form, update, todo, remove }: EditTodoProps) => {
   const { hovered, ref } = useHover();
   const categories = [
     {
@@ -97,7 +97,11 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
             <IconLayoutSidebarRightCollapse />
           </ActionIcon>
           <Text size="sm">Created - {getDueDate(todo?.createdAt)}</Text>
-          <ActionIcon color="red" variant="transparent">
+          <ActionIcon
+            color="red"
+            variant="transparent"
+            onClick={() => remove(todo?._id)}
+          >
             <IconTrash />
           </ActionIcon>
         </Group>

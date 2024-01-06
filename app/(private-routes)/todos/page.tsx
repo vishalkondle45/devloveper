@@ -17,6 +17,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import { IconNote } from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
@@ -71,6 +72,27 @@ const Page = () => {
       .catch((error) => {});
   };
 
+  const remove = (_id?: Types.ObjectId) => {
+    if (_id) {
+      modals.openConfirmModal({
+        title: (
+          <Text fw={700}>"{todo?.todo}" will be permanently deleted.</Text>
+        ),
+        centered: true,
+        children: <Text size="sm">You won't be able to undo this action.</Text>,
+        labels: { confirm: "Delete task", cancel: "Cancel" },
+        confirmProps: { color: "red" },
+        radius: "xs",
+        onConfirm: async () =>
+          await axios.delete(`/api/todos?_id=${_id}`).then(() => {
+            getTodos();
+            close();
+            form.reset();
+          }),
+      });
+    }
+  };
+
   if (status === "loading" || !todos) {
     return <LoadingOverlay visible />;
   }
@@ -115,7 +137,13 @@ const Page = () => {
         onClose={close}
         position="right"
       >
-        <EditTodo close={close} form={form} update={update} todo={todo} />
+        <EditTodo
+          close={close}
+          form={form}
+          update={update}
+          todo={todo}
+          remove={remove}
+        />
       </Drawer>
     </Container>
   );

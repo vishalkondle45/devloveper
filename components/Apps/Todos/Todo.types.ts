@@ -32,4 +32,5 @@ export interface EditTodoProps {
     object: TodoUpdateTypes
   ) => Promise<void>;
   todo: TodoUpdateTypes | null;
+  remove: (_id?: Types.ObjectId) => Promise<void> | void;
 }
