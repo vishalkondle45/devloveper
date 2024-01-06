@@ -42,9 +42,6 @@ export function getDigitByString(str: string | undefined | null) {
   return getSum(sum);
 }
 
-export const formatDate = (date?: string | Date | Dayjs) =>
-  dayjs(date).format("MM-DD-YYYY");
-
 export const getDueDate = (date: any) => {
   if (dayjs(date).isToday()) return "Today";
   if (dayjs(date).isTomorrow()) return "Tomorrow";

@@ -1,4 +1,4 @@
-import { formatDate, getDueDate } from "@/lib/functions";
+import { getDueDate } from "@/lib/functions";
 import {
   ActionIcon,
   Badge,
@@ -53,7 +53,9 @@ const Todo = ({
               checked={Boolean(todo?.completedOn)}
               onChange={() =>
                 update(todo._id, {
-                  completedOn: Boolean(todo?.completedOn) ? "" : formatDate(),
+                  completedOn: Boolean(todo?.completedOn)
+                    ? ""
+                    : dayjs().toISOString(),
                 })
               }
               onClick={(e) => e.stopPropagation()}
@@ -156,7 +158,7 @@ const Todo = ({
                     update(todo._id, {
                       completedOn: Boolean(todo?.completedOn)
                         ? ""
-                        : formatDate(),
+                        : dayjs().toISOString(),
                     })
                   }
                 >
@@ -169,7 +171,9 @@ const Todo = ({
                       style={{ width: rem(16), height: rem(16) }}
                     />
                   }
-                  onClick={() => update(todo._id, { date: formatDate() })}
+                  onClick={() =>
+                    update(todo._id, { date: dayjs().toISOString() })
+                  }
                 >
                   Due today
                 </MenuItem>
@@ -181,7 +185,7 @@ const Todo = ({
                   }
                   onClick={() =>
                     update(todo._id, {
-                      date: formatDate(String(dayjs().add(1, "day"))),
+                      date: dayjs().add(1, "day").toISOString(),
                     })
                   }
                 >

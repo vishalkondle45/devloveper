@@ -1,6 +1,5 @@
 import {
   convertToSingleSpace,
-  formatDate,
   getDueDate,
   removeSpaces,
 } from "@/lib/functions";
@@ -26,6 +25,7 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
+import dayjs from "dayjs";
 import { Types } from "mongoose";
 import { useEffect } from "react";
 import { EditTodoProps, TodoUpdateTypes } from "../Todo.types";
@@ -101,7 +101,7 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
                   onUpdate(todo?._id, {
                     completedOn: Boolean(form.values?.completedOn)
                       ? ""
-                      : formatDate(),
+                      : dayjs().toISOString(),
                   })
                 }
               />

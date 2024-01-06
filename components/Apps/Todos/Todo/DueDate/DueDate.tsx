@@ -1,4 +1,4 @@
-import { formatDate, getDueDate } from "@/lib/functions";
+import { getDueDate } from "@/lib/functions";
 import {
   ActionIcon,
   Button,
@@ -20,7 +20,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs, { Dayjs } from "dayjs";
 import weekday from "dayjs/plugin/weekday";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DueDateProps } from "./DueDate.types";
 dayjs.extend(weekday);
 
@@ -31,17 +31,17 @@ const DueDate = ({ update, todo }: DueDateProps) => {
     todo?.date ? new Date(todo?.date) : null
   );
 
-  useEffect(() => {
-    if (value) {
-      if (!dayjs(value).isSame(todo?.date)) {
-        update(todo?._id, { date: formatDate(value) });
-      }
-    }
-  }, [value]);
+  // useEffect(() => {
+  //   if (value) {
+  //     if (!dayjs(value).isSame(todo?.date)) {
+  //       update(todo?._id, { date: dayjs(value).toISOString() });
+  //     }
+  //   }
+  // }, [value]);
 
   const onUpdate = (value?: string | Date | Dayjs | null) => {
     update(todo?._id, {
-      date: value !== null ? formatDate(value) : undefined,
+      date: value !== null ? dayjs(value).toISOString() : undefined,
     }).then(() => {
       setValue(value ? dayjs(value) : undefined);
       setOpened(false);
@@ -128,7 +128,14 @@ const DueDate = ({ update, todo }: DueDateProps) => {
               <DatePickerInput
                 placeholder="Pick a date"
                 value={value}
-                onChange={setValue}
+                onChange={(value) => {
+                  if (value) {
+                    update(todo?._id, { date: dayjs(value).toISOString() });
+                    setValue(dayjs(value));
+                  } else {
+                    setValue(null);
+                  }
+                }}
                 styles={{
                   input: {
                     border: "none",
