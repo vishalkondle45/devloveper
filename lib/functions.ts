@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
 dayjs.extend(isToday);
@@ -42,7 +42,7 @@ export function getDigitByString(str: string | undefined | null) {
   return getSum(sum);
 }
 
-export const formatDate = (date?: string | Date) =>
+export const formatDate = (date?: string | Date | Dayjs) =>
   dayjs(date).format("MM-DD-YYYY");
 
 export const getDueDate = (date: any) => {

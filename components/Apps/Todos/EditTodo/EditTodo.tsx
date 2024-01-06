@@ -9,20 +9,13 @@ import {
   Button,
   Checkbox,
   Group,
-  Menu,
   Stack,
   Text,
   Textarea,
   rem,
 } from "@mantine/core";
-import { DateInput, DatePickerInput } from "@mantine/dates";
 import { useHover } from "@mantine/hooks";
 import {
-  IconCalendarDown,
-  IconCalendarMonth,
-  IconCalendarShare,
-  IconCalendarTime,
-  IconCalendarUp,
   IconLayoutSidebarRightCollapse,
   IconStar,
   IconStarFilled,
@@ -31,13 +24,11 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { Types } from "mongoose";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { EditTodoProps, TodoUpdateTypes } from "../Todo.types";
 import Category from "../Todo/Category";
-import dayjs from "dayjs";
+import DueDate from "../Todo/DueDate/DueDate";
 const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
-  const [opened, setOpened] = useState(false);
-  const [value, setValue] = useState<Date | null>(null);
   const { hovered, ref } = useHover();
 
   const onTitleBlur = async () => {
@@ -62,14 +53,6 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
       form.setValues({ ...form.values, ...object })
     );
   };
-
-  useEffect(() => {
-    if (value) {
-      if (!dayjs(value).isSame(todo?.date)) {
-        update(todo?._id, { date: formatDate(value) });
-      }
-    }
-  }, [value]);
 
   useEffect(() => {
     if (form.values.todo.includes("  ")) {
@@ -143,77 +126,7 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
               </ActionIcon>
             )}
           </Group>
-          <Menu
-            opened={opened}
-            onChange={setOpened}
-            radius="xs"
-            shadow="md"
-            width={200}
-            closeOnItemClick={false}
-          >
-            <Menu.Target>
-              <Button
-                px={0}
-                variant="transparent"
-                justify="left"
-                leftSection={
-                  <IconCalendarMonth
-                    style={{ width: rem(18), height: rem(18) }}
-                  />
-                }
-              >
-                Add due date
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>
-                <Text fw={700} size="md" ta="center">
-                  Due
-                </Text>
-              </Menu.Label>
-              <Menu.Divider />
-              <Menu.Item
-                leftSection={
-                  <IconCalendarUp style={{ width: rem(18), height: rem(18) }} />
-                }
-              >
-                Today
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconCalendarShare
-                    style={{ width: rem(18), height: rem(18) }}
-                  />
-                }
-              >
-                Tomorrow
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconCalendarDown
-                    style={{ width: rem(18), height: rem(18) }}
-                  />
-                }
-              >
-                Next week
-              </Menu.Item>
-              <Menu.Divider />
-              <Menu.Item
-                leftSection={
-                  <IconCalendarTime
-                    style={{ width: rem(18), height: rem(18) }}
-                  />
-                }
-              >
-                <DatePickerInput
-                  value={value}
-                  onChange={setValue}
-                  styles={{ input: { border: "none" } }}
-                  radius="xs"
-                />
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+          <DueDate todo={todo} update={update} />
           <Category update={update} />
           <Textarea
             placeholder="Add note"
