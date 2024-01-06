@@ -10,6 +10,7 @@ import {
   Checkbox,
   Group,
   MultiSelect,
+  Paper,
   Stack,
   Text,
   Textarea,
@@ -91,95 +92,105 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
   return (
     <>
       <Stack justify="space-between" h={rem("90vh")}>
-        <Stack>
-          <Group align="center" gap={0} wrap="nowrap">
-            <Checkbox
-              {...form.getInputProps("completedOn", { type: "checkbox" })}
-              onChange={() =>
-                onUpdate(todo?._id, {
-                  completedOn: Boolean(form.values?.completedOn)
-                    ? ""
-                    : formatDate(),
-                })
+        <Stack gap="xs">
+          <Paper p="xs" withBorder>
+            <Group align="center" gap={0} wrap="nowrap">
+              <Checkbox
+                {...form.getInputProps("completedOn", { type: "checkbox" })}
+                onChange={() =>
+                  onUpdate(todo?._id, {
+                    completedOn: Boolean(form.values?.completedOn)
+                      ? ""
+                      : formatDate(),
+                  })
+                }
+              />
+              <Textarea
+                styles={{
+                  root: { width: "100%" },
+                  input: {
+                    backgroundColor: "transparent",
+                    border: "none",
+                    fontWeight: 700,
+                  },
+                }}
+                autosize
+                minRows={1}
+                {...form.getInputProps("todo")}
+                onBlur={onTitleBlur}
+              />
+              <ActionIcon
+                size="sm"
+                variant="transparent"
+                onClick={() =>
+                  onUpdate(todo?._id, { favorite: !form.values?.favorite })
+                }
+              >
+                {form.values.favorite ? (
+                  <IconStarFilled stroke={1.5} />
+                ) : (
+                  <IconStar stroke={1.5} />
+                )}
+              </ActionIcon>
+            </Group>
+          </Paper>
+          <Paper p="xs" withBorder>
+            <Group wrap="nowrap" justify="space-between" ref={ref}>
+              <Button
+                variant="transparent"
+                justify="left"
+                leftSection={
+                  <IconSun style={{ width: rem(18), height: rem(18) }} />
+                }
+                px={0}
+                fullWidth
+                onClick={() => onUpdate(todo?._id, { myday: true })}
+                style={{ cursor: form.values.myday && "default" }}
+                color={form.values.myday ? undefined : "gray"}
+              >
+                {Boolean(form.values.myday) ? "Remove from" : "Add to"} My Day
+              </Button>
+              {Boolean(form.values.myday) && hovered && (
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => onUpdate(todo?._id, { myday: false })}
+                >
+                  <IconX />
+                </ActionIcon>
+              )}
+            </Group>
+          </Paper>
+          <Paper p="xs" withBorder>
+            <DueDate todo={todo} update={update} />
+          </Paper>
+          <Paper p="xs" withBorder>
+            <MultiSelect
+              data={categories}
+              variant="transparent"
+              placeholder="Pick a category"
+              leftSection={
+                <IconTag style={{ width: rem(18), height: rem(18) }} />
               }
-            />
-            <Textarea
               styles={{
-                root: { width: "100%" },
-                input: {
-                  backgroundColor: "transparent",
-                  border: "none",
-                  fontWeight: 700,
+                section: {
+                  justifyContent: "left",
+                  maxWidth: "fit-content",
                 },
               }}
-              autosize
-              minRows={1}
-              {...form.getInputProps("todo")}
-              onBlur={onTitleBlur}
+              {...form.getInputProps("category")}
+              onChange={(values) => onUpdate(todo?._id, { category: values })}
+              searchable
             />
-            <ActionIcon
-              size="sm"
-              variant="transparent"
-              onClick={() =>
-                onUpdate(todo?._id, { favorite: !form.values?.favorite })
-              }
-            >
-              {form.values.favorite ? (
-                <IconStarFilled stroke={1.5} />
-              ) : (
-                <IconStar stroke={1.5} />
-              )}
-            </ActionIcon>
-          </Group>
-          <Group wrap="nowrap" justify="space-between" ref={ref}>
-            <Button
-              variant="transparent"
-              justify="left"
-              leftSection={
-                <IconSun style={{ width: rem(18), height: rem(18) }} />
-              }
-              px={0}
-              fullWidth
-              onClick={() => onUpdate(todo?._id, { myday: true })}
-              style={{ cursor: form.values.myday && "default" }}
-              color={form.values.myday ? undefined : "gray"}
-            >
-              {Boolean(form.values.myday) ? "Remove from" : "Add to"} My Day
-            </Button>
-            {Boolean(form.values.myday) && hovered && (
-              <ActionIcon
-                variant="transparent"
-                onClick={() => onUpdate(todo?._id, { myday: false })}
-              >
-                <IconX />
-              </ActionIcon>
-            )}
-          </Group>
-          <DueDate todo={todo} update={update} />
-          <MultiSelect
-            data={categories}
-            variant="transparent"
-            placeholder="Pick a category"
-            leftSection={
-              <IconTag style={{ width: rem(18), height: rem(18) }} />
-            }
-            styles={{
-              section: {
-                justifyContent: "left",
-                maxWidth: "fit-content",
-              },
-            }}
-            {...form.getInputProps("category")}
-            onChange={(values) => onUpdate(todo?._id, { category: values })}
-            searchable
-          />
-          <Textarea
-            placeholder="Add note"
-            radius="xs"
-            styles={{
-              input: { border: "none", backgroundColor: "transparent" },
-            }}
-          />
+          </Paper>
+          <Paper p="xs" withBorder>
+            <Textarea
+              placeholder="Add note"
+              radius="xs"
+              styles={{
+                input: { border: "none", backgroundColor: "transparent" },
+              }}
+            />
+          </Paper>
         </Stack>
         <Group justify="space-between">
           <ActionIcon variant="transparent" onClick={close}>
