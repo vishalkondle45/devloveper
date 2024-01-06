@@ -179,7 +179,6 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
               }}
               {...form.getInputProps("category")}
               onChange={(values) => onUpdate(todo?._id, { category: values })}
-              searchable
             />
           </Paper>
           <Paper p="xs" withBorder>
