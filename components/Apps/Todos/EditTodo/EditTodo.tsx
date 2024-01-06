@@ -91,7 +91,7 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
 
   return (
     <>
-      <Stack justify="space-between" h={rem("90vh")}>
+      <Stack justify="space-between" h={rem("95vh")}>
         <Stack gap="xs">
           <Paper p="xs" withBorder>
             <Group align="center" gap={0} wrap="nowrap">
