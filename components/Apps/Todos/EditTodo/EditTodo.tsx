@@ -9,6 +9,7 @@ import {
   Button,
   Checkbox,
   Group,
+  MultiSelect,
   Stack,
   Text,
   Textarea,
@@ -20,16 +21,43 @@ import {
   IconStar,
   IconStarFilled,
   IconSun,
+  IconTag,
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
 import { Types } from "mongoose";
 import { useEffect } from "react";
 import { EditTodoProps, TodoUpdateTypes } from "../Todo.types";
-import Category from "../Todo/Category";
 import DueDate from "../Todo/DueDate/DueDate";
+
 const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
   const { hovered, ref } = useHover();
+  const categories = [
+    {
+      value: "blue",
+      label: "🔵 Blue category",
+    },
+    {
+      value: "green",
+      label: "🟢 Green category",
+    },
+    {
+      value: "red",
+      label: "🔴 Red category",
+    },
+    {
+      value: "purple",
+      label: "🟣 Purple category",
+    },
+    {
+      value: "orange",
+      label: "🟠 Orange category",
+    },
+    {
+      value: "yellow",
+      label: "🟡 Yellow category",
+    },
+  ];
 
   const onTitleBlur = async () => {
     if (!form.values.todo) {
@@ -62,7 +90,7 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
 
   return (
     <>
-      <Stack justify="space-between" h={rem("95vh")}>
+      <Stack justify="space-between" h={rem("90vh")}>
         <Stack>
           <Group align="center" gap={0} wrap="nowrap">
             <Checkbox
@@ -128,18 +156,36 @@ const EditTodo = ({ close, form, update, todo }: EditTodoProps) => {
             )}
           </Group>
           <DueDate todo={todo} update={update} />
-          <Category update={update} />
+          <MultiSelect
+            data={categories}
+            variant="transparent"
+            placeholder="Pick a category"
+            leftSection={
+              <IconTag style={{ width: rem(18), height: rem(18) }} />
+            }
+            styles={{
+              section: {
+                justifyContent: "left",
+                maxWidth: "fit-content",
+              },
+            }}
+            {...form.getInputProps("category")}
+            onChange={(values) => onUpdate(todo?._id, { category: values })}
+            searchable
+          />
           <Textarea
             placeholder="Add note"
             radius="xs"
-            styles={{ input: { border: "none" } }}
+            styles={{
+              input: { border: "none", backgroundColor: "transparent" },
+            }}
           />
         </Stack>
         <Group justify="space-between">
           <ActionIcon variant="transparent" onClick={close}>
             <IconLayoutSidebarRightCollapse />
           </ActionIcon>
-          <Text size="sm">Created {getDueDate(form.values.date)}</Text>
+          <Text size="sm">Created - {getDueDate(form.values.date)}</Text>
           <ActionIcon color="red" variant="transparent">
             <IconTrash />
           </ActionIcon>
