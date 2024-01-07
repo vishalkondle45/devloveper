@@ -3,12 +3,9 @@ import { useListState } from "@mantine/hooks";
 import {
   IconCalendarMonth,
   IconCircleCheck,
-  IconNote,
+  IconList,
   IconStar,
-  IconSun,
-  IconTag,
-  IconTags,
-  IconTrash,
+  IconSun
 } from "@tabler/icons-react";
 import axios from "axios";
 import { usePathname } from "next/navigation";
@@ -48,7 +45,7 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
             item.icon ? (
               <item.icon style={{ width: rem(20), height: rem(20) }} />
             ) : (
-              <IconTag />
+              <IconList />
             )
           }
           onClick={() => navigate(item.path)}

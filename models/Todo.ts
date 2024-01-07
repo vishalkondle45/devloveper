@@ -9,7 +9,7 @@ interface TodoDocument extends Document {
   date: string;
   category: Array<any | null> | any;
   note: string;
-  list?: Types.ObjectId;
+  list: string;
 }
 
 const todoSchema = new Schema<TodoDocument>(
@@ -22,7 +22,7 @@ const todoSchema = new Schema<TodoDocument>(
     date: { type: String, default: "" },
     category: { type: Array, default: [] },
     note: { type: String, default: "" },
-    list: { type: String },
+    list: { type: String, default: "" },
   },
   { timestamps: true }
 );
