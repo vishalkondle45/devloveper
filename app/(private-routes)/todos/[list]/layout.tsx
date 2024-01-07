@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "List",
+  title: "Loading...",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

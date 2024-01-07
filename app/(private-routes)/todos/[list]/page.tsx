@@ -123,6 +123,12 @@ const Page = () => {
     }
   };
 
+  useEffect(() => {
+    if (selected?.title) {
+      document.title = selected?.title;
+    }
+  }, [selected]);
+
   if (status === "loading" || !todos) {
     return <LoadingOverlay visible />;
   }
