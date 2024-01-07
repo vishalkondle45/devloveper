@@ -125,6 +125,7 @@ const Page = () => {
                 key={todo.todo}
                 editTodo={editTodo}
                 update={update}
+                remove={remove}
               />
             ))}
           </Stack>

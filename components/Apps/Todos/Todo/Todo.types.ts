@@ -9,6 +9,7 @@ export interface TodoProps {
     _id: Types.ObjectId | undefined,
     object: TodoUpdateTypes
   ) => Promise<void>;
+  remove: (_id?: Types.ObjectId) => Promise<void> | void;
   withMyDay?: boolean;
   withDueDate?: boolean;
   withListName?: boolean;

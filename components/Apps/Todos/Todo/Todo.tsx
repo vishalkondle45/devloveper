@@ -24,18 +24,19 @@ import {
   IconStarOff,
   IconSun,
   IconSunOff,
+  IconTrash,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { TodoProps } from "./Todo.types";
 const Todo = ({
   todo,
-  getTodos,
   withMyDay = true,
   withDueDate = true,
   withListName = true,
   editTodo,
   update,
+  remove,
 }: TodoProps) => {
   const [opened, setOpened] = useState(false);
 
@@ -204,6 +205,16 @@ const Todo = ({
                     Remove due date
                   </MenuItem>
                 )}
+                <Menu.Divider />
+                <MenuItem
+                  color="red"
+                  leftSection={
+                    <IconTrash style={{ width: rem(20), height: rem(20) }} />
+                  }
+                  onClick={() => remove(todo?._id)}
+                >
+                  Delete task
+                </MenuItem>
               </Menu.Dropdown>
             </Menu>
           </Group>
