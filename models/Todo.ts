@@ -22,7 +22,7 @@ const todoSchema = new Schema<TodoDocument>(
     date: { type: String, default: "" },
     category: { type: Array, default: [] },
     note: { type: String, default: "" },
-    list: { type: Types.ObjectId, default: "" },
+    list: { type: Types.ObjectId },
   },
   { timestamps: true }
 );
