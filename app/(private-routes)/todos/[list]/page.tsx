@@ -263,6 +263,7 @@ const Page = () => {
                 update={update}
                 remove={remove}
                 todoLists={todoLists}
+                withListName={false}
               />
             ))}
           </Stack>
