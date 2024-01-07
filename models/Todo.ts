@@ -9,7 +9,7 @@ interface TodoDocument extends Document {
   date: string;
   category: Array<any | null> | any;
   note: string;
-  list?: Types.ObjectId | any;
+  list?: string;
 }
 
 const todoSchema = new Schema<TodoDocument>(

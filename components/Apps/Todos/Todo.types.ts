@@ -10,7 +10,7 @@ export interface TodoType {
   date?: string;
   category?: Array<any | null> | any;
   note?: string;
-  list?: Types.ObjectId | any;
+  list?: string;
 }
 
 export interface TodoUpdateTypes {
@@ -23,7 +23,7 @@ export interface TodoUpdateTypes {
   date?: string;
   category?: Array<any | null> | any;
   note?: string;
-  list?: Types.ObjectId | any;
+  list?: string;
   createdAt?: string;
   updatedAt?: string;
 }
