@@ -35,7 +35,7 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
   };
 
   useEffect(() => {
-    // getTodoLists();
+    getTodoLists();
   }, []);
 
   return (

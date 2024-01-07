@@ -5,11 +5,13 @@ import Todo from "@/components/Apps/Todos/Todo";
 import { TodoType, TodoUpdateTypes } from "@/components/Apps/Todos/Todo.types";
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import {
+  ActionIcon,
   Center,
   Container,
   Drawer,
   Group,
   LoadingOverlay,
+  Menu,
   Stack,
   Text,
   ThemeIcon,
@@ -19,7 +21,21 @@ import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
-import { IconNote, IconX } from "@tabler/icons-react";
+import {
+  IconArrowsSort,
+  IconCalendarMonth,
+  IconCalendarPlus,
+  IconChevronRight,
+  IconCursorText,
+  IconDots,
+  IconList,
+  IconNote,
+  IconPrinter,
+  IconStar,
+  IconSun,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
 import { useSession } from "next-auth/react";
@@ -123,10 +139,107 @@ const Page = () => {
   return (
     <Container mt="md" size="md">
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
-      <Group justify="space-between">
-        <Text fz={rem(40)} fw={700}>
-          {selected?.title}
-        </Text>
+      <Group wrap="nowrap" my="sm" justify="space-between">
+        <Group wrap="nowrap" justify="left" gap="xs">
+          <ThemeIcon variant="transparent">
+            <IconList />
+          </ThemeIcon>
+          <Text maw={rem("60vw")} fz={rem(24)} fw={700} truncate="end">
+            {selected?.title}
+          </Text>
+          <Menu radius="xs" shadow="md" width={200}>
+            <Menu.Target>
+              <ActionIcon color="gray" variant="transparent">
+                <IconDots stroke={1} />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label ta="center">List options</Menu.Label>
+              <Menu.Item
+                leftSection={
+                  <IconCursorText style={{ width: rem(16), height: rem(16) }} />
+                }
+              >
+                Rename list
+              </Menu.Item>
+              <Menu.Item
+                leftSection={
+                  <IconPrinter style={{ width: rem(16), height: rem(16) }} />
+                }
+              >
+                Print list
+              </Menu.Item>
+              <Menu.Item
+                leftSection={
+                  <IconSun style={{ width: rem(16), height: rem(16) }} />
+                }
+                rightSection={
+                  <IconChevronRight
+                    style={{ width: rem(16), height: rem(16) }}
+                  />
+                }
+              >
+                Change theme
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item
+                leftSection={
+                  <IconTrash style={{ width: rem(16), height: rem(16) }} />
+                }
+                color="red"
+              >
+                Delete list
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
+        <Menu radius="xs" shadow="md" width={200}>
+          <Menu.Target>
+            <ActionIcon color="gray" variant="transparent">
+              <IconArrowsSort stroke={1} />
+            </ActionIcon>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Label ta="center">Sort by</Menu.Label>
+            <Menu.Item
+              leftSection={
+                <IconStar style={{ width: rem(16), height: rem(16) }} />
+              }
+            >
+              Importance
+            </Menu.Item>
+            <Menu.Item
+              leftSection={
+                <IconCalendarMonth
+                  style={{ width: rem(16), height: rem(16) }}
+                />
+              }
+            >
+              Due date
+            </Menu.Item>
+            <Menu.Item
+              leftSection={
+                <IconSun style={{ width: rem(16), height: rem(16) }} />
+              }
+            >
+              Added to My Day
+            </Menu.Item>
+            <Menu.Item
+              leftSection={
+                <IconArrowsSort style={{ width: rem(16), height: rem(16) }} />
+              }
+            >
+              Alphabetically
+            </Menu.Item>
+            <Menu.Item
+              leftSection={
+                <IconCalendarPlus style={{ width: rem(16), height: rem(16) }} />
+              }
+            >
+              Creation date
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       </Group>
       <NewTodo getTodos={getTodos} />
       {!todos?.length ? (
