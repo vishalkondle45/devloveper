@@ -16,6 +16,7 @@ import {
 import {
   IconCalendarMonth,
   IconCalendarUp,
+  IconCalendarX,
   IconCircleCheck,
   IconDotsVertical,
   IconStar,
@@ -70,7 +71,7 @@ const Todo = ({
                     variant="transparent"
                     c="gray"
                     leftSection={
-                      <IconSun style={{ width: rem(16), height: rem(16) }} />
+                      <IconSun style={{ width: rem(20), height: rem(20) }} />
                     }
                   >
                     My Day
@@ -83,7 +84,7 @@ const Todo = ({
                     variant="transparent"
                     leftSection={
                       <IconCalendarMonth
-                        style={{ width: rem(16), height: rem(16) }}
+                        style={{ width: rem(20), height: rem(20) }}
                       />
                     }
                     c={dayjs(todo.date).isToday() ? "" : "grey"}
@@ -125,9 +126,9 @@ const Todo = ({
                 <MenuItem
                   leftSection={
                     todo.myday ? (
-                      <IconSunOff style={{ width: rem(16), height: rem(16) }} />
+                      <IconSunOff style={{ width: rem(20), height: rem(20) }} />
                     ) : (
-                      <IconSun style={{ width: rem(16), height: rem(16) }} />
+                      <IconSun style={{ width: rem(20), height: rem(20) }} />
                     )
                   }
                   onClick={() => update(todo._id, { myday: !todo.myday })}
@@ -138,10 +139,10 @@ const Todo = ({
                   leftSection={
                     todo.favorite ? (
                       <IconStarOff
-                        style={{ width: rem(16), height: rem(16) }}
+                        style={{ width: rem(20), height: rem(20) }}
                       />
                     ) : (
-                      <IconStar style={{ width: rem(16), height: rem(16) }} />
+                      <IconStar style={{ width: rem(20), height: rem(20) }} />
                     )
                   }
                   onClick={() => update(todo._id, { favorite: !todo.favorite })}
@@ -151,7 +152,7 @@ const Todo = ({
                 <MenuItem
                   leftSection={
                     <IconCircleCheck
-                      style={{ width: rem(16), height: rem(16) }}
+                      style={{ width: rem(20), height: rem(20) }}
                     />
                   }
                   onClick={() =>
@@ -168,7 +169,7 @@ const Todo = ({
                 <MenuItem
                   leftSection={
                     <IconCalendarUp
-                      style={{ width: rem(16), height: rem(16) }}
+                      style={{ width: rem(20), height: rem(20) }}
                     />
                   }
                   onClick={() =>
@@ -180,7 +181,7 @@ const Todo = ({
                 <MenuItem
                   leftSection={
                     <IconCalendarMonth
-                      style={{ width: rem(16), height: rem(16) }}
+                      style={{ width: rem(20), height: rem(20) }}
                     />
                   }
                   onClick={() =>
@@ -191,6 +192,18 @@ const Todo = ({
                 >
                   Due tomorrow
                 </MenuItem>
+                {todo.date && (
+                  <MenuItem
+                    leftSection={
+                      <IconCalendarX
+                        style={{ width: rem(20), height: rem(20) }}
+                      />
+                    }
+                    onClick={() => update(todo._id, { date: "" })}
+                  >
+                    Remove due date
+                  </MenuItem>
+                )}
               </Menu.Dropdown>
             </Menu>
           </Group>
