@@ -15,7 +15,7 @@ const noteSchema = new Schema<NoteDocument>(
     title: { type: String, required: false, trim: true },
     note: { type: String, required: true, trim: true },
     color: { type: String, required: false, default: "" },
-    user: { type: "ObjectId", required: false },
+    user: { type: Types.ObjectId, required: false },
     pinned: { type: Boolean, default: false },
     trashed: { type: Boolean, default: false },
     labels: { type: [Types.ObjectId], default: [] },

@@ -3,14 +3,14 @@ import { Document, Model, Schema, Types, model, models } from "mongoose";
 interface TodoListDocument extends Document {
   title: string;
   color?: string;
-  user: Types.ObjectId;
+  user?: Types.ObjectId;
 }
 
 const todoListSchema = new Schema<TodoListDocument>(
   {
     title: { type: String, required: true, trim: true },
     color: { type: String, required: false, trim: true },
-    user: { type: "ObjectId", required: true },
+    user: { type: Types.ObjectId, required: true },
   },
   { timestamps: true }
 );
