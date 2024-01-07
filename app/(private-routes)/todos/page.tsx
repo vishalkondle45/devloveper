@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 const Page = () => {
   const { status } = useSession();
   const [todos, setTodos] = useState<any[] | null>(null);
+  const [todoLists, setTodoLists] = useState<any[] | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [todo, setTodo] = useState<TodoUpdateTypes | null>(null);
 
@@ -45,6 +46,11 @@ const Page = () => {
     setTodos(res.data);
   };
 
+  const getTodoLists = async () => {
+    const res = await axios.get("/api/todos/lists");
+    setTodoLists(res.data);
+  };
+
   const editTodo = (todo: TodoType) => {
     open();
     form.setValues(todo);
@@ -53,6 +59,7 @@ const Page = () => {
 
   useEffect(() => {
     getTodos();
+    getTodoLists();
   }, []);
 
   const breadcrumbs = [
@@ -126,6 +133,7 @@ const Page = () => {
                 editTodo={editTodo}
                 update={update}
                 remove={remove}
+                todoLists={todoLists}
               />
             ))}
           </Stack>

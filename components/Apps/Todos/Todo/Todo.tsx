@@ -19,6 +19,7 @@ import {
   IconCalendarX,
   IconCircleCheck,
   IconDotsVertical,
+  IconListNumbers,
   IconStar,
   IconStarFilled,
   IconStarOff,
@@ -26,7 +27,10 @@ import {
   IconSunOff,
   IconTrash,
 } from "@tabler/icons-react";
+import axios from "axios";
 import dayjs from "dayjs";
+import { Types } from "mongoose";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TodoProps } from "./Todo.types";
 const Todo = ({
@@ -37,8 +41,17 @@ const Todo = ({
   editTodo,
   update,
   remove,
+  todoLists,
 }: TodoProps) => {
   const [opened, setOpened] = useState(false);
+
+  const router = useRouter();
+
+  const createNewTodoList = async (_id?: Types.ObjectId) => {
+    const { data } = await axios.post("/api/todos/lists");
+    await axios.put(`/api/todos?_id=${_id}`, { list: data });
+    router.push(`/todos/${data}`);
+  };
 
   return (
     <>
@@ -91,6 +104,17 @@ const Todo = ({
                     c={dayjs(todo.date).isToday() ? "" : "grey"}
                   >
                     Due {getDueDate(todo.date)}
+                  </Badge>
+                )}
+                {todo?.list && withListName && (
+                  <Badge
+                    size="xs"
+                    variant="outline"
+                    color={
+                      todoLists?.find(({ _id }) => _id === todo?.list)?.color
+                    }
+                  >
+                    {todoLists?.find(({ _id }) => _id === todo?.list)?.title}
                   </Badge>
                 )}
               </Group>
@@ -205,6 +229,17 @@ const Todo = ({
                     Remove due date
                   </MenuItem>
                 )}
+                <Menu.Divider />
+                <MenuItem
+                  leftSection={
+                    <IconListNumbers
+                      style={{ width: rem(20), height: rem(20) }}
+                    />
+                  }
+                  onClick={() => createNewTodoList(todo._id)}
+                >
+                  Create new list from this todo
+                </MenuItem>
                 <Menu.Divider />
                 <MenuItem
                   color="red"

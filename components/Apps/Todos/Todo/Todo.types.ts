@@ -13,4 +13,5 @@ export interface TodoProps {
   withMyDay?: boolean;
   withDueDate?: boolean;
   withListName?: boolean;
+  todoLists?: any[] | null;
 }

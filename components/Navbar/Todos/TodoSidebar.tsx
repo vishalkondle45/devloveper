@@ -24,10 +24,10 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
     { path: "/todos/favorites", icon: IconStar, title: "Favorites" },
   ]);
 
-  const getLabels = async () => {
-    await axios.get("/api/todos/labels").then((res) => {
+  const getTodoLists = async () => {
+    await axios.get("/api/todos/lists").then((res) => {
       let labels = res.data.map(({ _id, title }: any) => ({
-        path: "/todos/labels/" + _id,
+        path: "/todos/" + _id,
         title,
       }));
       handlers.append(...labels);
@@ -35,7 +35,7 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
   };
 
   useEffect(() => {
-    // getLabels();
+    // getTodoLists();
   }, []);
 
   return (
