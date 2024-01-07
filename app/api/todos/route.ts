@@ -31,7 +31,8 @@ export const GET = async (req: NextRequest): Promise<any> => {
     );
   }
   await startDb();
-  const todos = await TodoModel.find({ user: session.user?._id }).sort(
+  const list = req.nextUrl.searchParams.get("list") || "";
+  const todos = await TodoModel.find({ user: session.user?._id, list }).sort(
     "-createdAt"
   );
   return NextResponse.json(todos, { status: 200 });

@@ -15,14 +15,14 @@ interface TodoDocument extends Document {
 const todoSchema = new Schema<TodoDocument>(
   {
     todo: { type: String, required: true, trim: true },
-    user: { type: Types.ObjectId, required: true },
+    user: { type: "ObjectId", required: true },
     completedOn: { type: String, default: "" },
     favorite: { type: Boolean, default: false },
     myday: { type: Boolean, default: false },
     date: { type: String, default: "" },
     category: { type: Array, default: [] },
     note: { type: String, default: "" },
-    list: { type: Types.ObjectId, default: "" },
+    list: { type: "ObjectId", default: "" },
   },
   { timestamps: true }
 );

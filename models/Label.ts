@@ -8,7 +8,7 @@ interface LabelDocument extends Document {
 const labelSchema = new Schema<LabelDocument>(
   {
     title: { type: String, required: true, trim: true },
-    user: { type: Types.ObjectId, required: false },
+    user: { type: "ObjectId", required: false },
   },
   { timestamps: true }
 );
