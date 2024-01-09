@@ -1,12 +1,15 @@
-import { sortOptions } from "@/lib/constants";
+import { colors, sortOptions } from "@/lib/constants";
 import {
   ActionIcon,
+  ColorSwatch,
   Group,
   Menu,
+  Popover,
   Stack,
   Text,
   ThemeIcon,
   rem,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconArrowsSort,
@@ -21,20 +24,49 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
-import { Props, SortOptionProps } from "./ListTitle.types";
+import axios from "axios";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { ListUpdateTypes, Props, SortOptionProps } from "./ListTitle.types";
 
 const ListTitle = (props: Props) => {
+  const [opened, setOpened] = useState(false);
+  const params = useParams();
+  const theme = useMantineTheme();
+
+  const update = async (object: ListUpdateTypes) => {
+    await axios
+      .put(`/api/todos/lists?_id=${params.list}`, object)
+      .then((res) => {
+        props.getTodoLists();
+      })
+      .catch((error) => {});
+  };
+
   return (
     <Stack gap="xs" my="sm">
       <Group wrap="nowrap" justify="space-between">
         <Group wrap="nowrap" justify="left" gap="xs">
-          <ThemeIcon variant="transparent">
+          <ThemeIcon color={props.color} variant="transparent">
             {props.icon ? <props.icon /> : <IconList />}
           </ThemeIcon>
-          <Text maw={rem("60vw")} fz={rem(24)} fw={700} truncate="end">
+          <Text
+            c={props.color || theme.primaryColor}
+            maw={rem("60vw")}
+            fz={rem(24)}
+            fw={700}
+            truncate="end"
+          >
             {props.title}
           </Text>
-          <Menu radius="xs" shadow="md" width={200}>
+          <Menu
+            closeOnItemClick={false}
+            opened={opened}
+            onChange={setOpened}
+            radius="xs"
+            shadow="md"
+            width={200}
+          >
             <Menu.Target>
               <ActionIcon color="gray" variant="transparent">
                 <IconDots stroke={1} />
@@ -56,18 +88,33 @@ const ListTitle = (props: Props) => {
               >
                 Print list
               </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconSun style={{ width: rem(16), height: rem(16) }} />
-                }
-                rightSection={
-                  <IconChevronRight
-                    style={{ width: rem(16), height: rem(16) }}
-                  />
-                }
-              >
-                Change theme
-              </Menu.Item>
+              <Popover width={330} radius="xs" offset={4} position="bottom">
+                <Popover.Target>
+                  <Menu.Item
+                    leftSection={
+                      <IconSun style={{ width: rem(16), height: rem(16) }} />
+                    }
+                    rightSection={
+                      <IconChevronRight
+                        style={{ width: rem(16), height: rem(16) }}
+                      />
+                    }
+                  >
+                    Change theme
+                  </Menu.Item>
+                </Popover.Target>
+                <Popover.Dropdown>
+                  <Group wrap="wrap">
+                    {colors.map((color) => (
+                      <ColorSwatch
+                        style={{ cursor: "pointer" }}
+                        color={color}
+                        onClick={() => update({ color })}
+                      />
+                    ))}
+                  </Group>
+                </Popover.Dropdown>
+              </Popover>
               <Menu.Divider />
               <Menu.Item
                 leftSection={
@@ -82,7 +129,7 @@ const ListTitle = (props: Props) => {
         </Group>
         <Menu radius="xs" shadow="md" width={200}>
           <Menu.Target>
-            <ActionIcon color="gray" variant="transparent">
+            <ActionIcon color={props.color} variant="transparent">
               <IconArrowsSort stroke={1} />
             </ActionIcon>
           </Menu.Target>

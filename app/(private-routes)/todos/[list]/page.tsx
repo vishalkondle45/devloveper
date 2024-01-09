@@ -148,8 +148,10 @@ const Page = () => {
       <ListTitle
         title={selected?.title}
         getTodos={getTodos}
+        color={selected?.color}
         setSort={setSort}
         sort={sort}
+        getTodoLists={getTodoLists}
       />
       <NewTodo getTodos={getTodos} />
       {!todos?.length ? (
