@@ -1,5 +1,7 @@
 "use client";
 import EditTodo from "@/components/Apps/Todos/EditTodo/EditTodo";
+import ListTitle from "@/components/Apps/Todos/ListTitle/ListTitle";
+import { SortTypes } from "@/components/Apps/Todos/ListTitle/ListTitle.types";
 import NewTodo from "@/components/Apps/Todos/NewTodo";
 import Todo from "@/components/Apps/Todos/Todo";
 import { TodoType, TodoUpdateTypes } from "@/components/Apps/Todos/Todo.types";
@@ -8,7 +10,6 @@ import {
   Center,
   Container,
   Drawer,
-  Group,
   LoadingOverlay,
   Stack,
   Text,
@@ -18,7 +19,7 @@ import {
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconNote } from "@tabler/icons-react";
+import { IconHome, IconNote } from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
 import { useSession } from "next-auth/react";
@@ -29,6 +30,7 @@ const Page = () => {
   const [todoLists, setTodoLists] = useState<any[] | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [todo, setTodo] = useState<TodoUpdateTypes | null>(null);
+  const [sort, setSort] = useState<SortTypes>({ sort: "asc", by: "" });
 
   const form = useForm({
     initialValues: {
@@ -42,7 +44,7 @@ const Page = () => {
   });
 
   const getTodos = async () => {
-    const res = await axios.get("/api/todos");
+    const res = await axios.get(`/api/todos?sort=${sort?.sort}&by=${sort?.by}`);
     setTodos(res.data);
   };
 
@@ -61,6 +63,18 @@ const Page = () => {
     getTodos();
     getTodoLists();
   }, []);
+
+  useEffect(() => {
+    if (todos) {
+      let by = sort.by || "createdAt";
+      const updatedTodod = todos?.sort((a: any, b: any) =>
+        sort.sort === "asc"
+          ? String(a[by])?.localeCompare(String(b[by]))
+          : String(b[by])?.localeCompare(String(a[by]))
+      );
+      setTodos(() => [...updatedTodod]);
+    }
+  }, [sort.by, sort.sort]);
 
   const breadcrumbs = [
     { title: "Home", href: "/" },
@@ -107,11 +121,13 @@ const Page = () => {
   return (
     <Container mt="md" size="md">
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
-      <Group justify="space-between">
-        <Text fz={rem(40)} fw={700}>
-          Todos
-        </Text>
-      </Group>
+      <ListTitle
+        title="Todos"
+        icon={IconHome}
+        getTodos={getTodos}
+        setSort={setSort}
+        sort={sort}
+      />
       <NewTodo getTodos={getTodos} />
       {!todos?.length ? (
         <Center h={500}>
@@ -129,7 +145,7 @@ const Page = () => {
               <Todo
                 todo={todo}
                 getTodos={getTodos}
-                key={todo.todo}
+                key={todo._id}
                 editTodo={editTodo}
                 update={update}
                 remove={remove}

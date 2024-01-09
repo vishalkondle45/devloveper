@@ -86,7 +86,7 @@ const EditTodo = ({ close, form, update, todo, remove }: EditTodoProps) => {
   };
 
   useEffect(() => {
-    if (form.values.todo.includes("  ")) {
+    if (form.values.todo?.includes("  ")) {
       form.setFieldValue("todo", convertToSingleSpace(form.values.todo) + " ");
     }
   }, [form.values.todo]);

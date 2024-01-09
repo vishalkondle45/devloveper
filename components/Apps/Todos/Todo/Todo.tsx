@@ -67,7 +67,7 @@ const Todo = ({
             <Checkbox
               checked={Boolean(todo?.completedOn)}
               onChange={() =>
-                update(todo._id, {
+                update(todo?._id, {
                   completedOn: Boolean(todo?.completedOn)
                     ? ""
                     : dayjs().toISOString(),
@@ -101,9 +101,9 @@ const Todo = ({
                         style={{ width: rem(20), height: rem(20) }}
                       />
                     }
-                    c={dayjs(todo.date).isToday() ? "" : "grey"}
+                    c={dayjs(todo?.date).isToday() ? "" : "grey"}
                   >
-                    Due {getDueDate(todo.date)}
+                    Due {getDueDate(todo?.date)}
                   </Badge>
                 )}
                 {todo?.list && withListName && (
@@ -128,7 +128,7 @@ const Todo = ({
           >
             <ActionIcon
               variant="transparent"
-              onClick={() => update(todo._id, { favorite: !todo.favorite })}
+              onClick={() => update(todo?._id, { favorite: !todo?.favorite })}
             >
               {Boolean(todo?.favorite) ? (
                 <IconStarFilled style={{ width: rem(20), height: rem(20) }} />
@@ -150,19 +150,19 @@ const Todo = ({
               <Menu.Dropdown>
                 <MenuItem
                   leftSection={
-                    todo.myday ? (
+                    todo?.myday ? (
                       <IconSunOff style={{ width: rem(20), height: rem(20) }} />
                     ) : (
                       <IconSun style={{ width: rem(20), height: rem(20) }} />
                     )
                   }
-                  onClick={() => update(todo._id, { myday: !todo.myday })}
+                  onClick={() => update(todo?._id, { myday: !todo?.myday })}
                 >
-                  {todo.myday ? "Remove from" : "Add to"} My Day
+                  {todo?.myday ? "Remove from" : "Add to"} My Day
                 </MenuItem>
                 <MenuItem
                   leftSection={
-                    todo.favorite ? (
+                    todo?.favorite ? (
                       <IconStarOff
                         style={{ width: rem(20), height: rem(20) }}
                       />
@@ -170,9 +170,11 @@ const Todo = ({
                       <IconStar style={{ width: rem(20), height: rem(20) }} />
                     )
                   }
-                  onClick={() => update(todo._id, { favorite: !todo.favorite })}
+                  onClick={() =>
+                    update(todo?._id, { favorite: !todo?.favorite })
+                  }
                 >
-                  {todo.favorite ? "Remove from" : "Add to"} favorites
+                  {todo?.favorite ? "Remove from" : "Add to"} favorites
                 </MenuItem>
                 <MenuItem
                   leftSection={
@@ -181,7 +183,7 @@ const Todo = ({
                     />
                   }
                   onClick={() =>
-                    update(todo._id, {
+                    update(todo?._id, {
                       completedOn: Boolean(todo?.completedOn)
                         ? ""
                         : dayjs().toISOString(),
@@ -198,7 +200,7 @@ const Todo = ({
                     />
                   }
                   onClick={() =>
-                    update(todo._id, { date: dayjs().toISOString() })
+                    update(todo?._id, { date: dayjs().toISOString() })
                   }
                 >
                   Due today
@@ -210,21 +212,21 @@ const Todo = ({
                     />
                   }
                   onClick={() =>
-                    update(todo._id, {
+                    update(todo?._id, {
                       date: dayjs().add(1, "day").toISOString(),
                     })
                   }
                 >
                   Due tomorrow
                 </MenuItem>
-                {todo.date && (
+                {todo?.date && (
                   <MenuItem
                     leftSection={
                       <IconCalendarX
                         style={{ width: rem(20), height: rem(20) }}
                       />
                     }
-                    onClick={() => update(todo._id, { date: "" })}
+                    onClick={() => update(todo?._id, { date: "" })}
                   >
                     Remove due date
                   </MenuItem>
@@ -236,7 +238,7 @@ const Todo = ({
                       style={{ width: rem(20), height: rem(20) }}
                     />
                   }
-                  onClick={() => createNewTodoList(todo._id)}
+                  onClick={() => createNewTodoList(todo?._id)}
                 >
                   Create new list from this todo
                 </MenuItem>

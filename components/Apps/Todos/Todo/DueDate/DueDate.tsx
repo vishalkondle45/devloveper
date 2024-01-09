@@ -31,19 +31,11 @@ const DueDate = ({ update, todo }: DueDateProps) => {
     todo?.date ? new Date(todo?.date) : null
   );
 
-  // useEffect(() => {
-  //   if (value) {
-  //     if (!dayjs(value).isSame(todo?.date)) {
-  //       update(todo?._id, { date: dayjs(value).toISOString() });
-  //     }
-  //   }
-  // }, [value]);
-
   const onUpdate = (value?: string | Date | Dayjs | null) => {
     update(todo?._id, {
-      date: value !== null ? dayjs(value).toISOString() : undefined,
+      date: value !== null ? dayjs(value).toISOString() : "",
     }).then(() => {
-      setValue(value ? dayjs(value) : undefined);
+      setValue(value ? dayjs(value) : "");
       setOpened(false);
     });
   };
