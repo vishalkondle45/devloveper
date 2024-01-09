@@ -14,7 +14,7 @@ export interface Props {
   getTodos: (list?: string, sort?: string, way?: string) => Promise<void>;
   setSort: Dispatch<SetStateAction<SortTypes>>;
   sort: SortTypes;
-  getTodoLists: () => Promise<void>;
+  getTodoLists?: () => Promise<void>;
 }
 
 export interface SortOptionProps {

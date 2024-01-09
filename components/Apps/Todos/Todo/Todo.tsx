@@ -11,7 +11,9 @@ import {
   Paper,
   Stack,
   Text,
+  getThemeColor,
   rem,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconCalendarMonth,
@@ -42,9 +44,10 @@ const Todo = ({
   update,
   remove,
   todoLists,
+  color,
 }: TodoProps) => {
   const [opened, setOpened] = useState(false);
-
+  const theme = useMantineTheme();
   const router = useRouter();
 
   const createNewTodoList = async (_id?: Types.ObjectId) => {
@@ -73,7 +76,9 @@ const Todo = ({
                     : dayjs().toISOString(),
                 })
               }
+              color={color}
               onClick={(e) => e.stopPropagation()}
+              styles={{ input: { borderColor: getThemeColor(color, theme) } }}
             />
             <Stack gap={0}>
               <Text>{todo?.todo}</Text>
@@ -129,6 +134,7 @@ const Todo = ({
             <ActionIcon
               variant="transparent"
               onClick={() => update(todo?._id, { favorite: !todo?.favorite })}
+              color={color}
             >
               {Boolean(todo?.favorite) ? (
                 <IconStarFilled style={{ width: rem(20), height: rem(20) }} />
@@ -141,6 +147,7 @@ const Todo = ({
                 <ActionIcon
                   variant="transparent"
                   onClick={() => setOpened((o) => !o)}
+                  color={color}
                 >
                   <IconDotsVertical
                     style={{ width: rem(20), height: rem(20) }}

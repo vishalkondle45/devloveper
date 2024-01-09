@@ -15,6 +15,7 @@ import {
   Text,
   ThemeIcon,
   rem,
+  useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -31,6 +32,7 @@ const Page = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [todo, setTodo] = useState<TodoUpdateTypes | null>(null);
   const [sort, setSort] = useState<SortTypes>({ sort: "asc", by: "" });
+  const theme = useMantineTheme();
 
   const form = useForm({
     initialValues: {
@@ -123,6 +125,7 @@ const Page = () => {
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
       <ListTitle
         title="Todos"
+        color={theme.primaryColor}
         icon={IconHome}
         getTodos={getTodos}
         setSort={setSort}

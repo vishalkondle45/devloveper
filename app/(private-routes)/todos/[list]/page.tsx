@@ -153,7 +153,7 @@ const Page = () => {
         sort={sort}
         getTodoLists={getTodoLists}
       />
-      <NewTodo getTodos={getTodos} />
+      <NewTodo getTodos={getTodos} color={selected?.color} />
       {!todos?.length ? (
         <Center h={500}>
           <Stack align="center">
@@ -176,6 +176,7 @@ const Page = () => {
                 remove={remove}
                 todoLists={todoLists}
                 withListName={false}
+                color={selected?.color}
               />
             ))}
           </Stack>

@@ -9,7 +9,9 @@ import {
   Popover,
   PopoverTarget,
   TextInput,
+  getThemeColor,
   rem,
+  useMantineTheme,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -19,10 +21,12 @@ import axios from "axios";
 import { useState } from "react";
 import { TodoType } from "../Todo.types";
 import classes from "./NewTodo.module.css";
+import { Props } from "./NewTodo.types";
 
-const NewTodo = ({ getTodos }: { getTodos: () => Promise<void> }) => {
+const NewTodo = ({ getTodos, color }: Props) => {
   const [opened, setOpened] = useState(false);
   const focusTrapRef = useFocusTrap(true);
+  const theme = useMantineTheme();
   const form = useForm({
     initialValues: {
       todo: "",
@@ -54,7 +58,13 @@ const NewTodo = ({ getTodos }: { getTodos: () => Promise<void> }) => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <TextInput
             radius="xs"
-            leftSection={<Checkbox checked={false} readOnly />}
+            leftSection={
+              <Checkbox
+                styles={{ input: { borderColor: getThemeColor(color, theme) } }}
+                checked={false}
+                readOnly
+              />
+            }
             classNames={{ input: classes.input }}
             placeholder="Add a task"
             {...form.getInputProps("todo")}

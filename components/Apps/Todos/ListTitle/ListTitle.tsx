@@ -7,10 +7,12 @@ import {
   Popover,
   Stack,
   Text,
+  TextInput,
   ThemeIcon,
   rem,
   useMantineTheme,
 } from "@mantine/core";
+import { useDisclosure, useFocusTrap } from "@mantine/hooks";
 import {
   IconArrowsSort,
   IconChevronDown,
@@ -31,34 +33,65 @@ import { ListUpdateTypes, Props, SortOptionProps } from "./ListTitle.types";
 
 const ListTitle = (props: Props) => {
   const [opened, setOpened] = useState(false);
+  const [openEdit, { open, close }] = useDisclosure(false);
+  const [title, setTitle] = useState("");
   const params = useParams();
   const theme = useMantineTheme();
+  const focusTrapRef = useFocusTrap(true);
+
+  const openEditHandler = () => {
+    open();
+    setTitle(props.title);
+    setOpened(false);
+  };
+
+  const closeEditHandler = () => {
+    if (title && props.title !== title) {
+      update({ title: title });
+    }
+    close();
+  };
 
   const update = async (object: ListUpdateTypes) => {
-    await axios
-      .put(`/api/todos/lists?_id=${params.list}`, object)
-      .then((res) => {
-        props.getTodoLists();
-      })
-      .catch((error) => {});
+    if (props?.getTodoLists) {
+      await axios
+        .put(`/api/todos/lists?_id=${params.list}`, object)
+        .then((res) => {
+          props?.getTodoLists?.();
+        })
+        .catch((error) => {});
+    }
   };
 
   return (
     <Stack gap="xs" my="sm">
       <Group wrap="nowrap" justify="space-between">
         <Group wrap="nowrap" justify="left" gap="xs">
-          <ThemeIcon color={props.color} variant="transparent">
-            {props.icon ? <props.icon /> : <IconList />}
-          </ThemeIcon>
-          <Text
-            c={props.color || theme.primaryColor}
-            maw={rem("60vw")}
-            fz={rem(24)}
-            fw={700}
-            truncate="end"
-          >
-            {props.title}
-          </Text>
+          {openEdit && !!props?.getTodoLists ? (
+            <TextInput
+              value={title}
+              onChange={(e) => setTitle(e.currentTarget.value)}
+              radius="xs"
+              onBlur={closeEditHandler}
+              ref={focusTrapRef}
+            />
+          ) : (
+            <>
+              <ThemeIcon color={props.color} variant="transparent">
+                {props.icon ? <props.icon /> : <IconList />}
+              </ThemeIcon>
+              <Text
+                c={props.color || theme.primaryColor}
+                maw={rem("60vw")}
+                fz={rem(24)}
+                fw={700}
+                truncate="end"
+                onClick={openEditHandler}
+              >
+                {props.title}
+              </Text>
+            </>
+          )}
           <Menu
             closeOnItemClick={false}
             opened={opened}
@@ -74,13 +107,50 @@ const ListTitle = (props: Props) => {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label ta="center">List options</Menu.Label>
-              <Menu.Item
-                leftSection={
-                  <IconCursorText style={{ width: rem(16), height: rem(16) }} />
-                }
-              >
-                Rename list
-              </Menu.Item>
+              {!!props?.getTodoLists && (
+                <>
+                  <Menu.Item
+                    leftSection={
+                      <IconCursorText
+                        style={{ width: rem(16), height: rem(16) }}
+                      />
+                    }
+                    onClick={openEditHandler}
+                  >
+                    Rename list
+                  </Menu.Item>
+                  <Popover width={330} radius="xs" offset={4} position="bottom">
+                    <Popover.Target>
+                      <Menu.Item
+                        leftSection={
+                          <IconSun
+                            style={{ width: rem(16), height: rem(16) }}
+                          />
+                        }
+                        rightSection={
+                          <IconChevronRight
+                            style={{ width: rem(16), height: rem(16) }}
+                          />
+                        }
+                      >
+                        Change theme
+                      </Menu.Item>
+                    </Popover.Target>
+                    <Popover.Dropdown>
+                      <Group wrap="wrap">
+                        {colors.map((color) => (
+                          <ColorSwatch
+                            key={color}
+                            style={{ cursor: "pointer" }}
+                            color={color}
+                            onClick={() => update({ color })}
+                          />
+                        ))}
+                      </Group>
+                    </Popover.Dropdown>
+                  </Popover>
+                </>
+              )}
               <Menu.Item
                 leftSection={
                   <IconPrinter style={{ width: rem(16), height: rem(16) }} />
@@ -88,42 +158,19 @@ const ListTitle = (props: Props) => {
               >
                 Print list
               </Menu.Item>
-              <Popover width={330} radius="xs" offset={4} position="bottom">
-                <Popover.Target>
+              {!!props?.getTodoLists && (
+                <>
+                  <Menu.Divider />
                   <Menu.Item
                     leftSection={
-                      <IconSun style={{ width: rem(16), height: rem(16) }} />
+                      <IconTrash style={{ width: rem(16), height: rem(16) }} />
                     }
-                    rightSection={
-                      <IconChevronRight
-                        style={{ width: rem(16), height: rem(16) }}
-                      />
-                    }
+                    color="red"
                   >
-                    Change theme
+                    Delete list
                   </Menu.Item>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  <Group wrap="wrap">
-                    {colors.map((color) => (
-                      <ColorSwatch
-                        style={{ cursor: "pointer" }}
-                        color={color}
-                        onClick={() => update({ color })}
-                      />
-                    ))}
-                  </Group>
-                </Popover.Dropdown>
-              </Popover>
-              <Menu.Divider />
-              <Menu.Item
-                leftSection={
-                  <IconTrash style={{ width: rem(16), height: rem(16) }} />
-                }
-                color="red"
-              >
-                Delete list
-              </Menu.Item>
+                </>
+              )}
             </Menu.Dropdown>
           </Menu>
         </Group>
