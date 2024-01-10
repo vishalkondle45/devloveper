@@ -1,12 +1,11 @@
 import startDb from "@/lib/db";
 import TodoModel from "@/models/Todo";
-import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/authOptions";
 
 export const GET = async (
-  req: NextApiRequest,
+  req: NextRequest,
   { params }: { params: { list: string } }
 ): Promise<any> => {
   const session = await getServerSession(authOptions);
