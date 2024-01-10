@@ -89,11 +89,11 @@ const Page = () => {
       .catch((error) => {});
   };
 
-  const remove = (_id?: Types.ObjectId) => {
-    if (_id) {
+  const remove = (object: TodoUpdateTypes | null) => {
+    if (object?._id) {
       modals.openConfirmModal({
         title: (
-          <Text fw={700}>"{todo?.todo}" will be permanently deleted.</Text>
+          <Text fw={700}>"{object.todo}" will be permanently deleted.</Text>
         ),
         centered: true,
         children: <Text size="sm">You won't be able to undo this action.</Text>,
@@ -101,7 +101,7 @@ const Page = () => {
         confirmProps: { color: "red" },
         radius: "xs",
         onConfirm: async () =>
-          await axios.delete(`/api/todos?_id=${_id}`).then(() => {
+          await axios.delete(`/api/todos?_id=${object._id}`).then(() => {
             getTodos();
             close();
             form.reset();
