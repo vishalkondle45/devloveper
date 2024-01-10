@@ -102,7 +102,7 @@ const EditTodo = ({ close, form, update, todo, remove }: EditTodoProps) => {
           <ActionIcon
             color="red"
             variant="transparent"
-            onClick={() => remove(todo?._id)}
+            onClick={() => remove(todo)}
           >
             <IconTrash />
           </ActionIcon>

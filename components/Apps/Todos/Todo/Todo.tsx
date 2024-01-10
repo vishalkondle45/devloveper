@@ -255,7 +255,7 @@ const Todo = ({
                   leftSection={
                     <IconTrash style={{ width: rem(20), height: rem(20) }} />
                   }
-                  onClick={() => remove(todo?._id)}
+                  onClick={() => remove(todo)}
                 >
                   Delete task
                 </MenuItem>
