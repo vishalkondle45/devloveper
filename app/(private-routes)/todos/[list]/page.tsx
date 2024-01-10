@@ -49,7 +49,7 @@ const Page = () => {
   });
 
   const getTodos = async () => {
-    const res = await axios.get(`/api/todos?list=${params.list}`);
+    const res = await axios.get(`/api/todos/${params.list}`);
     setTodos(res.data);
   };
 

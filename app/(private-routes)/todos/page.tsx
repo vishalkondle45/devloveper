@@ -46,7 +46,7 @@ const Page = () => {
   });
 
   const getTodos = async () => {
-    const res = await axios.get(`/api/todos?sort=${sort?.sort}&by=${sort?.by}`);
+    const res = await axios.get(`/api/todos`);
     setTodos(res.data);
   };
 
