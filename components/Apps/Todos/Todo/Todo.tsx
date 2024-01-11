@@ -16,12 +16,16 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import {
+  IconArrowRight,
   IconCalendarMonth,
   IconCalendarUp,
   IconCalendarX,
+  IconChevronRight,
   IconCircleCheck,
+  IconCopy,
   IconDotsVertical,
-  IconListNumbers,
+  IconList,
+  IconPlaylistAdd,
   IconStar,
   IconStarFilled,
   IconStarOff,
@@ -54,6 +58,11 @@ const Todo = ({
     const { data } = await axios.post("/api/todos/lists");
     await axios.put(`/api/todos?_id=${_id}`, { list: data });
     router.push(`/todos/${data}`);
+  };
+
+  const copyToTodoList = async (list: string) => {
+    await axios.post(`/api/todos`, { ...todo, list, _id: undefined });
+    update(todo._id, {});
   };
 
   return (
@@ -241,7 +250,7 @@ const Todo = ({
                 <Menu.Divider />
                 <MenuItem
                   leftSection={
-                    <IconListNumbers
+                    <IconPlaylistAdd
                       style={{ width: rem(20), height: rem(20) }}
                     />
                   }
@@ -249,6 +258,68 @@ const Todo = ({
                 >
                   Create new list from this todo
                 </MenuItem>
+                <Menu radius="xs" position="left" trigger="click-hover">
+                  <Menu.Target>
+                    <MenuItem
+                      leftSection={
+                        <IconArrowRight
+                          style={{ width: rem(20), height: rem(20) }}
+                        />
+                      }
+                      rightSection={
+                        <IconChevronRight
+                          style={{ width: rem(20), height: rem(20) }}
+                        />
+                      }
+                    >
+                      Move task to...
+                    </MenuItem>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {todoLists?.map((item) => (
+                      <Menu.Item
+                        onClick={() => update(todo?._id, { list: item._id })}
+                        leftSection={
+                          <IconList
+                            style={{ width: rem(14), height: rem(14) }}
+                          />
+                        }
+                      >
+                        {item?.title}
+                      </Menu.Item>
+                    ))}
+                  </Menu.Dropdown>
+                </Menu>
+                <Menu radius="xs" position="left" trigger="click-hover">
+                  <Menu.Target>
+                    <MenuItem
+                      leftSection={
+                        <IconCopy style={{ width: rem(20), height: rem(20) }} />
+                      }
+                      rightSection={
+                        <IconChevronRight
+                          style={{ width: rem(20), height: rem(20) }}
+                        />
+                      }
+                    >
+                      Copy task to...
+                    </MenuItem>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {todoLists?.map((item) => (
+                      <Menu.Item
+                        onClick={() => copyToTodoList(item._id)}
+                        leftSection={
+                          <IconList
+                            style={{ width: rem(14), height: rem(14) }}
+                          />
+                        }
+                      >
+                        {item?.title}
+                      </Menu.Item>
+                    ))}
+                  </Menu.Dropdown>
+                </Menu>
                 <Menu.Divider />
                 <MenuItem
                   color="red"
