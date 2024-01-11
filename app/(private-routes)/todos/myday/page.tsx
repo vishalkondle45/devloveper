@@ -81,6 +81,7 @@ const Page = () => {
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Todos", href: "/todos" },
+    { title: "My Day", href: "/todos/myday" },
   ];
 
   const update = async (
