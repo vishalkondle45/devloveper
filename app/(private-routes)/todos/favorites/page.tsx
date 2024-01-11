@@ -154,7 +154,6 @@ const Page = () => {
                 update={update}
                 remove={remove}
                 todoLists={todoLists}
-                withMyDay={false}
               />
             ))}
           </Stack>
