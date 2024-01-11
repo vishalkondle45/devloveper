@@ -132,7 +132,7 @@ const Page = () => {
         setSort={setSort}
         sort={sort}
       />
-      <NewTodo getTodos={getTodos} isMyDayPage />
+      <NewTodo getTodos={getTodos} isPlannedPage />
       {!todos?.length ? (
         <Center h={500}>
           <Stack align="center">

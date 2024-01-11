@@ -22,11 +22,13 @@ import { useState } from "react";
 import { TodoType } from "../Todo.types";
 import classes from "./NewTodo.module.css";
 import { Props } from "./NewTodo.types";
+import dayjs from "dayjs";
 
 const NewTodo = ({
   getTodos,
   color,
   isMyDayPage = false,
+  isPlannedPage = false,
   list = "",
 }: Props) => {
   const [opened, setOpened] = useState(false);
@@ -35,7 +37,7 @@ const NewTodo = ({
   const form = useForm({
     initialValues: {
       todo: "",
-      date: "",
+      date: isPlannedPage ? dayjs().toString() : "",
       myday: isMyDayPage,
       list,
     },
