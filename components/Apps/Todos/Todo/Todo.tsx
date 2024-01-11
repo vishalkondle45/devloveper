@@ -306,7 +306,11 @@ const Todo = ({
                       Move task to...
                     </MenuItem>
                   </PopoverTarget>
-                  <PopoverDropdown onMouseEnter={open} onMouseLeave={close}>
+                  <PopoverDropdown
+                    p={0}
+                    onMouseEnter={open}
+                    onMouseLeave={close}
+                  >
                     <Stack gap={0}>
                       {todoLists?.map((item) => (
                         <Button
@@ -349,7 +353,11 @@ const Todo = ({
                       Copy task to...
                     </MenuItem>
                   </PopoverTarget>
-                  <PopoverDropdown onMouseEnter={open2} onMouseLeave={close2}>
+                  <PopoverDropdown
+                    p={0}
+                    onMouseEnter={open2}
+                    onMouseLeave={close2}
+                  >
                     <Stack gap={0}>
                       {todoLists?.map((item) => (
                         <Button
