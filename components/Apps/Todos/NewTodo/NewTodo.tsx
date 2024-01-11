@@ -23,7 +23,12 @@ import { TodoType } from "../Todo.types";
 import classes from "./NewTodo.module.css";
 import { Props } from "./NewTodo.types";
 
-const NewTodo = ({ getTodos, color, isMyDayPage = false }: Props) => {
+const NewTodo = ({
+  getTodos,
+  color,
+  isMyDayPage = false,
+  list = "",
+}: Props) => {
   const [opened, setOpened] = useState(false);
   const focusTrapRef = useFocusTrap(true);
   const theme = useMantineTheme();
@@ -31,7 +36,8 @@ const NewTodo = ({ getTodos, color, isMyDayPage = false }: Props) => {
     initialValues: {
       todo: "",
       date: "",
-      myday: false,
+      myday: isMyDayPage,
+      list,
     },
     validate: {
       todo: (value) => (value ? null : ""),
@@ -39,9 +45,6 @@ const NewTodo = ({ getTodos, color, isMyDayPage = false }: Props) => {
   });
 
   const handleSubmit = async (values: TodoType) => {
-    if (isMyDayPage) {
-      form.setFieldValue("myday", isMyDayPage);
-    }
     await axios
       .post("/api/todos", values)
       .then(() => {

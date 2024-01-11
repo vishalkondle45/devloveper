@@ -153,7 +153,11 @@ const Page = () => {
         sort={sort}
         getTodoLists={getTodoLists}
       />
-      <NewTodo getTodos={getTodos} color={selected?.color} />
+      <NewTodo
+        getTodos={getTodos}
+        color={selected?.color}
+        list={String(params.list)}
+      />
       {!todos?.length ? (
         <Center h={500}>
           <Stack align="center">
