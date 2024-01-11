@@ -28,7 +28,7 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import { ListUpdateTypes, Props, SortOptionProps } from "./ListTitle.types";
 
 const ListTitle = (props: Props) => {
@@ -50,6 +50,12 @@ const ListTitle = (props: Props) => {
       update({ title: title });
     }
     close();
+  };
+
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      closeEditHandler();
+    }
   };
 
   const update = async (object: ListUpdateTypes) => {
@@ -74,6 +80,7 @@ const ListTitle = (props: Props) => {
               radius="xs"
               onBlur={closeEditHandler}
               ref={focusTrapRef}
+              onKeyDown={handleKeyPress}
             />
           ) : (
             <>
