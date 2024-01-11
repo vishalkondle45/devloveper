@@ -24,7 +24,7 @@ export interface SortOptionProps {
 }
 
 export interface ListUpdateTypes {
-  // _id?: string;
+  _id?: string;
   title?: string;
   color?: string;
   user?: Types.ObjectId;

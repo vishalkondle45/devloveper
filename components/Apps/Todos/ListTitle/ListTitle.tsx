@@ -13,6 +13,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useFocusTrap } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import {
   IconArrowsSort,
   IconChevronDown,
@@ -27,7 +28,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { KeyboardEvent, useState } from "react";
 import { ListUpdateTypes, Props, SortOptionProps } from "./ListTitle.types";
 
@@ -38,6 +39,7 @@ const ListTitle = (props: Props) => {
   const params = useParams();
   const theme = useMantineTheme();
   const focusTrapRef = useFocusTrap(true);
+  const router = useRouter();
 
   const openEditHandler = () => {
     open();
@@ -66,6 +68,30 @@ const ListTitle = (props: Props) => {
           props?.getTodoLists?.();
         })
         .catch((error) => {});
+    }
+  };
+
+  const remove = () => {
+    setOpened(false);
+    if (!!params.list) {
+      modals.openConfirmModal({
+        title: (
+          <Text fw={700}>"{props.title}" will be permanently deleted.</Text>
+        ),
+        centered: true,
+        children: (
+          <Text fw={700}>All the todos added to list will be deleted.</Text>
+        ),
+        labels: { confirm: "Delete list", cancel: "Cancel" },
+        confirmProps: { color: "red" },
+        radius: "xs",
+        onConfirm: async () =>
+          await axios
+            .delete(`/api/todos/lists?_id=${String(params.list)}`)
+            .then(() => {
+              router.push("/todos");
+            }),
+      });
     }
   };
 
@@ -173,6 +199,7 @@ const ListTitle = (props: Props) => {
                       <IconTrash style={{ width: rem(16), height: rem(16) }} />
                     }
                     color="red"
+                    onClick={remove}
                   >
                     Delete list
                   </Menu.Item>
