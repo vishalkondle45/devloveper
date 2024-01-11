@@ -2,6 +2,7 @@ import { getDueDate } from "@/lib/functions";
 import {
   ActionIcon,
   Badge,
+  Button,
   Checkbox,
   Group,
   Menu,
@@ -9,12 +10,16 @@ import {
   MenuItem,
   MenuTarget,
   Paper,
+  Popover,
+  PopoverDropdown,
+  PopoverTarget,
   Stack,
   Text,
   getThemeColor,
   rem,
   useMantineTheme,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconArrowRight,
   IconCalendarMonth,
@@ -37,7 +42,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { Types } from "mongoose";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TodoProps } from "./Todo.types";
 const Todo = ({
   todo,
@@ -64,6 +69,20 @@ const Todo = ({
     await axios.post(`/api/todos`, { ...todo, list, _id: undefined });
     update(todo._id, {});
   };
+
+  const [opened1, { close, open }] = useDisclosure(false);
+  const [opened2, { close: close2, open: open2 }] = useDisclosure(false);
+
+  const removeTodo = () => {
+    setOpened(false);
+    remove(todo);
+  };
+
+  useEffect(() => {
+    close();
+    close2();
+    setOpened(false);
+  }, [todo]);
 
   return (
     <>
@@ -151,7 +170,12 @@ const Todo = ({
                 <IconStar style={{ width: rem(20), height: rem(20) }} />
               )}
             </ActionIcon>
-            <Menu radius="xs" opened={opened} onChange={setOpened}>
+            <Menu
+              radius="xs"
+              opened={opened}
+              onChange={setOpened}
+              closeOnItemClick={false}
+            >
               <MenuTarget>
                 <ActionIcon
                   variant="transparent"
@@ -258,8 +282,13 @@ const Todo = ({
                 >
                   Create new list from this todo
                 </MenuItem>
-                <Menu radius="xs" position="left" trigger="click-hover">
-                  <Menu.Target>
+                <Popover
+                  position="right"
+                  opened={opened1}
+                  radius="xs"
+                  offset={0}
+                >
+                  <PopoverTarget>
                     <MenuItem
                       leftSection={
                         <IconArrowRight
@@ -271,27 +300,40 @@ const Todo = ({
                           style={{ width: rem(20), height: rem(20) }}
                         />
                       }
+                      onMouseEnter={open}
+                      onMouseLeave={close}
                     >
                       Move task to...
                     </MenuItem>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    {todoLists?.map((item) => (
-                      <Menu.Item
-                        onClick={() => update(todo?._id, { list: item._id })}
-                        leftSection={
-                          <IconList
-                            style={{ width: rem(14), height: rem(14) }}
-                          />
-                        }
-                      >
-                        {item?.title}
-                      </Menu.Item>
-                    ))}
-                  </Menu.Dropdown>
-                </Menu>
-                <Menu radius="xs" position="left" trigger="click-hover">
-                  <Menu.Target>
+                  </PopoverTarget>
+                  <PopoverDropdown onMouseEnter={open} onMouseLeave={close}>
+                    <Stack gap={0}>
+                      {todoLists?.map((item) => (
+                        <Button
+                          variant="subtle"
+                          radius="xs"
+                          color="gray"
+                          onClick={() => update(todo?._id, { list: item._id })}
+                          leftSection={
+                            <IconList
+                              style={{ width: rem(14), height: rem(14) }}
+                            />
+                          }
+                          key={String(item._id)}
+                        >
+                          {item?.title}
+                        </Button>
+                      ))}
+                    </Stack>
+                  </PopoverDropdown>
+                </Popover>
+                <Popover
+                  position="right"
+                  opened={opened2}
+                  radius="xs"
+                  offset={0}
+                >
+                  <PopoverTarget>
                     <MenuItem
                       leftSection={
                         <IconCopy style={{ width: rem(20), height: rem(20) }} />
@@ -301,32 +343,40 @@ const Todo = ({
                           style={{ width: rem(20), height: rem(20) }}
                         />
                       }
+                      onMouseEnter={open2}
+                      onMouseLeave={close2}
                     >
                       Copy task to...
                     </MenuItem>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    {todoLists?.map((item) => (
-                      <Menu.Item
-                        onClick={() => copyToTodoList(item._id)}
-                        leftSection={
-                          <IconList
-                            style={{ width: rem(14), height: rem(14) }}
-                          />
-                        }
-                      >
-                        {item?.title}
-                      </Menu.Item>
-                    ))}
-                  </Menu.Dropdown>
-                </Menu>
+                  </PopoverTarget>
+                  <PopoverDropdown onMouseEnter={open2} onMouseLeave={close2}>
+                    <Stack gap={0}>
+                      {todoLists?.map((item) => (
+                        <Button
+                          variant="subtle"
+                          radius="xs"
+                          color="gray"
+                          onClick={() => copyToTodoList(item._id)}
+                          leftSection={
+                            <IconList
+                              style={{ width: rem(14), height: rem(14) }}
+                            />
+                          }
+                          key={String(item._id)}
+                        >
+                          {item?.title}
+                        </Button>
+                      ))}
+                    </Stack>
+                  </PopoverDropdown>
+                </Popover>
                 <Menu.Divider />
                 <MenuItem
                   color="red"
                   leftSection={
                     <IconTrash style={{ width: rem(20), height: rem(20) }} />
                   }
-                  onClick={() => remove(todo)}
+                  onClick={removeTodo}
                 >
                   Delete task
                 </MenuItem>
