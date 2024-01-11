@@ -23,7 +23,7 @@ import { TodoType } from "../Todo.types";
 import classes from "./NewTodo.module.css";
 import { Props } from "./NewTodo.types";
 
-const NewTodo = ({ getTodos, color }: Props) => {
+const NewTodo = ({ getTodos, color, isMyDayPage = false }: Props) => {
   const [opened, setOpened] = useState(false);
   const focusTrapRef = useFocusTrap(true);
   const theme = useMantineTheme();
@@ -39,13 +39,15 @@ const NewTodo = ({ getTodos, color }: Props) => {
   });
 
   const handleSubmit = async (values: TodoType) => {
+    if (isMyDayPage) {
+      form.setFieldValue("myday", isMyDayPage);
+    }
     await axios
       .post("/api/todos", values)
-      .then((res) => {
+      .then(() => {
         getTodos();
         form.reset();
         setOpened(false);
-        console.log(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -112,32 +114,41 @@ const NewTodo = ({ getTodos, color }: Props) => {
                   </Popover.Dropdown>
                 </Popover>
               )}
-              {form.values.myday ? (
-                <Badge
-                  variant="light"
-                  size="xs"
-                  rightSection={
-                    <ActionIcon
+              {!isMyDayPage && (
+                <>
+                  {form.values.myday ? (
+                    <Badge
+                      variant="light"
                       size="xs"
-                      variant="transparent"
-                      onClick={() => form.setFieldValue("myday", false)}
+                      rightSection={
+                        <ActionIcon
+                          size="xs"
+                          variant="transparent"
+                          onClick={() => form.setFieldValue("myday", false)}
+                        >
+                          <IconX />
+                        </ActionIcon>
+                      }
                     >
-                      <IconX />
+                      My day
+                    </Badge>
+                  ) : (
+                    <ActionIcon
+                      variant="transparent"
+                      onClick={() => form.setFieldValue("myday", true)}
+                    >
+                      <IconSun style={{ width: rem(20), height: rem(20) }} />
                     </ActionIcon>
-                  }
-                >
-                  My day
-                </Badge>
-              ) : (
-                <ActionIcon
-                  variant="transparent"
-                  onClick={() => form.setFieldValue("myday", true)}
-                >
-                  <IconSun style={{ width: rem(20), height: rem(20) }} />
-                </ActionIcon>
+                  )}
+                </>
               )}
             </Group>
-            <Button type="submit" radius="xs" size="compact-md">
+            <Button
+              type="submit"
+              disabled={!Boolean(form.values.todo)}
+              radius="xs"
+              size="compact-sm"
+            >
               Add
             </Button>
           </Group>
