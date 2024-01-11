@@ -316,6 +316,7 @@ const Todo = ({
                         <Button
                           variant="subtle"
                           radius="xs"
+                          justify="left"
                           color="gray"
                           onClick={() => update(todo?._id, { list: item._id })}
                           leftSection={
@@ -363,6 +364,7 @@ const Todo = ({
                         <Button
                           variant="subtle"
                           radius="xs"
+                          justify="left"
                           color="gray"
                           onClick={() => copyToTodoList(item._id)}
                           leftSection={
