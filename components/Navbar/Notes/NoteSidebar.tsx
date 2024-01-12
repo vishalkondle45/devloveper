@@ -29,7 +29,7 @@ const NoteSidebar = ({ navigate }: NoteSidebarProps) => {
   }, []);
 
   return (
-    <Group mt="xs" gap="xs">
+    <Group gap="xs">
       {list.map((item) => (
         <Button
           key={item.path}
@@ -37,6 +37,7 @@ const NoteSidebar = ({ navigate }: NoteSidebarProps) => {
           leftSection={item.icon ? <item.icon /> : <IconTag />}
           onClick={() => navigate(item.path)}
           justify="left"
+          radius="xs"
           fullWidth
         >
           {item.title}

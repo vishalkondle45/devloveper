@@ -36,7 +36,7 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
   }, []);
 
   return (
-    <Group mt="xs" gap="xs">
+    <Group gap="xs">
       {list.map((item) => (
         <Button
           key={item.path}
@@ -49,8 +49,9 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
             )
           }
           onClick={() => navigate(item.path)}
-          fullWidth
           justify="left"
+          radius="xs"
+          fullWidth
         >
           {item.title}
         </Button>
