@@ -36,6 +36,7 @@ const NoteSidebar = ({ navigate }: NoteSidebarProps) => {
           variant={pathname === item.path ? "filled" : "outline"}
           leftSection={item.icon ? <item.icon /> : <IconTag />}
           onClick={() => navigate(item.path)}
+          justify="left"
           fullWidth
         >
           {item.title}
