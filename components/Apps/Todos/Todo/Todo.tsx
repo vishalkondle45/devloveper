@@ -92,8 +92,14 @@ const Todo = ({
         radius="xs"
         withBorder
         onClick={() => editTodo(todo)}
+        py={"xs"}
       >
-        <Group justify="space-between" align="center" h={rem(60)} wrap="nowrap">
+        <Group
+          justify="space-between"
+          align="center"
+          mih={rem(30)}
+          wrap="nowrap"
+        >
           <Group wrap="nowrap" gap="xs">
             <Checkbox
               checked={Boolean(todo?.completedOn)}
@@ -110,7 +116,7 @@ const Todo = ({
             />
             <Stack gap={0}>
               <Text>{todo?.todo}</Text>
-              <Group gap="xs" wrap="nowrap">
+              <Group gap="xs">
                 {todo?.myday && withMyDay && (
                   <Badge
                     size="xs"

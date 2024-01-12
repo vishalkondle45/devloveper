@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
 dayjs.extend(isToday);
@@ -45,7 +45,7 @@ export function getDigitByString(str: string | undefined | null) {
 export const getDueDate = (date: any) => {
   if (dayjs(date).isToday()) return "Today";
   if (dayjs(date).isTomorrow()) return "Tomorrow";
-  return dayjs(date).format("dddd, MMMM D");
+  return dayjs(date).format("ddd, MMM D");
 };
 
 export const removeSpaces = (string: string | undefined) =>
