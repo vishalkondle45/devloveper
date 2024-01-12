@@ -1,6 +1,6 @@
 # Devloveper
 
-#### https://www.devloveper.vercel.app
+#### https://devloveper.vercel.app
 
 ##### email - vishal.kondle@gmail.com
 
