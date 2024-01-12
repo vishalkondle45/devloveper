@@ -111,6 +111,7 @@ const Todo = ({
                     : dayjs().toISOString(),
                 })
               }
+              radius="xl"
               color={color}
               onClick={(e) => e.stopPropagation()}
               styles={{ input: { borderColor: getThemeColor(color, theme) } }}

@@ -1,5 +1,6 @@
 import startDb from "@/lib/db";
 import LabelModel from "@/models/Label";
+import NoteModel from "@/models/Note";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -62,6 +63,13 @@ export const DELETE = async (req: NextRequest): Promise<any> => {
   }
   const _id = req.nextUrl.searchParams.get("_id");
   await startDb();
+  const notes = await NoteModel.countDocuments({ labels: _id });
+  if (notes) {
+    return NextResponse.json(
+      { msg: "Please remove this label from notes." },
+      { status: 400 }
+    );
+  }
   const label = await LabelModel.findByIdAndDelete(_id);
   return NextResponse.json(label, { status: 200 });
 };

@@ -22,6 +22,7 @@ import { IconPencil, IconTags, IconTrash, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = () => {
@@ -29,6 +30,7 @@ const Page = () => {
   const [labels, setLabels] = useState<Values[] | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [label, setLabel] = useState(null);
+  const router = useRouter();
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Notes", href: "/notes" },
@@ -69,7 +71,14 @@ const Page = () => {
       labels: { confirm: "Delete", cancel: "Cancel" },
       centered: true,
       onConfirm: async () => {
-        await axios.delete(`/api/notes/labels?_id=${_id}`);
+        await axios.delete(`/api/notes/labels?_id=${_id}`).catch((error) => {
+          notifications.show({
+            message: error.response.data.msg,
+            icon: <IconX />,
+            color: "red",
+          });
+          router.push(`/notes/labels/${_id}`);
+        });
         getLabels();
       },
     });

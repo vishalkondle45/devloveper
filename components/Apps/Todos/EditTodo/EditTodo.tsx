@@ -118,6 +118,7 @@ const EditTodo = ({ close, form, update, todo, remove }: EditTodoProps) => {
                     : dayjs().toISOString(),
                 })
               }
+              radius="xl"
             />
             <Textarea
               styles={{

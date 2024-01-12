@@ -13,6 +13,7 @@ import {
   PopoverTarget,
   Stack,
   Text,
+  ThemeIcon,
   parseThemeColor,
   rem,
   useMantineColorScheme,
@@ -211,19 +212,32 @@ const Note = ({
                   </PopoverTarget>
                   <PopoverDropdown>
                     <Stack gap="xs">
-                      {labels?.map((label) => (
-                        <Group
-                          key={String(label._id)}
-                          onClick={() => updateLabel(label?._id)}
+                      {labels?.length ? (
+                        labels?.map((label) => (
+                          <Group
+                            key={String(label._id)}
+                            onClick={() => updateLabel(label?._id)}
+                          >
+                            <Checkbox
+                              checked={Boolean(
+                                note.labels.find((i) => i === label._id)
+                              )}
+                            />
+                            <Text>{label?.title}</Text>
+                          </Group>
+                        ))
+                      ) : (
+                        <Badge
+                          variant="transparent"
+                          leftSection={
+                            <ThemeIcon radius="xl" size="xs" color="red">
+                              <IconX />
+                            </ThemeIcon>
+                          }
                         >
-                          <Checkbox
-                            checked={Boolean(
-                              note.labels.find((i) => i === label._id)
-                            )}
-                          />
-                          <Text>{label?.title}</Text>
-                        </Group>
-                      ))}
+                          No labels found
+                        </Badge>
+                      )}
                     </Stack>
                   </PopoverDropdown>
                 </Popover>
