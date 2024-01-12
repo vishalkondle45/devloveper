@@ -13,7 +13,7 @@ const DevLovePer = () => {
         href="/"
         variant="transparent"
         leftSection={
-          <ThemeIcon>
+          <ThemeIcon radius="xl">
             <IconBraces size={18} />
           </ThemeIcon>
         }

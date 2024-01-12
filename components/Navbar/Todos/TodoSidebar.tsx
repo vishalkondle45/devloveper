@@ -50,7 +50,6 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
           }
           onClick={() => navigate(item.path)}
           justify="left"
-          radius="xs"
           fullWidth
         >
           {item.title}

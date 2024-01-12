@@ -91,7 +91,6 @@ const Todo = ({
       <Paper
         shadow="xl"
         px="xs"
-        radius="xs"
         withBorder
         onClick={() => editTodo(todo)}
         py={"xs"}
@@ -188,12 +187,7 @@ const Todo = ({
                 <IconStar style={{ width: rem(20), height: rem(20) }} />
               )}
             </ActionIcon>
-            <Menu
-              radius="xs"
-              opened={opened}
-              onChange={setOpened}
-              closeOnItemClick={false}
-            >
+            <Menu opened={opened} onChange={setOpened} closeOnItemClick={false}>
               <MenuTarget>
                 <ActionIcon
                   variant="transparent"
@@ -300,12 +294,7 @@ const Todo = ({
                 >
                   Create new list from this todo
                 </MenuItem>
-                <Popover
-                  position="right"
-                  opened={opened1}
-                  radius="xs"
-                  offset={0}
-                >
+                <Popover position="right" opened={opened1} offset={0}>
                   <PopoverTarget>
                     <MenuItem
                       leftSection={
@@ -333,7 +322,6 @@ const Todo = ({
                       {todoLists?.map((item) => (
                         <Button
                           variant="subtle"
-                          radius="xs"
                           justify="left"
                           color="gray"
                           onClick={() => update(todo?._id, { list: item._id })}
@@ -350,12 +338,7 @@ const Todo = ({
                     </Stack>
                   </PopoverDropdown>
                 </Popover>
-                <Popover
-                  position="right"
-                  opened={opened2}
-                  radius="xs"
-                  offset={0}
-                >
+                <Popover position="right" opened={opened2} offset={0}>
                   <PopoverTarget>
                     <MenuItem
                       leftSection={
@@ -381,7 +364,6 @@ const Todo = ({
                       {todoLists?.map((item) => (
                         <Button
                           variant="subtle"
-                          radius="xs"
                           justify="left"
                           color="gray"
                           onClick={() => copyToTodoList(item._id)}

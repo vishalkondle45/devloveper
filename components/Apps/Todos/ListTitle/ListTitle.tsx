@@ -103,7 +103,6 @@ const ListTitle = (props: Props) => {
             <TextInput
               value={title}
               onChange={(e) => setTitle(e.currentTarget.value)}
-              radius="xs"
               onBlur={closeEditHandler}
               ref={focusTrapRef}
               onKeyDown={handleKeyPress}
@@ -129,7 +128,6 @@ const ListTitle = (props: Props) => {
             closeOnItemClick={false}
             opened={opened}
             onChange={setOpened}
-            radius="xs"
             shadow="md"
             width={200}
           >
@@ -152,7 +150,7 @@ const ListTitle = (props: Props) => {
                   >
                     Rename list
                   </Menu.Item>
-                  <Popover width={330} radius="xs" offset={4} position="bottom">
+                  <Popover width={330} offset={4} position="bottom">
                     <Popover.Target>
                       <Menu.Item
                         leftSection={
@@ -208,7 +206,7 @@ const ListTitle = (props: Props) => {
             </Menu.Dropdown>
           </Menu>
         </Group>
-        <Menu radius="xs" shadow="md" width={200}>
+        <Menu shadow="md" width={200}>
           <Menu.Target>
             <ActionIcon color={props.color} variant="transparent">
               <IconArrowsSort stroke={1} />

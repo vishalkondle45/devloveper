@@ -20,6 +20,7 @@ export default function ColorSchemeToggle({
         variant="outline"
         onClick={toggleColorScheme}
         size="lg"
+        radius="xl"
       >
         {colorScheme === "dark" ? (
           <IconMoon size={18} />

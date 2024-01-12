@@ -37,7 +37,6 @@ const NoteSidebar = ({ navigate }: NoteSidebarProps) => {
           leftSection={item.icon ? <item.icon /> : <IconTag />}
           onClick={() => navigate(item.path)}
           justify="left"
-          radius="xs"
           fullWidth
         >
           {item.title}

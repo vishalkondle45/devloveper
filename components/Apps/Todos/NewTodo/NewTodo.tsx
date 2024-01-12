@@ -61,14 +61,14 @@ const NewTodo = ({
 
   return (
     <>
-      <Paper radius="xs" shadow="xl" withBorder>
+      <Paper shadow="xl" withBorder>
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <TextInput
-            radius="xs"
             leftSection={
               <Checkbox
                 styles={{ input: { borderColor: getThemeColor(color, theme) } }}
                 checked={false}
+                radius="xl"
                 readOnly
               />
             }
@@ -97,7 +97,6 @@ const NewTodo = ({
                 </Badge>
               ) : (
                 <Popover
-                  radius="xs"
                   position="bottom"
                   withArrow
                   shadow="md"
@@ -151,7 +150,6 @@ const NewTodo = ({
             <Button
               type="submit"
               disabled={!Boolean(form.values.todo)}
-              radius="xs"
               size="compact-sm"
             >
               Add

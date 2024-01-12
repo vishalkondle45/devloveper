@@ -46,7 +46,6 @@ const DueDate = ({ update, todo }: DueDateProps) => {
         <Menu
           opened={opened}
           onChange={setOpened}
-          radius="xs"
           shadow="md"
           width={200}
           closeOnItemClick={false}
@@ -135,7 +134,6 @@ const DueDate = ({ update, todo }: DueDateProps) => {
                     backgroundColor: "transparent",
                   },
                 }}
-                radius="xs"
               />
             </Menu.Item>
           </Menu.Dropdown>

@@ -19,13 +19,19 @@ const Apps = () => {
   const [opened, setOpened] = useState(false);
   return (
     <>
-      <Popover opened={opened} onChange={setOpened} position="bottom-end">
+      <Popover
+        opened={opened}
+        onChange={setOpened}
+        radius="xl"
+        position="bottom-end"
+      >
         <Popover.Target>
           <ActionIcon
             onClick={() => setOpened((o) => !o)}
             color="grey"
             variant="outline"
             size="lg"
+            radius="xl"
           >
             <IconGridDots size={18} />
           </ActionIcon>

@@ -198,7 +198,6 @@ const EditTodo = ({ close, form, update, todo, remove }: EditTodoProps) => {
         <Paper p="xs" withBorder>
           <Textarea
             placeholder="Add note"
-            radius="xs"
             styles={{
               input: { border: "none", backgroundColor: "transparent" },
             }}
