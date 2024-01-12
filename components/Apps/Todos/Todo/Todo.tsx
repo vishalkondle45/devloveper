@@ -15,6 +15,7 @@ import {
   PopoverTarget,
   Stack,
   Text,
+  ThemeIcon,
   getThemeColor,
   rem,
   useMantineTheme,
@@ -26,6 +27,7 @@ import {
   IconCalendarUp,
   IconCalendarX,
   IconChevronRight,
+  IconCircle,
   IconCircleCheck,
   IconCopy,
   IconDotsVertical,
@@ -117,18 +119,39 @@ const Todo = ({
             <Stack gap={0}>
               <Text>{todo?.todo}</Text>
               <Group gap="xs">
+                {todo?.list && withListName && (
+                  <>
+                    <Badge
+                      size="xs"
+                      variant="outline"
+                      color={
+                        todoLists?.find(({ _id }) => _id === todo?.list)?.color
+                      }
+                    >
+                      {todoLists?.find(({ _id }) => _id === todo?.list)?.title}
+                    </Badge>
+                    <ThemeIcon size={rem(4)}>
+                      <IconCircle />
+                    </ThemeIcon>
+                  </>
+                )}
                 {todo?.myday && withMyDay && (
-                  <Badge
-                    size="xs"
-                    p={0}
-                    variant="transparent"
-                    c="gray"
-                    leftSection={
-                      <IconSun style={{ width: rem(20), height: rem(20) }} />
-                    }
-                  >
-                    My Day
-                  </Badge>
+                  <>
+                    <Badge
+                      size="xs"
+                      p={0}
+                      variant="transparent"
+                      c="gray"
+                      leftSection={
+                        <IconSun style={{ width: rem(20), height: rem(20) }} />
+                      }
+                    >
+                      My Day
+                    </Badge>
+                    <ThemeIcon size={rem(4)}>
+                      <IconCircle />
+                    </ThemeIcon>
+                  </>
                 )}
                 {todo?.date && withDueDate && (
                   <Badge
@@ -143,17 +166,6 @@ const Todo = ({
                     c={dayjs(todo?.date).isToday() ? "" : "grey"}
                   >
                     Due {getDueDate(todo?.date)}
-                  </Badge>
-                )}
-                {todo?.list && withListName && (
-                  <Badge
-                    size="xs"
-                    variant="outline"
-                    color={
-                      todoLists?.find(({ _id }) => _id === todo?.list)?.color
-                    }
-                  >
-                    {todoLists?.find(({ _id }) => _id === todo?.list)?.title}
                   </Badge>
                 )}
               </Group>
