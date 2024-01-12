@@ -179,10 +179,10 @@ const Todo = ({
           >
             <ActionIcon
               variant="transparent"
-              onClick={() => update(todo?._id, { favorite: !todo?.favorite })}
+              onClick={() => update(todo?._id, { important: !todo?.important })}
               color={color}
             >
-              {Boolean(todo?.favorite) ? (
+              {Boolean(todo?.important) ? (
                 <IconStarFilled style={{ width: rem(20), height: rem(20) }} />
               ) : (
                 <IconStar style={{ width: rem(20), height: rem(20) }} />
@@ -220,7 +220,7 @@ const Todo = ({
                 </MenuItem>
                 <MenuItem
                   leftSection={
-                    todo?.favorite ? (
+                    todo?.important ? (
                       <IconStarOff
                         style={{ width: rem(20), height: rem(20) }}
                       />
@@ -229,10 +229,10 @@ const Todo = ({
                     )
                   }
                   onClick={() =>
-                    update(todo?._id, { favorite: !todo?.favorite })
+                    update(todo?._id, { important: !todo?.important })
                   }
                 >
-                  {todo?.favorite ? "Remove from" : "Add to"} favorites
+                  {todo?.important ? "Remove importance" : "Mark as important"}
                 </MenuItem>
                 <MenuItem
                   leftSection={

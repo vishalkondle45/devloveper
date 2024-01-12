@@ -15,7 +15,7 @@ export const GET = async (req: NextRequest): Promise<any> => {
   await startDb();
   const todos = await TodoModel.find({
     user: session.user?._id,
-    favorite: true,
+    important: true,
   });
   return NextResponse.json(todos, { status: 200 });
 };

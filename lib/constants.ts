@@ -25,7 +25,7 @@ export const colors = [
 
 export const sortOptions: SortOptionProps[] = [
   {
-    name: "favorite",
+    name: "important",
     label: "Importance",
     icon: IconStar,
   },

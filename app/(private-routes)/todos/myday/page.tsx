@@ -37,7 +37,7 @@ const Page = () => {
   const form = useForm({
     initialValues: {
       todo: "",
-      favorite: false,
+      important: false,
       myday: true,
       completedOn: "",
       date: "",

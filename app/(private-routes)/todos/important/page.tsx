@@ -37,7 +37,7 @@ const Page = () => {
   const form = useForm({
     initialValues: {
       todo: "",
-      favorite: false,
+      important: false,
       myday: true,
       completedOn: "",
       date: "",
@@ -46,7 +46,7 @@ const Page = () => {
   });
 
   const getTodos = async () => {
-    const res = await axios.get(`/api/todos/favorites`);
+    const res = await axios.get(`/api/todos/important`);
     setTodos(res.data);
   };
 
@@ -81,7 +81,7 @@ const Page = () => {
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Todos", href: "/todos" },
-    { title: "Favorites", href: "/todos/favorites" },
+    { title: "Important", href: "/todos/important" },
   ];
 
   const update = async (
@@ -125,7 +125,7 @@ const Page = () => {
     <Container mt="md" size="md">
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
       <ListTitle
-        title="Favorites"
+        title="Important"
         color={theme.primaryColor}
         icon={IconStar}
         getTodos={getTodos}

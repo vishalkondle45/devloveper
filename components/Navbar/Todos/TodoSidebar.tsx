@@ -5,7 +5,7 @@ import {
   IconCircleCheck,
   IconList,
   IconStar,
-  IconSun
+  IconSun,
 } from "@tabler/icons-react";
 import axios from "axios";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,7 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
     { path: "/todos", icon: IconCircleCheck, title: "Todos" },
     { path: "/todos/myday", icon: IconSun, title: "My Day" },
     { path: "/todos/planned", icon: IconCalendarMonth, title: "Planned" },
-    { path: "/todos/favorites", icon: IconStar, title: "Favorites" },
+    { path: "/todos/important", icon: IconStar, title: "Important" },
   ]);
 
   const getTodoLists = async () => {

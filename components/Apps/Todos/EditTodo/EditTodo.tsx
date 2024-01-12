@@ -137,10 +137,10 @@ const EditTodo = ({ close, form, update, todo, remove }: EditTodoProps) => {
               size="sm"
               variant="transparent"
               onClick={() =>
-                onUpdate(todo?._id, { favorite: !form.values?.favorite })
+                onUpdate(todo?._id, { important: !form.values?.important })
               }
             >
-              {form.values.favorite ? (
+              {form.values.important ? (
                 <IconStarFilled stroke={1.5} />
               ) : (
                 <IconStar stroke={1.5} />

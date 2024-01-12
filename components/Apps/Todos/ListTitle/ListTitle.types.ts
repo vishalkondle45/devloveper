@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 
 export interface SortTypes {
   sort: "asc" | "desc";
-  by: "favorite" | "date" | "todo" | "createdAt" | "myday" | "";
+  by: "important" | "date" | "todo" | "createdAt" | "myday" | "";
 }
 
 export interface Props {
@@ -18,7 +18,7 @@ export interface Props {
 }
 
 export interface SortOptionProps {
-  name: "favorite" | "date" | "todo" | "createdAt" | "myday" | "";
+  name: "important" | "date" | "todo" | "createdAt" | "myday" | "";
   label: string;
   icon: (props: TablerIconsProps) => JSX.Element;
 }
