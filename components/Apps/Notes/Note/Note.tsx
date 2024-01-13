@@ -33,7 +33,7 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NoteProps } from "./Note.types";
 const Note = ({
   note,
@@ -79,6 +79,11 @@ const Note = ({
       })
       .catch((error) => console.log(error));
   };
+
+  useEffect(() => {
+    setOpened(false);
+    setOpened1(false);
+  }, [note]);
 
   return (
     <>
