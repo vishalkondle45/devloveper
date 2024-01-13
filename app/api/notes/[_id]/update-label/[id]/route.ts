@@ -17,9 +17,7 @@ export const PUT = async (
       { status: 401 }
     );
   }
-  // const _id = req.nextUrl.searchParams.get("_id");
   await startDb();
-  console.log({ params_id: params._id, paramsId: params.id });
   const label = await LabelModel.findById(params.id);
   if (!label?.user || String(label?.user) !== String(session.user?._id)) {
     return NextResponse.json(

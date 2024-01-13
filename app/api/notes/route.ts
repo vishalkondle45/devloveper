@@ -30,7 +30,6 @@ export const GET = async (req: NextRequest): Promise<any> => {
       { status: 401 }
     );
   }
-  console.log({ labels: req.nextUrl.searchParams.get("label") || [] });
   await startDb();
   const notes = await NoteModel.find({
     user: session.user?._id,

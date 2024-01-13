@@ -77,9 +77,7 @@ const Note = ({
           handlers.close();
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.log(error));
   };
 
   return (
