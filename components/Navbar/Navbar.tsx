@@ -16,6 +16,7 @@ import ColorSchemeToggle from "../ColorSchemeToggle";
 import DevLovePer from "../DevLovePer";
 import classes from "./Navbar.module.css";
 import NoteSidebar from "./Notes";
+import SplitSidebar from "./Split";
 import TodoSidebar from "./Todos";
 
 const Navbar = () => {
@@ -35,6 +36,8 @@ const Navbar = () => {
         return <NoteSidebar navigate={navigate} />;
       case "todos":
         return <TodoSidebar navigate={navigate} />;
+      case "split":
+        return <SplitSidebar navigate={navigate} />;
       default:
         return <Text>Please select app</Text>;
     }
