@@ -14,7 +14,7 @@ export default function BreadcrumbsComp({ breadcrumbs }: BreadcrumbsProps) {
               {item.title}
             </Anchor>
           ) : (
-            <Text>{item.title}</Text>
+            <Text key={item.href}>{item.title}</Text>
           )
         )}
       </Breadcrumbs>

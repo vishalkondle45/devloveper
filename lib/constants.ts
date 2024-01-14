@@ -1,10 +1,17 @@
 import { SortOptionProps } from "@/components/Apps/Todos/ListTitle/ListTitle.types";
 import {
   IconArrowsDownUp,
+  IconBuilding,
   IconCalendarMonth,
   IconCalendarPlus,
+  IconCar,
+  IconCircles,
+  IconHome,
+  IconHome2,
+  IconPingPong,
   IconStar,
   IconSun,
+  TablerIconsProps,
 } from "@tabler/icons-react";
 
 export const colors = [
@@ -49,4 +56,18 @@ export const sortOptions: SortOptionProps[] = [
     label: "Creation date",
     icon: IconCalendarPlus,
   },
+];
+
+export interface GroupTypeTypes {
+  type: "home" | "trip" | "office" | "sports" | "others";
+  label: String;
+  icon: (props: TablerIconsProps) => JSX.Element;
+}
+
+export const groupTypes: GroupTypeTypes[] = [
+  { type: "home", label: "Home", icon: IconHome },
+  { type: "trip", label: "Trip", icon: IconCar },
+  { type: "office", label: "Office", icon: IconBuilding },
+  { type: "sports", label: "Sports", icon: IconPingPong },
+  { type: "others", label: "Others", icon: IconCircles },
 ];

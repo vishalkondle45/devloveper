@@ -26,12 +26,12 @@ const Page = () => {
   ];
 
   const getFriends = async () => {
-    const res = await axios.get("/api/todos/friends");
+    const res = await axios.get("/api/split/friends");
     setFriends(res.data);
   };
 
   const manageFriendship = async (friend: mongoose.Types.ObjectId) => {
-    await axios.put(`/api/todos/friends`, { friend });
+    await axios.put(`/api/split/friends`, { friend });
   };
 
   useEffect(() => {
