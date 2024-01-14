@@ -1,6 +1,7 @@
 import { Button, Group, rem } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import {
+  IconActivity,
   IconCoinRupee,
   IconList,
   IconUsers,
@@ -17,6 +18,7 @@ const SplitSidebar = ({ navigate }: SplitSidebarProps) => {
     { path: "/split", icon: IconCoinRupee, title: "Home" },
     { path: "/split/groups", icon: IconUsersGroup, title: "Groups" },
     { path: "/split/friends", icon: IconUsers, title: "Friends" },
+    { path: "/split/activity", icon: IconActivity, title: "Activities" },
   ]);
 
   const getTodoLists = async () => {

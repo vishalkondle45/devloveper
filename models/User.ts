@@ -1,5 +1,6 @@
 import { Model, models, model, Document, Schema } from "mongoose";
 import bcrypt from "bcrypt";
+import { Types } from "mongoose";
 
 interface UserDocument extends Document {
   email: string;
@@ -8,6 +9,7 @@ interface UserDocument extends Document {
   isAdmin: boolean;
   verificationCode: string;
   isVerified: boolean;
+  friends: Types.ObjectId[];
 }
 
 interface Methods {
@@ -22,6 +24,7 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
     isAdmin: { type: Boolean, default: false },
     verificationCode: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
+    friends: { type: [Types.ObjectId], default: [] },
   },
   { timestamps: true }
 );
