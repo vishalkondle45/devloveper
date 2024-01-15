@@ -53,3 +53,5 @@ export const removeSpaces = (string: string | undefined) =>
 
 export const convertToSingleSpace = (string: string | undefined) =>
   string?.split("  ").join(" ").trim();
+
+export const displayUserFirstName = (string: string) => string.split(" ")[0];

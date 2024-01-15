@@ -18,7 +18,7 @@ const groupSchema = new Schema<GroupDocument>(
     },
     simplify: { type: Boolean, default: false },
     user: { type: "ObjectId", required: true },
-    users: { type: ["ObjectId"], default: [] },
+    users: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
   },
   { timestamps: true }
 );
