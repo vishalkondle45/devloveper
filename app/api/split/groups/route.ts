@@ -13,7 +13,49 @@ export const GET = async (req: NextRequest) => {
     );
   }
   await startDb();
-  let groups = await GroupModel.find({ user: session.user?._id });
+  let groups = await GroupModel.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+    {
+      $project: {
+        "user.password": 0,
+        "user.verificationCode": 0,
+        "user.isAdmin": 0,
+        "user.isVerified": 0,
+        "user.friends": 0,
+        "user.createdAt": 0,
+        "user.updatedAt": 0,
+        "user.__v": 0,
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "users",
+        foreignField: "_id",
+        as: "users",
+      },
+    },
+    {
+      $project: {
+        "users.password": 0,
+        "users.verificationCode": 0,
+        "users.isAdmin": 0,
+        "users.isVerified": 0,
+        "users.friends": 0,
+        "users.createdAt": 0,
+        "users.updatedAt": 0,
+        "users.__v": 0,
+      },
+    },
+  ]);
   return NextResponse.json(groups, { status: 200 });
 };
 
