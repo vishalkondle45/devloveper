@@ -111,9 +111,8 @@ const Page = () => {
               key: group.type,
               value: group.type,
               label: (
-                <Center style={{ gap: rem(5) }}>
-                  <group.icon style={{ width: rem(13), height: rem(13) }} />
-                  <span>{group.label}</span>
+                <Center>
+                  <group.icon />
                 </Center>
               ),
             }))}
