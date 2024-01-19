@@ -1,23 +1,27 @@
-import { GroupTypeTypes, groupTypes } from "@/lib/constants";
-import { Group, Paper, Stack, Text, ThemeIcon, rem } from "@mantine/core";
+import { groupTypes } from "@/lib/constants";
+import { Group, Paper, Stack, Text, ThemeIcon } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import { GroupProps } from "./Group.Types";
 
 const GroupItem = ({ group }: GroupProps) => {
   const groupType = groupTypes.find(({ type }) => type === group.type);
+  const router = useRouter();
+  const goToGroup = () => router.push(`/split/groups/${group._id}`);
+
   return (
-    <Paper p="xs" shadow="xl" withBorder>
+    <Paper
+      p="xs"
+      shadow="xl"
+      style={{ cursor: "pointer" }}
+      onClick={goToGroup}
+      withBorder
+    >
       <Group wrap="nowrap" justify="space-between">
         <Group>
           <ThemeIcon variant="light" radius="xl" size="xl">
             {groupType && <groupType.icon />}
           </ThemeIcon>
-          <Stack gap={0}>
-            <Text>{group.title}</Text>
-            <Stack gap={0}>
-              <Text size="xs">Someone will pay you $100</Text>
-              <Text size="xs">Someone will pay you $90</Text>
-            </Stack>
-          </Stack>
+          <Text>{group.title}</Text>
         </Group>
         <Stack ta="right" gap={0}>
           <Text size="xs">You are owed</Text>
