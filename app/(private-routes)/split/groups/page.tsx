@@ -39,6 +39,7 @@ const Page = () => {
     initialValues: {
       title: "",
       type: "home",
+      users: [],
     },
     validate: {
       title: (value) => (value ? null : "This field is required."),

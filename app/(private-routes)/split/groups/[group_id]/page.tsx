@@ -1,12 +1,13 @@
 "use client";
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
-import { GroupType, GroupUser } from "@/components/Split/Group/Group.Types";
+import { GroupType } from "@/components/Split/Group/Group.Types";
+import GroupUser from "@/components/Split/Group/User/GroupUser";
+import { GroupUserType } from "@/components/Split/Group/User/User.Types";
 import { colors, groupTypes } from "@/lib/constants";
 import { getDigitByString, getInitials } from "@/lib/functions";
 import {
   ActionIcon,
   Avatar,
-  Button,
   Center,
   Container,
   Group,
@@ -27,6 +28,7 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconSettings, IconTrash } from "@tabler/icons-react";
 import axios from "axios";
+import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -42,7 +44,7 @@ const Page = () => {
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Split", href: "/split" },
-    { title: "Group", href: "/split/groups" },
+    { title: "Groups", href: "/split/groups" },
     {
       title: String(group?.title) || String(params?.group_id),
       href: String(params?.group_id),
@@ -53,6 +55,8 @@ const Page = () => {
     initialValues: {
       title: "",
       type: "home",
+      users: [],
+      user: new mongoose.Types.ObjectId(),
     },
     validate: {
       title: (value) => (value ? null : "This field is required."),
@@ -90,19 +94,13 @@ const Page = () => {
     });
   };
 
-  const upateGroup = async () => {
+  const update = async (
+    property: "title" | "type" | "users",
+    value: string | never[]
+  ) => {
     await axios
-      .put(`/api/split/groups/${params?.group_id}`, form.values)
-      .then((res) => {
-        form.reset();
-        close();
-        getGroup();
-        notifications.show({
-          message: "Group updated",
-          icon: <IconCheck />,
-          color: "green",
-        });
-      })
+      .put(`/api/split/groups/${params?.group_id}`, { [property]: value })
+      .then((res) => getGroup())
       .catch((error) => console.log(error));
   };
 
@@ -154,43 +152,50 @@ const Page = () => {
           </Group>
         </Group>
       </Paper>
-      <Container size="xs" px={0}>
-        {group.users.map((user: GroupUser) => (
-          <Text>{user?.name}</Text>
-        ))}
-      </Container>
-      <Modal opened={opened} onClose={close} withCloseButton={false}>
-        <form onSubmit={form.onSubmit(upateGroup)}>
-          <TextInput
-            label="Group name"
-            placeholder="Enter a group name"
-            {...form.getInputProps("title")}
-            mb="xs"
-          />
-          <SegmentedControl
-            w={rem("100%")}
-            color="teal"
-            size="xs"
-            data={groupTypes.map((group) => ({
-              key: group.type,
-              value: group.type,
-              label: (
-                <Center>
-                  <group.icon />
-                </Center>
-              ),
-            }))}
-            {...form.getInputProps("type")}
-          />
-          <Group mt="sm" justify="right">
-            <Button color="red" onClick={close}>
-              Cancel
-            </Button>
-            <Button color="green" type="submit">
-              Submit
-            </Button>
-          </Group>
-        </form>
+      <Modal opened={opened} title="Edit Group" onClose={close}>
+        <TextInput
+          label="Group name"
+          placeholder="Enter a group name"
+          {...form.getInputProps("title")}
+          mb="xs"
+          onBlur={() => update("title", form.values.title)}
+        />
+        <Text fw={500} fz="sm">
+          Type
+        </Text>
+        <SegmentedControl
+          w={rem("100%")}
+          color="teal"
+          size="xs"
+          data={groupTypes.map((group) => ({
+            key: group.type,
+            value: group.type,
+            label: (
+              <Center>
+                <group.icon />
+              </Center>
+            ),
+          }))}
+          mb="xs"
+          {...form.getInputProps("type")}
+          onChange={(value) => update("type", value)}
+        />
+        <Text fw={500} fz="sm">
+          Users
+        </Text>
+        <Paper p="sm" withBorder>
+          <Stack gap={0}>
+            {form.values.users.map((user: GroupUserType, index) => (
+              <GroupUser
+                form={form}
+                index={index}
+                update={update}
+                user={user}
+                key={String(user._id)}
+              />
+            ))}
+          </Stack>
+        </Paper>
       </Modal>
     </Container>
   );
