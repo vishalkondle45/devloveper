@@ -2,11 +2,15 @@
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import { GroupType } from "@/components/Split/Group/Group.Types";
 import GroupUser from "@/components/Split/Group/User/GroupUser";
-import { GroupUserType } from "@/components/Split/Group/User/User.Types";
+import {
+  AutoCompleteDataType,
+  GroupUserType,
+} from "@/components/Split/Group/User/User.Types";
 import { colors, groupTypes } from "@/lib/constants";
 import { getDigitByString, getInitials } from "@/lib/functions";
 import {
   ActionIcon,
+  Autocomplete,
   Avatar,
   Center,
   Container,
@@ -23,10 +27,15 @@ import {
   rem,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconSettings, IconTrash } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconSettings,
+  IconTrash,
+  IconUserSearch,
+} from "@tabler/icons-react";
 import axios from "axios";
 import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
@@ -37,6 +46,9 @@ const Page = () => {
   const { status, data } = useSession();
   const [group, setGroup] = useState<GroupType | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const [value, setValue] = useState("");
+  const [users, setUsers] = useState([]);
+  const [debounced] = useDebouncedValue(value, 400);
 
   const params = useParams();
   const router = useRouter();
@@ -103,6 +115,25 @@ const Page = () => {
       .then((res) => getGroup())
       .catch((error) => console.log(error));
   };
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const res = await axios.get(
+        `/api/split/groups/${params?.group_id}/users?query=${debounced}`
+      );
+      setUsers(
+        res.data.map((item: AutoCompleteDataType) => ({
+          value: item._id,
+          label: item.email,
+        }))
+      );
+    };
+    if (debounced.length > 3) {
+      getUsers();
+    } else {
+      setUsers([]);
+    }
+  }, [debounced]);
 
   useEffect(() => {
     getGroup();
@@ -184,6 +215,16 @@ const Page = () => {
           Users
         </Text>
         <Paper p="sm" withBorder>
+          <Autocomplete
+            leftSection={
+              <IconUserSearch style={{ width: rem(20), height: rem(20) }} />
+            }
+            mb="sm"
+            data={users}
+            value={value}
+            onChange={setValue}
+            multiple
+          />
           <Stack gap={0}>
             {form.values.users.map((user: GroupUserType, index) => (
               <GroupUser

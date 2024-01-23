@@ -34,3 +34,8 @@ export interface GroupUserProps {
   ) => Promise<void>;
   index: number;
 }
+
+export interface AutoCompleteDataType {
+  _id: mongoose.Types.ObjectId;
+  email: string;
+}
