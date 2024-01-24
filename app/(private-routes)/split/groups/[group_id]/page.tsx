@@ -31,7 +31,12 @@ import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconSettings, IconTrash } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconSettings,
+  IconTrash,
+  IconUserSearch,
+} from "@tabler/icons-react";
 import axios from "axios";
 import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
@@ -113,7 +118,7 @@ const Page = () => {
   };
 
   const getFriends = async () => {
-    const res = await axios.get("/api/split/friends");
+    const res = await axios.get(`/api/split/groups/${params?.group_id}/users`);
     setFriends(
       res.data.map((item: AutoCompleteDataType) => ({
         value: item._id,
@@ -128,7 +133,8 @@ const Page = () => {
         user,
       })
       .then(() => setSearchValue(""))
-      .then(() => getGroup());
+      .then(() => getGroup())
+      .then(() => getFriends());
   };
 
   useEffect(() => {
@@ -220,6 +226,8 @@ const Page = () => {
             value={value ? value.value : null}
             onChange={(_value) => updateUser(_value)}
             mb="sm"
+            leftSection={<IconUserSearch />}
+            placeholder="Search user"
           />
           <Stack gap={0}>
             {form.values.users.map((user: GroupUserType, index) => (

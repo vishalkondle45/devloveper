@@ -17,15 +17,22 @@ export const GET = async (
       { status: 401 }
     );
   }
-  const query = req.nextUrl.searchParams.get("query")?.toLowerCase().trim();
-  if (!query || query.length < 4) {
-    return NextResponse.json([], { status: 200 });
-  }
   await startDb();
+  const group = await GroupModel.findById(params.group_id);
+  if (!group?.users) {
+    return 0;
+  }
+
   const users = await UserModel.find({
-    $or: [
-      { email: { $regex: ".*" + query + ".*" } },
-      { name: { $regex: ".*" + query + ".*" } },
+    $and: [
+      {
+        _id: {
+          $nin: [
+            ...group?.users,
+            new mongoose.Types.ObjectId(session.user?._id),
+          ],
+        },
+      },
     ],
   }).select("name _id email");
   return NextResponse.json(users, { status: 200 });
