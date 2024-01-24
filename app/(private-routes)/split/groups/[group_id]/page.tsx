@@ -10,15 +10,16 @@ import { colors, groupTypes } from "@/lib/constants";
 import { getDigitByString, getInitials } from "@/lib/functions";
 import {
   ActionIcon,
-  Autocomplete,
   Avatar,
   Center,
+  ComboboxItem,
   Container,
   Group,
   LoadingOverlay,
   Modal,
   Paper,
   SegmentedControl,
+  Select,
   Stack,
   Text,
   TextInput,
@@ -27,15 +28,10 @@ import {
   rem,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import {
-  IconCheck,
-  IconSettings,
-  IconTrash,
-  IconUserSearch,
-} from "@tabler/icons-react";
+import { IconCheck, IconSettings, IconTrash } from "@tabler/icons-react";
 import axios from "axios";
 import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
@@ -46,9 +42,9 @@ const Page = () => {
   const { status, data } = useSession();
   const [group, setGroup] = useState<GroupType | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
-  const [value, setValue] = useState("");
-  const [users, setUsers] = useState([]);
-  const [debounced] = useDebouncedValue(value, 400);
+  const [value, setValue] = useState<ComboboxItem | null>(null);
+  const [friends, setFriends] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   const params = useParams();
   const router = useRouter();
@@ -116,27 +112,28 @@ const Page = () => {
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-    const getUsers = async () => {
-      const res = await axios.get(
-        `/api/split/groups/${params?.group_id}/users?query=${debounced}`
-      );
-      setUsers(
-        res.data.map((item: AutoCompleteDataType) => ({
-          value: item._id,
-          label: item.email,
-        }))
-      );
-    };
-    if (debounced.length > 3) {
-      getUsers();
-    } else {
-      setUsers([]);
-    }
-  }, [debounced]);
+  const getFriends = async () => {
+    const res = await axios.get("/api/split/friends");
+    setFriends(
+      res.data.map((item: AutoCompleteDataType) => ({
+        value: item._id,
+        label: item.name,
+      }))
+    );
+  };
+
+  const updateUser = async (user: string | null) => {
+    await axios
+      .put(`/api/split/groups/${params?.group_id}/users`, {
+        user,
+      })
+      .then(() => setSearchValue(""))
+      .then(() => getGroup());
+  };
 
   useEffect(() => {
     getGroup();
+    getFriends();
   }, []);
 
   if (status === "loading" || !group) {
@@ -215,24 +212,23 @@ const Page = () => {
           Users
         </Text>
         <Paper p="sm" withBorder>
-          <Autocomplete
-            leftSection={
-              <IconUserSearch style={{ width: rem(20), height: rem(20) }} />
-            }
+          <Select
+            searchable
+            searchValue={searchValue}
+            onSearchChange={setSearchValue}
+            data={friends}
+            value={value ? value.value : null}
+            onChange={(_value) => updateUser(_value)}
             mb="sm"
-            data={users}
-            value={value}
-            onChange={setValue}
-            multiple
           />
           <Stack gap={0}>
             {form.values.users.map((user: GroupUserType, index) => (
               <GroupUser
                 form={form}
                 index={index}
-                update={update}
                 user={user}
                 key={String(user._id)}
+                updateUser={updateUser}
               />
             ))}
           </Stack>

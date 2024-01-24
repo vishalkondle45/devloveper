@@ -28,14 +28,11 @@ export interface GroupUserProps {
       user: mongoose.Types.ObjectId;
     }
   >;
-  update: (
-    property: "title" | "type" | "users",
-    value: string | never[]
-  ) => Promise<void>;
   index: number;
+  updateUser: (user: string | null) => Promise<void>;
 }
 
 export interface AutoCompleteDataType {
   _id: mongoose.Types.ObjectId;
-  email: string;
+  name: string;
 }

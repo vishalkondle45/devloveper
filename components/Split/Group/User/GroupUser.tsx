@@ -3,9 +3,9 @@ import { getDigitByString, getInitials } from "@/lib/functions";
 import { ActionIcon, Avatar, Box, Divider, Group, Text } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
-import { GroupUserProps, GroupUserType } from "./User.Types";
+import { GroupUserProps } from "./User.Types";
 
-const GroupUser = ({ user, form, update, index }: GroupUserProps) => {
+const GroupUser = ({ user, form, index, updateUser }: GroupUserProps) => {
   const { data } = useSession();
 
   return (
@@ -25,14 +25,7 @@ const GroupUser = ({ user, form, update, index }: GroupUserProps) => {
         </Group>
         {data?.user?._id === form?.values.user && (
           <ActionIcon
-            onClick={() =>
-              update(
-                "users",
-                form.values.users.filter(
-                  (item: GroupUserType) => item._id !== user._id
-                )
-              )
-            }
+            onClick={() => updateUser(String(user._id))}
             variant="transparent"
             color="red"
           >
