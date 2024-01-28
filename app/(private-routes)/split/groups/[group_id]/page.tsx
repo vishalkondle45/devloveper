@@ -325,7 +325,6 @@ const Page = () => {
           : 0,
       }))
     );
-    console.log({ splitAmong });
   };
 
   const handleSplitAmongAmount = (
@@ -336,7 +335,6 @@ const Page = () => {
       (item) => item.user === user,
       (item) => ({ ...item, amount })
     );
-    console.log(splitAmong);
   };
 
   useEffect(() => {
