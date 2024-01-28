@@ -99,7 +99,7 @@ export interface ExpneseCategoryTypes {
     | "health"
     | "emi"
     | "investment"
-    | "other";
+    | "general";
   label: String;
   icon: (props: TablerIconsProps) => JSX.Element;
   color: DefaultMantineColor;
@@ -159,8 +159,8 @@ export const expenseCategories: ExpneseCategoryTypes[] = [
     color: "dark",
   },
   {
-    category: "other",
-    label: "Other",
+    category: "general",
+    label: "General",
     icon: IconDots,
     color: "dark",
   },

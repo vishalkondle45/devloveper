@@ -96,7 +96,7 @@ const Page = () => {
   const eForm = useForm({
     initialValues: {
       description: "",
-      category: "home",
+      category: "general",
       isMultiPayer: false,
       price: 0,
       isEquallySplit: true,
@@ -274,13 +274,34 @@ const Page = () => {
   }, [isEqually]);
 
   const submitExpense = async () => {
-    const paidByTotal = paidBy.reduce(
-      (accum, item) => accum + (item?.amount || 0),
-      0
-    );
-    if (paidByTotal !== eForm.values.price) {
+    if (!eForm.values.description) {
       showNotification({
-        message: "Paid by total is not matching price.",
+        message: "Description is required field.",
+        icon: <IconX />,
+        color: "red",
+      });
+      return;
+    }
+    if (eForm.values.price < 1) {
+      showNotification({
+        message: "Price is required field.",
+        icon: <IconX />,
+        color: "red",
+      });
+      return;
+    }
+    if (paidTotal !== eForm.values.price) {
+      showNotification({
+        message: "Paid by total is not equal to price.",
+        icon: <IconX />,
+        color: "red",
+      });
+      setOpened2(true);
+      return;
+    }
+    if (splitTotal !== eForm.values.price) {
+      showNotification({
+        message: "Split among total is not equal to price.",
         icon: <IconX />,
         color: "red",
       });
@@ -453,7 +474,10 @@ const Page = () => {
                   readOnly
                   styles={{
                     label: { cursor: "pointer" },
-                    input: { cursor: "pointer" },
+                    input: {
+                      cursor: "pointer",
+                      textTransform: "capitalize",
+                    },
                   }}
                   rightSection={
                     <IconSelector style={{ width: rem(16), height: rem(16) }} />
@@ -461,7 +485,7 @@ const Page = () => {
                 />
               </Popover.Target>
               <Popover.Dropdown>
-                <Text>Select category - {eForm.values.category}</Text>
+                {/* <Text>Select category - {eForm.values.category}</Text> */}
                 <SimpleGrid cols={3}>
                   {expenseCategories.map((category) => (
                     <Stack
@@ -496,7 +520,7 @@ const Page = () => {
               label="Price"
               placeholder="Enter price"
               leftSection={<IconCurrencyRupee />}
-              min={1}
+              min={0}
               {...eForm.getInputProps("price")}
             />
           </Grid.Col>
