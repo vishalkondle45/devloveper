@@ -1,25 +1,34 @@
 "use client";
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
-import { GroupType } from "@/components/Split/Group/Group.Types";
-import GroupUser from "@/components/Split/Group/User/GroupUser";
 import {
-  AutoCompleteDataType,
+  ExpenseUser,
+  GroupType,
   GroupUserType,
-} from "@/components/Split/Group/User/User.Types";
-import { colors, groupTypes } from "@/lib/constants";
+} from "@/components/Split/Group/Group.Types";
+import GroupUser from "@/components/Split/Group/User/GroupUser";
+import { AutoCompleteDataType } from "@/components/Split/Group/User/User.Types";
+import { colors, expenseCategories, groupTypes } from "@/lib/constants";
 import { getDigitByString, getInitials } from "@/lib/functions";
 import {
   ActionIcon,
   Avatar,
+  Button,
   Center,
+  Checkbox,
   ComboboxItem,
   Container,
+  Grid,
   Group,
   LoadingOverlay,
   Modal,
+  NumberFormatter,
+  NumberInput,
   Paper,
+  Popover,
+  ScrollArea,
   SegmentedControl,
   Select,
+  SimpleGrid,
   Stack,
   Text,
   TextInput,
@@ -28,14 +37,17 @@ import {
   rem,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useListState } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
+import { notifications, showNotification } from "@mantine/notifications";
 import {
   IconCheck,
+  IconCurrencyRupee,
+  IconSelector,
   IconSettings,
   IconTrash,
   IconUserSearch,
+  IconX,
 } from "@tabler/icons-react";
 import axios from "axios";
 import mongoose from "mongoose";
@@ -45,10 +57,15 @@ import { useEffect, useState } from "react";
 
 const Page = () => {
   const { status, data } = useSession();
+  const userId = data?.user?._id || new mongoose.Types.ObjectId();
   const [group, setGroup] = useState<GroupType | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const [newExpenseOpened, newExpenseHandler] = useDisclosure(false);
   const [value, setValue] = useState<ComboboxItem | null>(null);
   const [friends, setFriends] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [opened1, setOpened] = useState(false);
+  const [opened2, setOpened2] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
   const params = useParams();
@@ -76,12 +93,74 @@ const Page = () => {
     },
   });
 
+  const eForm = useForm({
+    initialValues: {
+      description: "",
+      category: "home",
+      isMultiPayer: false,
+      price: 0,
+      isEquallySplit: true,
+    },
+    validate: {
+      description: (value) => (value ? null : "This field is required."),
+    },
+  });
+
+  const [users, usersHandlers] = useListState<any>([]);
+  const [paidBy, paidByHandlers] = useListState<ExpenseUser>([
+    { user: userId },
+  ]);
+  const [splitAmong, splitAmongHandlers] = useListState<ExpenseUser>([]);
+  const splitTotal = splitAmong.reduce(
+    (accum, item) => accum + (item?.amount || 0),
+    0
+  );
+  const paidTotal = paidBy.reduce(
+    (accum, item) => accum + (item?.amount || 0),
+    0
+  );
+
+  useEffect(() => {
+    if (group?.users.length) {
+      usersHandlers.setState(
+        group?.users.map((user: GroupUserType) => ({
+          user: user._id,
+          name: user.name,
+        }))
+      );
+    }
+  }, [group?._id]);
+
+  useEffect(() => {
+    paidByHandlers.setState([{ user: userId, amount: eForm.values.price }]);
+    if (users) {
+      splitAmongHandlers.setState([
+        ...users.map(({ user }) => ({ user, amount: 0, active: true })),
+        { user: userId, amount: 0, active: true },
+      ]);
+    }
+  }, [users]);
+
+  const setEForm = (key: string, value: any) => eForm.setFieldValue(key, value);
+  const isCategory = (category: string) => eForm.values.category === category;
+  const isMulti = eForm.values.isMultiPayer ? "multi" : "single";
+  const isEqually = eForm.values.isEquallySplit ? "equally" : "unequally";
+
   const getGroup = async () => {
     await axios
       .get(`/api/split/groups/${params?.group_id}`)
       .then((res) => {
         setGroup(res?.data);
         form.setValues(res?.data);
+      })
+      .catch((error) => router.push("/split/groups"));
+  };
+
+  const getExpenses = async () => {
+    await axios
+      .get(`/api/split/groups/${params?.group_id}/expenses`)
+      .then((res) => {
+        setExpenses(res.data);
       })
       .catch((error) => router.push("/split/groups"));
   };
@@ -134,12 +213,115 @@ const Page = () => {
       })
       .then(() => setSearchValue(""))
       .then(() => getGroup())
-      .then(() => getFriends());
+      .then(() => getFriends())
+      .then(() => getExpenses());
+  };
+
+  const handlePaidByUser = (user: mongoose.Types.ObjectId | undefined) => {
+    if (!user) return;
+    if (isMulti === "multi") {
+      if (paidBy.filter((item) => item.user === user).length) {
+        if (paidBy.length > 1) {
+          paidByHandlers.setState((current) =>
+            current.filter((item) => item.user !== user)
+          );
+        }
+      } else {
+        paidByHandlers.append({ user, amount: 0 });
+      }
+    } else {
+      paidByHandlers.setState([{ user, amount: eForm.values.price }]);
+    }
+  };
+
+  const handlePaidByAmount = (
+    user: mongoose.Types.ObjectId | undefined,
+    amount: number
+  ) => {
+    paidByHandlers.applyWhere(
+      (item) => item.user === user,
+      (item) => ({ ...item, amount })
+    );
+  };
+
+  useEffect(() => {
+    // if (eForm.values.isMultiPayer) {
+    paidByHandlers.setState([
+      {
+        user: userId,
+        amount: eForm.values.price,
+      },
+    ]);
+    // }
+  }, [isMulti]);
+
+  useEffect(() => {
+    splitAmongHandlers.apply((item) => ({
+      user: item.user,
+      amount: (eForm?.values?.price || 0) / splitAmong.length,
+      active: true,
+    }));
+  }, [eForm.values.price]);
+
+  useEffect(() => {
+    splitAmongHandlers.apply((item) => ({
+      user: item.user,
+      amount: eForm.values.isEquallySplit
+        ? (eForm?.values?.price || 0) / splitAmong.length
+        : 0,
+      active: true,
+    }));
+  }, [isEqually]);
+
+  const submitExpense = async () => {
+    const paidByTotal = paidBy.reduce(
+      (accum, item) => accum + (item?.amount || 0),
+      0
+    );
+    if (paidByTotal !== eForm.values.price) {
+      showNotification({
+        message: "Paid by total is not matching price.",
+        icon: <IconX />,
+        color: "red",
+      });
+      return;
+    }
+  };
+
+  const handleSplitAmong = (user: mongoose.Types.ObjectId) => {
+    splitAmongHandlers.setState((old) =>
+      old.map((value) => ({
+        ...value,
+        active: user === value.user ? !value.active : value.active,
+      }))
+    );
+    splitAmongHandlers.setState((old) =>
+      old.map((value) => ({
+        ...value,
+        amount: value.active
+          ? eForm?.values?.price /
+            old.filter((user) => user.active === true).length
+          : 0,
+      }))
+    );
+    console.log({ splitAmong });
+  };
+
+  const handleSplitAmongAmount = (
+    user: mongoose.Types.ObjectId,
+    amount: number
+  ) => {
+    splitAmongHandlers.applyWhere(
+      (item) => item.user === user,
+      (item) => ({ ...item, amount })
+    );
+    console.log(splitAmong);
   };
 
   useEffect(() => {
     getGroup();
     getFriends();
+    getExpenses();
   }, []);
 
   if (status === "loading" || !group) {
@@ -171,7 +353,7 @@ const Page = () => {
                   </Avatar>
                 </Tooltip>
                 <Text fw={700}>
-                  {group?.user === data?.user?._id ? "You" : "Others"}
+                  {group?.user === userId ? "You" : "Others"}
                 </Text>
               </Group>
             </Stack>
@@ -186,6 +368,7 @@ const Page = () => {
           </Group>
         </Group>
       </Paper>
+      <Button onClick={newExpenseHandler.open}>Add Expense</Button>
       <Modal opened={opened} title="Edit Group" onClose={close}>
         <TextInput
           label="Group name"
@@ -241,6 +424,299 @@ const Page = () => {
             ))}
           </Stack>
         </Paper>
+      </Modal>
+      <Modal
+        opened={newExpenseOpened}
+        title="Add Expense"
+        onClose={newExpenseHandler.close}
+      >
+        <Grid>
+          <Grid.Col span={6}>
+            <TextInput
+              label="Description"
+              placeholder="Enter a expense description"
+              {...eForm.getInputProps("description")}
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Popover
+              opened={opened1}
+              onChange={setOpened}
+              radius="xl"
+              position="bottom-end"
+            >
+              <Popover.Target>
+                <TextInput
+                  label="Category"
+                  value={eForm.values.category}
+                  onClick={() => setOpened((o) => !o)}
+                  readOnly
+                  styles={{
+                    label: { cursor: "pointer" },
+                    input: { cursor: "pointer" },
+                  }}
+                  rightSection={
+                    <IconSelector style={{ width: rem(16), height: rem(16) }} />
+                  }
+                />
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Text>Select category - {eForm.values.category}</Text>
+                <SimpleGrid cols={3}>
+                  {expenseCategories.map((category) => (
+                    <Stack
+                      p={0}
+                      key={category.category}
+                      align="center"
+                      gap={0}
+                      onClick={() => setEForm("category", category.category)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <ThemeIcon
+                        variant={
+                          isCategory(category.category) ? "filled" : "outline"
+                        }
+                        color={category.color}
+                        radius="xl"
+                        size="lg"
+                      >
+                        <category.icon
+                          style={{ height: rem(18), width: rem(18) }}
+                        />
+                      </ThemeIcon>
+                      <Text fz="sm">{category.label}</Text>
+                    </Stack>
+                  ))}
+                </SimpleGrid>
+              </Popover.Dropdown>
+            </Popover>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <NumberInput
+              label="Price"
+              placeholder="Enter price"
+              leftSection={<IconCurrencyRupee />}
+              min={1}
+              {...eForm.getInputProps("price")}
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Popover
+              opened={opened2}
+              onChange={setOpened2}
+              radius="xl"
+              position="bottom-end"
+              width="auto"
+            >
+              <Popover.Target>
+                <TextInput
+                  label="Paid By"
+                  value={
+                    paidBy.length === 1
+                      ? paidBy[0].user === userId
+                        ? "You"
+                        : users.find(({ user }) => user === paidBy[0].user)
+                            ?.name
+                      : "Multiple"
+                  }
+                  onClick={() => setOpened2((o) => !o)}
+                  readOnly
+                  styles={{
+                    label: { cursor: "pointer" },
+                    input: { cursor: "pointer" },
+                  }}
+                  rightSection={
+                    <IconSelector style={{ width: rem(16), height: rem(16) }} />
+                  }
+                />
+              </Popover.Target>
+              <Popover.Dropdown>
+                <SegmentedControl
+                  color="red"
+                  data={[
+                    { value: "single", label: "Single payer" },
+                    { value: "multi", label: "Multiple payer" },
+                  ]}
+                  onChange={(v) => setEForm("isMultiPayer", v === "multi")}
+                  value={isMulti}
+                  fullWidth
+                  size="xs"
+                  mb="xs"
+                  radius="xl"
+                />
+                <Group wrap="nowrap" justify="space-between">
+                  <Group wrap="nowrap">
+                    <Checkbox
+                      checked={paidBy.some((item) => item.user === group?.user)}
+                      onChange={() => handlePaidByUser(group?.user)}
+                      radius="xl"
+                    />
+                    <Text>
+                      {group?.user === userId
+                        ? "You"
+                        : users.find(({ user }) => user === userId)?.name}
+                    </Text>
+                  </Group>
+                  <NumberInput
+                    value={
+                      paidBy.some((item) => item.user === group?.user)
+                        ? paidBy.find((item) => item.user === group?.user)
+                            ?.amount
+                        : 0
+                    }
+                    leftSection={<IconCurrencyRupee />}
+                    disabled={!paidBy.some((item) => item.user === group?.user)}
+                    onChange={(v) => handlePaidByAmount(group?.user, Number(v))}
+                    w="35%"
+                  />
+                </Group>
+                {users.map(({ user, name }) => (
+                  <Group wrap="nowrap" key={user} justify="space-between">
+                    <Group wrap="nowrap">
+                      <Checkbox
+                        checked={paidBy.some((item) => item.user === user)}
+                        onChange={() => handlePaidByUser(user)}
+                        radius="xl"
+                      />
+                      <Text>{user === userId ? "You" : name}</Text>
+                    </Group>
+                    <NumberInput
+                      leftSection={<IconCurrencyRupee />}
+                      value={
+                        paidBy.some((item) => item.user === user)
+                          ? paidBy.find((item) => item.user === user)?.amount
+                          : 0
+                      }
+                      disabled={!paidBy.some((item) => item.user === user)}
+                      onChange={(v) => handlePaidByAmount(user, Number(v))}
+                      w="35%"
+                    />
+                  </Group>
+                ))}
+                <Group mt="xs" justify="space-between">
+                  <Group>
+                    <Text ta="right">
+                      People : {paidBy.length} / {form.values.users.length + 1}
+                    </Text>
+                  </Group>
+                  <Group wrap="nowrap" gap={0}>
+                    {paidTotal > eForm.values.price ? (
+                      <>
+                        <Text ta="right">Exceeding: &nbsp;</Text>
+                        <Text c="red">
+                          ₹{Math.abs(paidTotal - eForm.values.price).toFixed(2)}{" "}
+                          &nbsp;
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <Text ta="right">Remaining: &nbsp;</Text>
+                        <Text
+                          c={paidTotal !== eForm.values.price ? "red" : "green"}
+                        >
+                          ₹{(eForm.values.price - paidTotal).toFixed(2)} &nbsp;
+                        </Text>
+                        <Text>/ &nbsp;₹{eForm.values.price}</Text>
+                      </>
+                    )}
+                  </Group>
+                </Group>
+              </Popover.Dropdown>
+            </Popover>
+          </Grid.Col>
+        </Grid>
+        <SegmentedControl
+          color="teal"
+          data={[
+            { value: "equally", label: "Equally" },
+            { value: "unequally", label: "UnEqually" },
+          ]}
+          onChange={(v) => setEForm("isEquallySplit", v === "equally")}
+          value={isEqually}
+          fullWidth
+          size="xs"
+          my="md"
+          radius="xl"
+        />
+        <ScrollArea w={rem("100%")} mx="auto">
+          <Group gap={rem(20)} wrap="nowrap">
+            {splitAmong.map((split) => (
+              <Paper
+                style={{ cursor: "pointer" }}
+                miw={rem(100)}
+                maw={rem(100)}
+                p="xs"
+                ta="center"
+                shadow="xl"
+                bg={split.active ? "teal" : ""}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSplitAmongAmount(split.user, 0);
+                  handleSplitAmong(split.user);
+                }}
+                key={String(split.user)}
+                withBorder
+              >
+                <Text fz="xs" truncate>
+                  {split.user === userId
+                    ? "You"
+                    : users.find(({ user }) => user === split.user)?.name}
+                </Text>
+                {eForm.values.isEquallySplit ? (
+                  <NumberFormatter
+                    value={split.amount}
+                    prefix="₹"
+                    thousandsGroupStyle="lakh"
+                    thousandSeparator=","
+                    decimalSeparator="."
+                    decimalScale={2}
+                  />
+                ) : (
+                  <TextInput
+                    disabled={!split.active}
+                    value={split.amount}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) =>
+                      handleSplitAmongAmount(
+                        split.user,
+                        Number(e.currentTarget.value)
+                      )
+                    }
+                  />
+                )}
+              </Paper>
+            ))}
+          </Group>
+        </ScrollArea>
+        <Group mt="xs" justify="space-between">
+          <Group>
+            <Text ta="right">
+              People : {splitAmong.filter((i) => i.active).length} /{" "}
+              {form.values.users.length + 1}
+            </Text>
+          </Group>
+          <Group wrap="nowrap" gap={0}>
+            {splitTotal > eForm.values.price ? (
+              <>
+                <Text ta="right">Exceeding: &nbsp;</Text>
+                <Text c="red">
+                  ₹{Math.abs(splitTotal - eForm.values.price)} &nbsp;
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text ta="right">Remaining: &nbsp;</Text>
+                <Text c={splitTotal !== eForm.values.price ? "red" : "green"}>
+                  ₹{eForm.values.price - splitTotal} &nbsp;
+                </Text>
+                <Text>/ &nbsp;{eForm.values.price}</Text>
+              </>
+            )}
+          </Group>
+        </Group>
+        <Button mt="xs" onClick={submitExpense} fullWidth>
+          Submit
+        </Button>
       </Modal>
     </Container>
   );

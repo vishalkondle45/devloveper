@@ -4,18 +4,24 @@ export interface GroupProps {
   group: GroupType;
 }
 
-export interface GroupUser {
+export interface GroupUserType {
   _id: Types.ObjectId;
-  name: String;
-  email: String;
+  name: string;
+  email: string;
 }
 
 export interface GroupType {
   _id: Types.ObjectId;
-  title: String;
+  title: string;
   type: "home" | "trip" | "office" | "sports" | "others";
   simplify: Boolean;
   user: Types.ObjectId;
-  users: GroupUser[];
-  createdAt: String;
+  users: GroupUserType[];
+  createdAt: string;
+}
+
+export interface ExpenseUser {
+  user: Types.ObjectId;
+  amount?: number;
+  active?: boolean;
 }
