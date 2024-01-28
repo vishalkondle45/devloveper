@@ -136,7 +136,7 @@ const Page = () => {
     if (users) {
       splitAmongHandlers.setState([
         ...users.map(({ user }) => ({ user, amount: 0, active: true })),
-        { user: userId, amount: 0, active: true },
+        { user: group?.user?._id, amount: 0, active: true },
       ]);
     }
   }, [users]);
@@ -357,7 +357,7 @@ const Page = () => {
               {groupType && <groupType.icon />}
             </ThemeIcon>
             <Stack gap={0}>
-              <Text fw={700}>{group.title}</Text>
+              <Text fw={700}>{group?.title}</Text>
               <Group gap={rem(6)}>
                 <Text>Created by</Text>
                 <Tooltip label={data?.user?.name} withArrow>
@@ -372,7 +372,7 @@ const Page = () => {
                   </Avatar>
                 </Tooltip>
                 <Text fw={700}>
-                  {group?.user === userId ? "You" : "Others"}
+                  {group?.user?._id === userId ? "You" : "Others"}
                 </Text>
               </Group>
             </Stack>
@@ -404,8 +404,8 @@ const Page = () => {
           color="teal"
           size="xs"
           data={groupTypes.map((group) => ({
-            key: group.type,
-            value: group.type,
+            key: group?.type,
+            value: group?.type,
             label: (
               <Center>
                 <group.icon />
@@ -569,26 +569,28 @@ const Page = () => {
                 <Group wrap="nowrap" justify="space-between">
                   <Group wrap="nowrap">
                     <Checkbox
-                      checked={paidBy.some((item) => item.user === group?.user)}
-                      onChange={() => handlePaidByUser(group?.user)}
+                      checked={paidBy.some(
+                        (item) => item.user === group?.user?._id
+                      )}
+                      onChange={() => handlePaidByUser(group?.user?._id)}
                       radius="xl"
                     />
-                    <Text>
-                      {group?.user === userId
-                        ? "You"
-                        : users.find(({ user }) => user === userId)?.name}
-                    </Text>
+                    <Text>{group?.user?.name}</Text>
                   </Group>
                   <NumberInput
                     value={
-                      paidBy.some((item) => item.user === group?.user)
-                        ? paidBy.find((item) => item.user === group?.user)
+                      paidBy.some((item) => item.user === group?.user?._id)
+                        ? paidBy.find((item) => item.user === group?.user?._id)
                             ?.amount
                         : 0
                     }
                     leftSection={<IconCurrencyRupee />}
-                    disabled={!paidBy.some((item) => item.user === group?.user)}
-                    onChange={(v) => handlePaidByAmount(group?.user, Number(v))}
+                    disabled={
+                      !paidBy.some((item) => item.user === group?.user?._id)
+                    }
+                    onChange={(v) =>
+                      handlePaidByAmount(group?.user?._id, Number(v))
+                    }
                     w="35%"
                   />
                 </Group>
@@ -682,7 +684,8 @@ const Page = () => {
                 <Text fz="xs" truncate>
                   {split.user === userId
                     ? "You"
-                    : users.find(({ user }) => user === split.user)?.name}
+                    : users.find(({ user }) => user === split.user)?.name ||
+                      group?.user.name}
                 </Text>
                 {eForm.values.isEquallySplit ? (
                   <NumberFormatter

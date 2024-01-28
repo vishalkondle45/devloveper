@@ -15,7 +15,7 @@ export interface GroupType {
   title: string;
   type: "home" | "trip" | "office" | "sports" | "others";
   simplify: Boolean;
-  user: Types.ObjectId;
+  user: GroupUserType;
   users: GroupUserType[];
   createdAt: string;
 }

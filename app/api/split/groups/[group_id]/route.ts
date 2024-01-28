@@ -20,10 +20,15 @@ export const GET = async (
   const group = await GroupModel.findOne({
     _id: group_id,
     $or: [{ user: session.user?._id }, { users: session.user?._id }],
-  }).populate({
-    path: "users",
-    select: ["_id", "email", "name"],
-  });
+  })
+    .populate({
+      path: "user",
+      select: ["_id", "email", "name"],
+    })
+    .populate({
+      path: "users",
+      select: ["_id", "email", "name"],
+    });
   if (!group) {
     return NextResponse.json(
       { message: "Please check the group id..." },
