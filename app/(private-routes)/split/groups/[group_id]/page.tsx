@@ -268,6 +268,11 @@ const Page = () => {
   }, [isMulti]);
 
   useEffect(() => {
+    paidByHandlers.apply((item) => ({
+      ...item,
+      amount: item.user === userId ? eForm?.values?.price || 0 : 0,
+    }));
+    eForm.setFieldValue("isMultiPayer", false);
     splitAmongHandlers.apply((item) => ({
       user: item.user,
       amount: (eForm?.values?.price || 0) / splitAmong.length,
@@ -452,7 +457,15 @@ const Page = () => {
           </MenuDropdown>
         </Menu>
       </Group>
-      <Modal opened={opened} title="Edit Group" onClose={close}>
+      {JSON.stringify(expenses)}
+      <Modal
+        opened={opened}
+        title="Edit Group"
+        onClose={() => {
+          close();
+          form.reset();
+        }}
+      >
         <TextInput
           label="Group name"
           placeholder="Enter a group name"
@@ -511,7 +524,10 @@ const Page = () => {
       <Modal
         opened={newExpenseOpened}
         title="Add Expense"
-        onClose={newExpenseHandler.close}
+        onClose={() => {
+          newExpenseHandler.close();
+          eForm.reset();
+        }}
       >
         <Grid>
           <Grid.Col span={12}>
@@ -555,7 +571,6 @@ const Page = () => {
                 />
               </Popover.Target>
               <Popover.Dropdown>
-                {/* <Text>Select category - {eForm.values.category}</Text> */}
                 <SimpleGrid cols={3}>
                   {expenseCategories.map((category) => (
                     <Stack

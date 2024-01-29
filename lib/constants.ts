@@ -85,7 +85,7 @@ export const groupTypes: GroupTypeTypes[] = [
   { type: "others", label: "Others", icon: IconCircles },
 ];
 
-export interface ExpneseCategoryTypes {
+export interface ExpenseCategoryTypes {
   category:
     | "food"
     | "drinks"
@@ -105,7 +105,7 @@ export interface ExpneseCategoryTypes {
   color: DefaultMantineColor;
 }
 
-export const expenseCategories: ExpneseCategoryTypes[] = [
+export const expenseCategories: ExpenseCategoryTypes[] = [
   { category: "food", label: "Food", icon: IconToolsKitchen2, color: "yellow" },
   { category: "drinks", label: "Drinks", icon: IconMilkshake, color: "orange" },
   { category: "groceries", label: "Groceries", icon: IconBasket, color: "red" },
