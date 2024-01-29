@@ -12,6 +12,7 @@ import { getDigitByString, getInitials } from "@/lib/functions";
 import {
   ActionIcon,
   Avatar,
+  Badge,
   Button,
   Center,
   Checkbox,
@@ -20,6 +21,10 @@ import {
   Grid,
   Group,
   LoadingOverlay,
+  Menu,
+  MenuDropdown,
+  MenuItem,
+  MenuTarget,
   Modal,
   NumberFormatter,
   NumberInput,
@@ -42,10 +47,14 @@ import { modals } from "@mantine/modals";
 import { notifications, showNotification } from "@mantine/notifications";
 import {
   IconCheck,
+  IconChevronDown,
   IconCurrencyRupee,
+  IconPlus,
+  IconReceipt,
   IconSelector,
   IconSettings,
   IconTrash,
+  IconUserPlus,
   IconUserSearch,
   IconX,
 } from "@tabler/icons-react";
@@ -119,6 +128,7 @@ const Page = () => {
     (accum, item) => accum + (item?.amount || 0),
     0
   );
+  const price = eForm.values.price || 0;
 
   useEffect(() => {
     if (group?.users.length) {
@@ -132,7 +142,7 @@ const Page = () => {
   }, [group?._id]);
 
   useEffect(() => {
-    paidByHandlers.setState([{ user: userId, amount: eForm.values.price }]);
+    paidByHandlers.setState([{ user: userId, amount: price }]);
     if (users) {
       splitAmongHandlers.setState([
         ...users.map(({ user }) => ({ user, amount: 0, active: true })),
@@ -230,7 +240,7 @@ const Page = () => {
         paidByHandlers.append({ user, amount: 0 });
       }
     } else {
-      paidByHandlers.setState([{ user, amount: eForm.values.price }]);
+      paidByHandlers.setState([{ user, amount: price }]);
     }
   };
 
@@ -249,7 +259,7 @@ const Page = () => {
     paidByHandlers.setState([
       {
         user: userId,
-        amount: eForm.values.price,
+        amount: price,
       },
     ]);
     // }
@@ -261,7 +271,7 @@ const Page = () => {
       amount: (eForm?.values?.price || 0) / splitAmong.length,
       active: true,
     }));
-  }, [eForm.values.price]);
+  }, [price]);
 
   useEffect(() => {
     splitAmongHandlers.apply((item) => ({
@@ -282,7 +292,7 @@ const Page = () => {
       });
       return;
     }
-    if (eForm.values.price < 1) {
+    if (price < 1) {
       showNotification({
         message: "Price is required field.",
         icon: <IconX />,
@@ -290,7 +300,7 @@ const Page = () => {
       });
       return;
     }
-    if (paidTotal !== eForm.values.price) {
+    if (paidTotal !== price) {
       showNotification({
         message: "Paid by total is not equal to price.",
         icon: <IconX />,
@@ -299,7 +309,7 @@ const Page = () => {
       setOpened2(true);
       return;
     }
-    if (splitTotal !== eForm.values.price) {
+    if (splitTotal !== price) {
       showNotification({
         message: "Split among total is not equal to price.",
         icon: <IconX />,
@@ -387,7 +397,39 @@ const Page = () => {
           </Group>
         </Group>
       </Paper>
-      <Button onClick={newExpenseHandler.open}>Add Expense</Button>
+      <Group justify="right">
+        <Menu shadow="md" width={150} position="bottom-end">
+          <MenuTarget>
+            <Button
+              leftSection={
+                <IconPlus style={{ width: rem(18), height: rem(18) }} />
+              }
+              rightSection={
+                <IconChevronDown style={{ width: rem(18), height: rem(18) }} />
+              }
+            >
+              Add
+            </Button>
+          </MenuTarget>
+          <MenuDropdown>
+            <MenuItem
+              leftSection={
+                <IconReceipt style={{ width: rem(18), height: rem(18) }} />
+              }
+              onClick={newExpenseHandler.open}
+            >
+              Expense
+            </MenuItem>
+            <MenuItem
+              leftSection={
+                <IconUserPlus style={{ width: rem(18), height: rem(18) }} />
+              }
+            >
+              User
+            </MenuItem>
+          </MenuDropdown>
+        </Menu>
+      </Group>
       <Modal opened={opened} title="Edit Group" onClose={close}>
         <TextInput
           label="Group name"
@@ -517,7 +559,6 @@ const Page = () => {
             <NumberInput
               label="Price"
               placeholder="Enter price"
-              leftSection={<IconCurrencyRupee />}
               min={0}
               {...eForm.getInputProps("price")}
             />
@@ -567,7 +608,7 @@ const Page = () => {
                   radius="xl"
                 />
                 <Group wrap="nowrap" justify="space-between">
-                  <Group wrap="nowrap">
+                  <Group gap="xs" wrap="nowrap">
                     <Checkbox
                       checked={paidBy.some(
                         (item) => item.user === group?.user?._id
@@ -575,7 +616,12 @@ const Page = () => {
                       onChange={() => handlePaidByUser(group?.user?._id)}
                       radius="xl"
                     />
-                    <Text>{group?.user?.name}</Text>
+                    <Text>
+                      {group?.user?._id === userId ? "You" : group?.user?.name}
+                    </Text>
+                    <Badge color="red" variant="outline" size="xs">
+                      Admin
+                    </Badge>
                   </Group>
                   <NumberInput
                     value={
@@ -596,7 +642,7 @@ const Page = () => {
                 </Group>
                 {users.map(({ user, name }) => (
                   <Group wrap="nowrap" key={user} justify="space-between">
-                    <Group wrap="nowrap">
+                    <Group gap="xs" wrap="nowrap">
                       <Checkbox
                         checked={paidBy.some((item) => item.user === user)}
                         onChange={() => handlePaidByUser(user)}
@@ -624,23 +670,20 @@ const Page = () => {
                     </Text>
                   </Group>
                   <Group wrap="nowrap" gap={0}>
-                    {paidTotal > eForm.values.price ? (
+                    {paidTotal > price ? (
                       <>
                         <Text ta="right">Exceeding: &nbsp;</Text>
                         <Text c="red">
-                          ₹{Math.abs(paidTotal - eForm.values.price).toFixed(2)}{" "}
-                          &nbsp;
+                          ₹{Math.abs(paidTotal - price).toFixed(2)} &nbsp;
                         </Text>
                       </>
                     ) : (
                       <>
                         <Text ta="right">Remaining: &nbsp;</Text>
-                        <Text
-                          c={paidTotal !== eForm.values.price ? "red" : "green"}
-                        >
-                          ₹{(eForm.values.price - paidTotal).toFixed(2)} &nbsp;
+                        <Text c={paidTotal !== price ? "red" : "green"}>
+                          ₹{(price - paidTotal).toFixed(2)} &nbsp;
                         </Text>
-                        <Text>/ &nbsp;₹{eForm.values.price}</Text>
+                        <Text>/ &nbsp;₹{price}</Text>
                       </>
                     )}
                   </Group>
@@ -649,6 +692,9 @@ const Page = () => {
             </Popover>
           </Grid.Col>
         </Grid>
+        <Text fw={500} size="sm" mt="md">
+          Split
+        </Text>
         <SegmentedControl
           color="teal"
           data={[
@@ -659,9 +705,12 @@ const Page = () => {
           value={isEqually}
           fullWidth
           size="xs"
-          my="md"
+          mb="md"
           radius="xl"
         />
+        <Text fw={500} size="sm" my="xs">
+          Split among
+        </Text>
         <ScrollArea w={rem("100%")} mx="auto">
           <Group gap={rem(20)} wrap="nowrap">
             {splitAmong.map((split) => (
@@ -721,20 +770,18 @@ const Page = () => {
             </Text>
           </Group>
           <Group wrap="nowrap" gap={0}>
-            {splitTotal > eForm.values.price ? (
+            {splitTotal > price ? (
               <>
                 <Text ta="right">Exceeding: &nbsp;</Text>
-                <Text c="red">
-                  ₹{Math.abs(splitTotal - eForm.values.price)} &nbsp;
-                </Text>
+                <Text c="red">₹{Math.abs(splitTotal - price)} &nbsp;</Text>
               </>
             ) : (
               <>
                 <Text ta="right">Remaining: &nbsp;</Text>
-                <Text c={splitTotal !== eForm.values.price ? "red" : "green"}>
-                  ₹{eForm.values.price - splitTotal} &nbsp;
+                <Text c={splitTotal !== price ? "red" : "green"}>
+                  ₹{price - splitTotal} &nbsp;
                 </Text>
-                <Text>/ &nbsp;{eForm.values.price}</Text>
+                <Text>/ &nbsp;₹{price}</Text>
               </>
             )}
           </Group>
