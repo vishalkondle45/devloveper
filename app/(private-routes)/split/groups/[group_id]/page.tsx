@@ -41,6 +41,7 @@ import {
   Tooltip,
   rem,
 } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useDisclosure, useListState } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
@@ -105,6 +106,7 @@ const Page = () => {
   const eForm = useForm({
     initialValues: {
       description: "",
+      date: new Date(),
       category: "general",
       isMultiPayer: false,
       price: 0,
@@ -317,6 +319,26 @@ const Page = () => {
       });
       return;
     }
+    await axios
+      .post(`/api/split/groups/${group?._id}/expenses`, {
+        ...eForm.values,
+        paidBy,
+        splitAmong,
+      })
+      .then(() => {
+        showNotification({
+          message: "Succeess",
+          icon: <IconCheck />,
+          color: "green",
+        });
+      })
+      .catch(() => {
+        showNotification({
+          message: "Split among total is not equal to price.",
+          icon: <IconX />,
+          color: "red",
+        });
+      });
   };
 
   const handleSplitAmong = (user: mongoose.Types.ObjectId) => {
@@ -492,11 +514,19 @@ const Page = () => {
         onClose={newExpenseHandler.close}
       >
         <Grid>
-          <Grid.Col span={6}>
+          <Grid.Col span={12}>
             <TextInput
               label="Description"
               placeholder="Enter a expense description"
               {...eForm.getInputProps("description")}
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <DatePickerInput
+              label="Date"
+              placeholder="Expense date"
+              valueFormat="DD MMM YYYY"
+              {...eForm.getInputProps("date")}
             />
           </Grid.Col>
           <Grid.Col span={6}>
