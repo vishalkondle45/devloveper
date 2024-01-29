@@ -29,7 +29,13 @@ export const GET = async (
       { status: 401 }
     );
   }
-  return NextResponse.json(expenses, { status: 200 });
+  const paidBy = await PaidByModel.find({
+    group: params.group_id,
+  });
+  const splitAmong = await PaidByModel.find({
+    group: params.group_id,
+  });
+  return NextResponse.json({ expenses, paidBy, splitAmong }, { status: 200 });
 };
 
 export const POST = async (
@@ -52,6 +58,7 @@ export const POST = async (
     description: body.description,
     category: body.category,
     price: body.price,
+    date: new Date(body.date),
     user: new mongoose.Types.ObjectId(session.user?._id),
     group,
   };

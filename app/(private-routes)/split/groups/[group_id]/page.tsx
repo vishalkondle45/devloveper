@@ -8,7 +8,11 @@ import {
 import GroupUser from "@/components/Split/Group/User/GroupUser";
 import { AutoCompleteDataType } from "@/components/Split/Group/User/User.Types";
 import { colors, expenseCategories, groupTypes } from "@/lib/constants";
-import { getDigitByString, getInitials } from "@/lib/functions";
+import {
+  getCategoryIcon,
+  getDigitByString,
+  getInitials,
+} from "@/lib/functions";
 import {
   ActionIcon,
   Avatar,
@@ -16,7 +20,6 @@ import {
   Button,
   Center,
   Checkbox,
-  ComboboxItem,
   Container,
   Grid,
   Group,
@@ -60,6 +63,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import axios from "axios";
+import dayjs from "dayjs";
 import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
@@ -71,9 +75,10 @@ const Page = () => {
   const [group, setGroup] = useState<GroupType | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [newExpenseOpened, newExpenseHandler] = useDisclosure(false);
-  const [value, setValue] = useState<ComboboxItem | null>(null);
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [paids, setPaids] = useState<any[]>([]);
+  const [splits, setSplits] = useState<any[]>([]);
   const [opened1, setOpened] = useState(false);
   const [opened2, setOpened2] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -172,7 +177,9 @@ const Page = () => {
     await axios
       .get(`/api/split/groups/${params?.group_id}/expenses`)
       .then((res) => {
-        setExpenses(res.data);
+        setExpenses(res.data.expenses);
+        setSplits(res.data.splitAmong);
+        setPaids(res.data.paidBy);
       })
       .catch((error) => router.push("/split/groups"));
   };
@@ -374,6 +381,14 @@ const Page = () => {
     );
   };
 
+  const getPaidAmountByUserAndExpense = (expense: string) =>
+    paids?.find((item) => item.user === userId && item.expense === expense)
+      .amount;
+
+  const getSplitAmountByUserAndExpense = (expense: string) =>
+    splits?.find((item) => item.user === userId && item.expense === expense)
+      .amount;
+
   useEffect(() => {
     getGroup();
     getFriends();
@@ -457,7 +472,52 @@ const Page = () => {
           </MenuDropdown>
         </Menu>
       </Group>
-      {JSON.stringify(expenses)}
+      <Container size="xs" my="xs" px={0}>
+        {/* {JSON.stringify(paids)}
+        {JSON.stringify(splits)} */}
+        {expenses.map(
+          (expense: {
+            _id: string;
+            category: string;
+            description: string;
+            price: number;
+            date: string;
+          }) => (
+            <Paper mt="xs" shadow="xl" p="sm" withBorder>
+              <Group justify="space-between">
+                <Group>
+                  <ThemeIcon radius="xl">
+                    {getCategoryIcon(expense.category)}
+                  </ThemeIcon>
+                  <Stack gap={0}>
+                    <Text fz="sm" fw={500}>
+                      {expense.description}
+                    </Text>
+                    <Text fz="sm" fw={300}>
+                      {getPaidAmountByUserAndExpense(expense._id) -
+                        getSplitAmountByUserAndExpense(expense._id)}
+                    </Text>
+                  </Stack>
+                </Group>
+                <Stack gap={0}>
+                  <Badge ta="right" variant="outline" size="xs">
+                    {dayjs(expense.date).format("DD-MMM")}
+                  </Badge>
+                  <NumberFormatter
+                    style={{ textAlign: "right" }}
+                    value={expense.price}
+                    prefix="₹"
+                    thousandsGroupStyle="lakh"
+                    thousandSeparator=","
+                    decimalSeparator="."
+                    decimalScale={2}
+                  />
+                </Stack>
+              </Group>
+            </Paper>
+          )
+        )}
+      </Container>
       <Modal
         opened={opened}
         title="Edit Group"
@@ -502,7 +562,6 @@ const Page = () => {
             searchValue={searchValue}
             onSearchChange={setSearchValue}
             data={friends}
-            value={value ? value.value : null}
             onChange={(_value) => updateUser(_value)}
             mb="sm"
             leftSection={<IconUserSearch />}
@@ -589,9 +648,7 @@ const Page = () => {
                         radius="xl"
                         size="lg"
                       >
-                        <category.icon
-                          style={{ height: rem(18), width: rem(18) }}
-                        />
+                        {category.icon}
                       </ThemeIcon>
                       <Text fz="sm">{category.label}</Text>
                     </Stack>

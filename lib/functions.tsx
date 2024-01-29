@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
+import { expenseCategories } from "./constants";
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 
@@ -55,3 +56,6 @@ export const convertToSingleSpace = (string: string | undefined) =>
   string?.split("  ").join(" ").trim();
 
 export const displayUserFirstName = (string: string) => string.split(" ")[0];
+
+export const getCategoryIcon = (string: string) =>
+  expenseCategories.find((item) => item.category === string)?.icon;

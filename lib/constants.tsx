@@ -1,5 +1,5 @@
 import { SortOptionProps } from "@/components/Apps/Todos/ListTitle/ListTitle.types";
-import { DefaultMantineColor } from "@mantine/core";
+import { DefaultMantineColor, rem } from "@mantine/core";
 import {
   IconArrowsDownUp,
   IconArrowsLeftRight,
@@ -26,6 +26,7 @@ import {
   IconToolsKitchen2,
   TablerIconsProps,
 } from "@tabler/icons-react";
+import { ReactNode } from "react";
 
 export const colors = [
   "grey",
@@ -101,67 +102,89 @@ export interface ExpenseCategoryTypes {
     | "investment"
     | "general";
   label: String;
-  icon: (props: TablerIconsProps) => JSX.Element;
+  icon: ReactNode;
   color: DefaultMantineColor;
 }
 
 export const expenseCategories: ExpenseCategoryTypes[] = [
-  { category: "food", label: "Food", icon: IconToolsKitchen2, color: "yellow" },
-  { category: "drinks", label: "Drinks", icon: IconMilkshake, color: "orange" },
-  { category: "groceries", label: "Groceries", icon: IconBasket, color: "red" },
-  { category: "bills", label: "Bills", icon: IconReceipt, color: "grape" },
+  {
+    category: "food",
+    label: "Food",
+    icon: <IconToolsKitchen2 style={{ width: rem(18), height: rem(18) }} />,
+    color: "yellow",
+  },
+  {
+    category: "drinks",
+    label: "Drinks",
+    icon: <IconMilkshake style={{ width: rem(18), height: rem(18) }} />,
+    color: "orange",
+  },
+  {
+    category: "groceries",
+    label: "Groceries",
+    icon: <IconBasket style={{ width: rem(18), height: rem(18) }} />,
+    color: "red",
+  },
+  {
+    category: "bills",
+    label: "Bills",
+    icon: <IconReceipt style={{ width: rem(18), height: rem(18) }} />,
+    color: "grape",
+  },
   {
     category: "shopping",
     label: "Shopping",
-    icon: IconShoppingCartFilled,
+    icon: (
+      <IconShoppingCartFilled style={{ width: rem(18), height: rem(18) }} />
+    ),
     color: "cyan",
   },
   {
     category: "entertainment",
     label: "Entertainment",
-    icon: IconTicket,
+    icon: <IconTicket style={{ width: rem(18), height: rem(18) }} />,
     color: "teal",
   },
   {
     category: "transfer",
     label: "Transfer",
-    icon: IconArrowsLeftRight,
+    icon: <IconArrowsLeftRight style={{ width: rem(18), height: rem(18) }} />,
     color: "green",
   },
   {
     category: "travel",
     label: "Travel",
-    icon: IconBriefcaseFilled,
+    icon: <IconBriefcaseFilled style={{ width: rem(18), height: rem(18) }} />,
     color: "blue",
   },
   {
     category: "fuel",
     label: "Fuel",
-    icon: IconGasStation,
+    icon: <IconGasStation style={{ width: rem(18), height: rem(18) }} />,
     color: "lime",
   },
   {
     category: "health",
     label: "Health",
-    icon: IconHeartbeat,
+    icon: <IconHeartbeat style={{ width: rem(18), height: rem(18) }} />,
     color: "pink",
   },
   {
     category: "emi",
     label: "EMI",
-    icon: IconChartPie,
+    icon: <IconChartPie style={{ width: rem(18), height: rem(18) }} />,
     color: "violet",
   },
   {
     category: "investment",
     label: "Investment",
-    icon: IconPigMoney,
+    icon: <IconPigMoney style={{ width: rem(18), height: rem(18) }} />,
     color: "dark",
   },
   {
     category: "general",
     label: "General",
-    icon: IconDots,
+    icon: <IconDots style={{ width: rem(18), height: rem(18) }} />,
     color: "dark",
   },
 ];

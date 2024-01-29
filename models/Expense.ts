@@ -21,7 +21,7 @@ interface ExpenseDocument extends Document {
   group: Types.ObjectId;
   user: Types.ObjectId;
   isSettelment: Boolean;
-  amount: Number;
+  price: Number;
 }
 
 const groupSchema = new Schema<ExpenseDocument>(
@@ -50,7 +50,7 @@ const groupSchema = new Schema<ExpenseDocument>(
     group: { type: Schema.Types.ObjectId, ref: "Group" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     isSettelment: { type: Boolean, default: false },
-    amount: { type: Number, default: 0 },
+    price: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
