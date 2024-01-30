@@ -398,10 +398,6 @@ const Page = () => {
         ?.amount ||
     0;
 
-  const shareExpense = () => {
-    console.log(`Sharing expenes with id ${expense._id}`);
-  };
-
   const deleteExpense = () => {
     modals.openConfirmModal({
       title: <Text size="lg">Delete expense forever?</Text>,
@@ -424,13 +420,16 @@ const Page = () => {
     });
   };
 
+  const [loading, setLoading] = useDisclosure(true);
   useEffect(() => {
+    setLoading.open();
     getGroup();
     getFriends();
     getExpenses();
+    setLoading.close();
   }, []);
 
-  if (status === "loading" || !group) {
+  if (status === "loading" || !group || loading) {
     return <LoadingOverlay visible />;
   }
 
