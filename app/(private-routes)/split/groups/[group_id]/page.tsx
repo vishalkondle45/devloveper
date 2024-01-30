@@ -351,10 +351,13 @@ const Page = () => {
           icon: <IconCheck />,
           color: "green",
         });
+        newExpenseHandler.close();
+        eForm.reset();
+        getData();
       })
       .catch(() => {
         showNotification({
-          message: "Split among total is not equal to price.",
+          message: "Unable to create expense.",
           icon: <IconX />,
           color: "red",
         });
@@ -420,12 +423,15 @@ const Page = () => {
   };
 
   const [loading, setLoading] = useDisclosure(true);
-  useEffect(() => {
+  const getData = () => {
     setLoading.open();
     getGroup();
     getFriends();
     getExpenses();
     setLoading.close();
+  };
+  useEffect(() => {
+    getData();
   }, []);
 
   if (status === "loading" || !group || loading) {
