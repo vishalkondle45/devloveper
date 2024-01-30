@@ -130,9 +130,7 @@ const Page = () => {
   });
 
   const [users, usersHandlers] = useListState<any>([]);
-  const [paidBy, paidByHandlers] = useListState<ExpenseUser>([
-    { user: userId },
-  ]);
+  const [paidBy, paidByHandlers] = useListState<ExpenseUser>([]);
   const [splitAmong, splitAmongHandlers] = useListState<ExpenseUser>([]);
   const splitTotal = splitAmong.reduce(
     (accum, item) => accum + (item?.amount || 0),
@@ -164,6 +162,7 @@ const Page = () => {
           active: true,
         }))
       );
+      paidByHandlers.setState([{ user: userId, amount: price || 0 }]);
     }
   }, [users]);
 
