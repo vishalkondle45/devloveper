@@ -69,6 +69,10 @@ export const POST = async (req: NextRequest) => {
   }
   const body = await req.json();
   await startDb();
-  let group = await GroupModel.create({ ...body, user: session.user?._id });
+  let group = await GroupModel.create({
+    ...body,
+    users: [...body.users, session?.user?._id],
+    user: session.user?._id,
+  });
   return NextResponse.json(group, { status: 200 });
 };

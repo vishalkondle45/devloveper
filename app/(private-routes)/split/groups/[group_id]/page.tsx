@@ -11,6 +11,7 @@ import { colors, expenseCategories, groupTypes } from "@/lib/constants";
 import {
   getCategoryIcon,
   getDigitByString,
+  getFormattedDate,
   getInitials,
 } from "@/lib/functions";
 import {
@@ -57,6 +58,7 @@ import {
   IconReceipt,
   IconSelector,
   IconSettings,
+  IconShare,
   IconTrash,
   IconUserPlus,
   IconUserSearch,
@@ -82,6 +84,7 @@ const Page = () => {
   const [opened1, setOpened] = useState(false);
   const [opened2, setOpened2] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [expense, setExpense] = useState<any>(null);
 
   const params = useParams();
   const router = useRouter();
@@ -149,12 +152,14 @@ const Page = () => {
   }, [group?._id]);
 
   useEffect(() => {
-    paidByHandlers.setState([{ user: userId, amount: price }]);
     if (users) {
-      splitAmongHandlers.setState([
-        ...users.map(({ user }) => ({ user, amount: 0, active: true })),
-        { user: group?.user?._id, amount: 0, active: true },
-      ]);
+      splitAmongHandlers.setState(
+        users.map(({ user }) => ({
+          user,
+          amount: user === userId ? price : 0,
+          active: true,
+        }))
+      );
     }
   }, [users]);
 
@@ -381,13 +386,39 @@ const Page = () => {
     );
   };
 
-  const getPaidAmountByUserAndExpense = (expense: string) =>
+  const getUserExpense = (expense: string) =>
     paids?.find((item) => item.user === userId && item.expense === expense)
-      .amount;
+      ?.amount ||
+    0 -
+      splits?.find((item) => item.user === userId && item.expense === expense)
+        ?.amount ||
+    0;
 
-  const getSplitAmountByUserAndExpense = (expense: string) =>
-    splits?.find((item) => item.user === userId && item.expense === expense)
-      .amount;
+  const shareExpense = () => {
+    console.log(`Sharing expenes with id ${expense._id}`);
+  };
+
+  const deleteExpense = () => {
+    modals.openConfirmModal({
+      title: <Text size="lg">Delete expense forever?</Text>,
+      labels: { confirm: "Delete", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      centered: true,
+      onConfirm: async () => {
+        await axios
+          .delete(`/api/split/groups/${group?._id}/expenses?_id=${expense._id}`)
+          .catch((error) => {
+            notifications.show({
+              message: "Unable to delete expense.",
+              icon: <IconX />,
+              color: "red",
+            });
+          });
+        getExpenses();
+        setExpense(null);
+      },
+    });
+  };
 
   useEffect(() => {
     getGroup();
@@ -483,7 +514,14 @@ const Page = () => {
             price: number;
             date: string;
           }) => (
-            <Paper mt="xs" shadow="xl" p="sm" withBorder>
+            <Paper
+              mt="xs"
+              shadow="xl"
+              p="sm"
+              withBorder
+              onClick={() => setExpense(expense)}
+              key={expense._id}
+            >
               <Group justify="space-between">
                 <Group>
                   <ThemeIcon radius="xl">
@@ -493,9 +531,24 @@ const Page = () => {
                     <Text fz="sm" fw={500}>
                       {expense.description}
                     </Text>
-                    <Text fz="sm" fw={300}>
-                      {getPaidAmountByUserAndExpense(expense._id) -
-                        getSplitAmountByUserAndExpense(expense._id)}
+                    <Text fz="xs" fw={200}>
+                      {paids.filter((item) => item.expense === expense._id)
+                        .length > 1
+                        ? "2 People "
+                        : "You "}
+                      <NumberFormatter
+                        value={paids
+                          .filter((item) => item.expense === expense._id)
+                          .reduce(
+                            (accum, item) => accum + (item?.amount || 0),
+                            0
+                          )}
+                        prefix="₹"
+                        thousandsGroupStyle="lakh"
+                        thousandSeparator=","
+                        decimalSeparator="."
+                        decimalScale={2}
+                      />
                     </Text>
                   </Stack>
                 </Group>
@@ -503,15 +556,21 @@ const Page = () => {
                   <Badge ta="right" variant="outline" size="xs">
                     {dayjs(expense.date).format("DD-MMM")}
                   </Badge>
-                  <NumberFormatter
-                    style={{ textAlign: "right" }}
-                    value={expense.price}
-                    prefix="₹"
-                    thousandsGroupStyle="lakh"
-                    thousandSeparator=","
-                    decimalSeparator="."
-                    decimalScale={2}
-                  />
+                  <Text
+                    ta="right"
+                    fz="sm"
+                    fw={700}
+                    c={getUserExpense(expense._id) < 0 ? "red" : "green"}
+                  >
+                    <NumberFormatter
+                      value={getUserExpense(expense._id)}
+                      prefix="₹"
+                      thousandsGroupStyle="lakh"
+                      thousandSeparator=","
+                      decimalSeparator="."
+                      decimalScale={2}
+                    />
+                  </Text>
                 </Stack>
               </Group>
             </Paper>
@@ -709,39 +768,6 @@ const Page = () => {
                   mb="xs"
                   radius="xl"
                 />
-                <Group wrap="nowrap" justify="space-between">
-                  <Group gap="xs" wrap="nowrap">
-                    <Checkbox
-                      checked={paidBy.some(
-                        (item) => item.user === group?.user?._id
-                      )}
-                      onChange={() => handlePaidByUser(group?.user?._id)}
-                      radius="xl"
-                    />
-                    <Text>
-                      {group?.user?._id === userId ? "You" : group?.user?.name}
-                    </Text>
-                    <Badge color="red" variant="outline" size="xs">
-                      Admin
-                    </Badge>
-                  </Group>
-                  <NumberInput
-                    value={
-                      paidBy.some((item) => item.user === group?.user?._id)
-                        ? paidBy.find((item) => item.user === group?.user?._id)
-                            ?.amount
-                        : 0
-                    }
-                    leftSection={<IconCurrencyRupee />}
-                    disabled={
-                      !paidBy.some((item) => item.user === group?.user?._id)
-                    }
-                    onChange={(v) =>
-                      handlePaidByAmount(group?.user?._id, Number(v))
-                    }
-                    w="35%"
-                  />
-                </Group>
                 {users.map(({ user, name }) => (
                   <Group wrap="nowrap" key={user} justify="space-between">
                     <Group gap="xs" wrap="nowrap">
@@ -768,7 +794,7 @@ const Page = () => {
                 <Group mt="xs" justify="space-between">
                   <Group>
                     <Text ta="right">
-                      People : {paidBy.length} / {form.values.users.length + 1}
+                      People : {paidBy.length} / {form.values.users.length}
                     </Text>
                   </Group>
                   <Group wrap="nowrap" gap={0}>
@@ -835,8 +861,7 @@ const Page = () => {
                 <Text fz="xs" truncate>
                   {split.user === userId
                     ? "You"
-                    : users.find(({ user }) => user === split.user)?.name ||
-                      group?.user.name}
+                    : users.find(({ user }) => user === split.user)?.name}
                 </Text>
                 {eForm.values.isEquallySplit ? (
                   <NumberFormatter
@@ -868,7 +893,7 @@ const Page = () => {
           <Group>
             <Text ta="right">
               People : {splitAmong.filter((i) => i.active).length} /{" "}
-              {form.values.users.length + 1}
+              {form.values.users.length}
             </Text>
           </Group>
           <Group wrap="nowrap" gap={0}>
@@ -891,6 +916,116 @@ const Page = () => {
         <Button mt="xs" onClick={submitExpense} fullWidth>
           Submit
         </Button>
+      </Modal>
+      <Modal
+        opened={Boolean(expense)}
+        onClose={() => setExpense(null)}
+        withCloseButton={false}
+      >
+        <Paper mt="xs" shadow="xl" p="sm" withBorder>
+          <Group justify="space-between">
+            <Group gap="xs">
+              <ThemeIcon radius="xl">
+                {getCategoryIcon(expense?.category)}
+              </ThemeIcon>
+              <Stack gap={0}>
+                <Text fz="sm" fw={500}>
+                  {expense?.description}
+                </Text>
+                <Text fz="xs" fw={200}>
+                  {getFormattedDate(expense?.date)}
+                </Text>
+                <Text fz="sm">{expense?.price}</Text>
+              </Stack>
+            </Group>
+            <Group gap="xs">
+              <ActionIcon onClick={shareExpense} color="blue" radius="xl">
+                <IconShare style={{ width: rem(18), height: rem(18) }} />
+              </ActionIcon>
+              <ActionIcon onClick={deleteExpense} color="red" radius="xl">
+                <IconTrash style={{ width: rem(18), height: rem(18) }} />
+              </ActionIcon>
+            </Group>
+          </Group>
+        </Paper>
+        <Paper shadow="xl" my="xs" p="sm" withBorder>
+          <Text my="xs" fw={700}>
+            Paid By
+          </Text>
+          <Stack gap={rem(4)}>
+            {paids
+              ?.filter((paid) => paid?.expense === expense?._id)
+              .map((paid) => {
+                const name =
+                  paid?.user === userId
+                    ? data?.user?.name
+                    : users.find((user) => paid?.user === user?.user)?.name;
+                return (
+                  <Group justify="space-between" key={paid?.user}>
+                    <Group gap="xs">
+                      <Avatar
+                        size={rem(20)}
+                        src={null}
+                        alt={name || ""}
+                        variant="filled"
+                        color={colors[getDigitByString(name)]}
+                      >
+                        {getInitials(name)}
+                      </Avatar>
+                      <Text>{name}</Text>
+                    </Group>
+                    <NumberFormatter
+                      style={{ textAlign: "right" }}
+                      value={paid?.amount}
+                      prefix="₹"
+                      thousandsGroupStyle="lakh"
+                      thousandSeparator=","
+                      decimalSeparator="."
+                      decimalScale={2}
+                    />
+                  </Group>
+                );
+              })}
+          </Stack>
+          <Text my="xs" fw={700}>
+            Split Among
+          </Text>
+          <Stack gap={rem(4)}>
+            {splits
+              ?.filter((split) => split?.expense === expense?._id)
+              .map((split) => {
+                const name =
+                  split?.user === userId
+                    ? data?.user?.name
+                    : users.find((user) => split?.user === user?.user)?.name;
+                return (
+                  <Group justify="space-between" key={split._id}>
+                    <Group gap="xs">
+                      <Avatar
+                        size={rem(20)}
+                        src={null}
+                        alt={name || ""}
+                        variant="filled"
+                        color={colors[getDigitByString(name)]}
+                      >
+                        {getInitials(name)}
+                      </Avatar>
+                      <Text>{name}</Text>
+                    </Group>
+                    <NumberFormatter
+                      style={{ textAlign: "right" }}
+                      value={split?.amount}
+                      prefix="₹"
+                      thousandsGroupStyle="lakh"
+                      thousandSeparator=","
+                      decimalSeparator="."
+                      decimalScale={2}
+                    />
+                  </Group>
+                );
+              })}
+          </Stack>
+        </Paper>
       </Modal>
     </Container>
   );

@@ -1,9 +1,11 @@
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import { expenseCategories } from "./constants";
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
+dayjs.extend(advancedFormat);
 
 export const getInitials = (name: string | undefined | null) => {
   if (name) {
@@ -59,3 +61,6 @@ export const displayUserFirstName = (string: string) => string.split(" ")[0];
 
 export const getCategoryIcon = (string: string) =>
   expenseCategories.find((item) => item.category === string)?.icon;
+
+export const getFormattedDate = (date: any) =>
+  dayjs(date).format("Do MMM YYYY");

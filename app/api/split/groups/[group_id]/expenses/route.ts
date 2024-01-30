@@ -32,7 +32,7 @@ export const GET = async (
   const paidBy = await PaidByModel.find({
     group: params.group_id,
   });
-  const splitAmong = await PaidByModel.find({
+  const splitAmong = await SplitAmongModel.find({
     group: params.group_id,
   });
   return NextResponse.json({ expenses, paidBy, splitAmong }, { status: 200 });
@@ -80,5 +80,22 @@ export const POST = async (
     }))
   );
   let expenses = await ExpenseModel.find();
+  return NextResponse.json(expenses, { status: 200 });
+};
+
+export const DELETE = async (req: NextRequest): Promise<any> => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { error: "You are not authenticated!" },
+      { status: 401 }
+    );
+  }
+  const expense = req.nextUrl.searchParams.get("_id");
+  await startDb();
+  await ExpenseModel.findByIdAndDelete(expense);
+  await PaidByModel.deleteMany({ expense });
+  await SplitAmongModel.deleteMany({ expense });
+  const expenses = await ExpenseModel.find();
   return NextResponse.json(expenses, { status: 200 });
 };
