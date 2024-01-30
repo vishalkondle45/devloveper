@@ -22,6 +22,8 @@ import {
   Center,
   Checkbox,
   Container,
+  CopyButton,
+  Divider,
   Grid,
   Group,
   LoadingOverlay,
@@ -53,12 +55,14 @@ import { notifications, showNotification } from "@mantine/notifications";
 import {
   IconCheck,
   IconChevronDown,
+  IconCopy,
   IconCurrencyRupee,
   IconPlus,
   IconReceipt,
   IconSelector,
   IconSettings,
   IconShare,
+  IconShareOff,
   IconTrash,
   IconUserPlus,
   IconUserSearch,
@@ -938,18 +942,48 @@ const Page = () => {
                 <Text fz="sm">{expense?.price}</Text>
               </Stack>
             </Group>
-            <Group gap="xs">
-              <ActionIcon onClick={shareExpense} color="blue" radius="xl">
-                <IconShare style={{ width: rem(18), height: rem(18) }} />
-              </ActionIcon>
-              <ActionIcon onClick={deleteExpense} color="red" radius="xl">
-                <IconTrash style={{ width: rem(18), height: rem(18) }} />
-              </ActionIcon>
-            </Group>
+            <Stack gap="xs">
+              <Badge size="xs" variant="outline">
+                {dayjs(group.createdAt).format("DD-MM-YYYY")}
+              </Badge>
+              <Group justify="right" gap="xs">
+                <CopyButton
+                  value={`https://www.devloveper.vercel.app/split/groups/${group?._id}`}
+                >
+                  {({ copied, copy }) => (
+                    <ActionIcon
+                      color={copied ? "teal" : "blue"}
+                      onClick={() => {
+                        copy();
+                        showNotification({
+                          icon: <IconCopy size={16} />,
+                          message: "Link copied to clipboard",
+                          autoClose: 1000,
+                        });
+                      }}
+                      radius="xl"
+                    >
+                      {copied ? (
+                        <IconShareOff
+                          style={{ width: rem(18), height: rem(18) }}
+                        />
+                      ) : (
+                        <IconShare
+                          style={{ width: rem(18), height: rem(18) }}
+                        />
+                      )}
+                    </ActionIcon>
+                  )}
+                </CopyButton>
+                <ActionIcon onClick={deleteExpense} color="red" radius="xl">
+                  <IconTrash style={{ width: rem(18), height: rem(18) }} />
+                </ActionIcon>
+              </Group>
+            </Stack>
           </Group>
         </Paper>
         <Paper shadow="xl" my="xs" p="sm" withBorder>
-          <Text my="xs" fw={700}>
+          <Text mb="xs" fw={700}>
             Paid By
           </Text>
           <Stack gap={rem(4)}>
@@ -987,6 +1021,7 @@ const Page = () => {
                 );
               })}
           </Stack>
+          <Divider variant="dashed" my="md" />
           <Text my="xs" fw={700}>
             Split Among
           </Text>
