@@ -41,6 +41,7 @@ import {
   Select,
   SimpleGrid,
   Stack,
+  Tabs,
   Text,
   TextInput,
   ThemeIcon,
@@ -434,6 +435,8 @@ const Page = () => {
     getData();
   }, []);
 
+  const [activeTab, setActiveTab] = useState<string | null>("balance");
+
   if (status === "loading" || !group || loading) {
     return <LoadingOverlay visible />;
   }
@@ -511,79 +514,93 @@ const Page = () => {
           </MenuDropdown>
         </Menu>
       </Group>
-      <Container size="xs" my="xs" px={0}>
-        {/* {JSON.stringify(paids)}
-        {JSON.stringify(splits)} */}
-        {expenses.map(
-          (expense: {
-            _id: string;
-            category: string;
-            description: string;
-            price: number;
-            date: string;
-          }) => (
-            <Paper
-              mt="xs"
-              shadow="xl"
-              p="sm"
-              withBorder
-              onClick={() => setExpense(expense)}
-              key={expense._id}
-            >
-              <Group justify="space-between">
-                <Group>
-                  <ThemeIcon radius="xl">
-                    {getCategoryIcon(expense.category)}
-                  </ThemeIcon>
-                  <Stack gap={0}>
-                    <Text fz="sm" fw={500}>
-                      {expense.description}
-                    </Text>
-                    <Text fz="xs" fw={200}>
-                      {paids.filter((item) => item.expense === expense._id)
-                        .length > 1
-                        ? "2 People "
-                        : "You "}
-                      <NumberFormatter
-                        value={paids
-                          .filter((item) => item.expense === expense._id)
-                          .reduce(
-                            (accum, item) => accum + (item?.amount || 0),
-                            0
-                          )}
-                        prefix="₹"
-                        thousandsGroupStyle="lakh"
-                        thousandSeparator=","
-                        decimalSeparator="."
-                        decimalScale={2}
-                      />
-                    </Text>
-                  </Stack>
-                </Group>
-                <Stack gap={0}>
-                  <Badge ta="right" variant="outline" size="xs">
-                    {dayjs(expense.date).format("DD-MMM")}
-                  </Badge>
-                  <Text
-                    ta="right"
-                    fz="sm"
-                    fw={700}
-                    c={getUserExpense(expense._id) < 0 ? "red" : "green"}
+      <Container size="xs" px={0}>
+        <Tabs variant="pills" value={activeTab} onChange={setActiveTab}>
+          <Paper withBorder>
+            <Tabs.List grow>
+              <Tabs.Tab value="expense">Expense</Tabs.Tab>
+              <Tabs.Tab value="balance">Balance</Tabs.Tab>
+              <Tabs.Tab value="summary">Summary</Tabs.Tab>
+            </Tabs.List>
+          </Paper>
+          <Tabs.Panel value="expense">
+            <Container size="xs" my="xs" px={0}>
+              {expenses.map(
+                (expense: {
+                  _id: string;
+                  category: string;
+                  description: string;
+                  price: number;
+                  date: string;
+                }) => (
+                  <Paper
+                    mt="xs"
+                    shadow="xl"
+                    p="sm"
+                    withBorder
+                    onClick={() => setExpense(expense)}
+                    key={expense._id}
                   >
-                    <NumberFormatter
-                      value={getUserExpense(expense._id)}
-                      prefix="₹"
-                      thousandsGroupStyle="lakh"
-                      thousandSeparator=","
-                      decimalSeparator="."
-                      decimalScale={2}
-                    />
-                  </Text>
-                </Stack>
-              </Group>
-            </Paper>
-          )
-        )}
+                    <Group justify="space-between">
+                      <Group>
+                        <ThemeIcon radius="xl">
+                          {getCategoryIcon(expense.category)}
+                        </ThemeIcon>
+                        <Stack gap={0}>
+                          <Text fz="sm" fw={500}>
+                            {expense.description}
+                          </Text>
+                          <Text fz="xs" fw={200}>
+                            {paids.filter(
+                              (item) => item.expense === expense._id
+                            ).length > 1
+                              ? "2 People "
+                              : "You "}
+                            <NumberFormatter
+                              value={paids
+                                .filter((item) => item.expense === expense._id)
+                                .reduce(
+                                  (accum, item) => accum + (item?.amount || 0),
+                                  0
+                                )}
+                              prefix="₹"
+                              thousandsGroupStyle="lakh"
+                              thousandSeparator=","
+                              decimalSeparator="."
+                              decimalScale={2}
+                            />
+                          </Text>
+                        </Stack>
+                      </Group>
+                      <Stack gap={0}>
+                        <Badge ta="right" variant="outline" size="xs">
+                          {dayjs(expense.date).format("DD-MMM")}
+                        </Badge>
+                        <Text
+                          ta="right"
+                          fz="sm"
+                          fw={700}
+                          c={getUserExpense(expense._id) < 0 ? "red" : "green"}
+                        >
+                          <NumberFormatter
+                            value={getUserExpense(expense._id)}
+                            prefix="₹"
+                            thousandsGroupStyle="lakh"
+                            thousandSeparator=","
+                            decimalSeparator="."
+                            decimalScale={2}
+                          />
+                        </Text>
+                      </Stack>
+                    </Group>
+                  </Paper>
+                )
+              )}
+            </Container>
+          </Tabs.Panel>
+          <Tabs.Panel value="balance">Balance</Tabs.Panel>
+          <Tabs.Panel value="summary">Summary</Tabs.Panel>
+        </Tabs>
       </Container>
       <Modal
         opened={opened}
