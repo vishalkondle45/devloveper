@@ -26,6 +26,8 @@ import {
   Divider,
   Grid,
   Group,
+  List,
+  ListItem,
   LoadingOverlay,
   Menu,
   MenuDropdown,
@@ -45,6 +47,7 @@ import {
   Text,
   TextInput,
   ThemeIcon,
+  Title,
   Tooltip,
   rem,
 } from "@mantine/core";
@@ -54,10 +57,12 @@ import { useDisclosure, useListState } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications, showNotification } from "@mantine/notifications";
 import {
+  IconArrowRight,
   IconCheck,
   IconChevronDown,
   IconCopy,
   IconCurrencyRupee,
+  IconMinus,
   IconPlus,
   IconReceipt,
   IconSelector,
@@ -90,6 +95,7 @@ const Page = () => {
   const [opened2, setOpened2] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [expense, setExpense] = useState<any>(null);
+  const [balances, setBalances] = useState<any[]>([]);
 
   const params = useParams();
   const router = useRouter();
@@ -189,6 +195,7 @@ const Page = () => {
         setExpenses(res.data.expenses);
         setSplits(res.data.splitAmong);
         setPaids(res.data.paidBy);
+        setBalances(res.data.balance);
       })
       .catch((error) => router.push("/split/groups"));
   };
@@ -598,7 +605,114 @@ const Page = () => {
               )}
             </Container>
           </Tabs.Panel>
-          <Tabs.Panel value="balance">Balance</Tabs.Panel>
+          <Tabs.Panel value="balance">
+            <Stack mt="md">
+              {Object.keys(balances).map((key: string) => {
+                const xName = users.find((user) => user.user === key)?.name;
+                return (
+                  <>
+                    {Object.keys((balances as { [key: string]: any })[key]).map(
+                      (k) => {
+                        const yName = users.find(
+                          (user) => user.user === k
+                        )?.name;
+                        const balance = (balances as { [key: string]: any })[k];
+                        const sender = balance < 0 ? xName : yName;
+                        const receiver = balance < 0 ? yName : xName;
+                        return (
+                          <>
+                            <Paper p="sm" withBorder>
+                              <Group
+                                wrap="nowrap"
+                                gap={0}
+                                justify="space-between"
+                              >
+                                <Stack
+                                  gap={0}
+                                  ta="center"
+                                  align="center"
+                                  maw={rem(60)}
+                                >
+                                  <Avatar
+                                    size="md"
+                                    src={null}
+                                    alt={sender || ""}
+                                    variant="filled"
+                                    color={colors[getDigitByString(sender)]}
+                                  >
+                                    {getInitials(sender)}
+                                  </Avatar>
+                                  <Text size="xs" fw={700}>
+                                    {sender}
+                                  </Text>
+                                </Stack>
+                                <ThemeIcon size="xs" variant="transparent">
+                                  <IconMinus />
+                                </ThemeIcon>
+                                <Stack gap={0} align="center">
+                                  <Text
+                                    ta="right"
+                                    fz="sm"
+                                    fw={700}
+                                    c={balance < 0 ? "red" : "green"}
+                                    size="xs"
+                                  >
+                                    <NumberFormatter
+                                      value={balance}
+                                      prefix="₹"
+                                      thousandsGroupStyle="lakh"
+                                      thousandSeparator=","
+                                      decimalSeparator="."
+                                      decimalScale={2}
+                                    />
+                                  </Text>
+                                  <Text size="xs">will pay</Text>
+                                </Stack>
+                                <ThemeIcon size="xs" variant="transparent">
+                                  <IconArrowRight />
+                                </ThemeIcon>
+                                <Stack
+                                  gap={0}
+                                  ta="center"
+                                  align="center"
+                                  maw={rem(60)}
+                                >
+                                  <Avatar
+                                    size="md"
+                                    src={null}
+                                    alt={receiver || ""}
+                                    variant="filled"
+                                    color={colors[getDigitByString(receiver)]}
+                                  >
+                                    {getInitials(receiver)}
+                                  </Avatar>
+                                  <Text size="xs" fw={700}>
+                                    {receiver}
+                                  </Text>
+                                </Stack>
+                                <Stack gap="xs">
+                                  <Button
+                                    variant="outline"
+                                    size="compact-xs"
+                                    radius="xl"
+                                  >
+                                    Remind
+                                  </Button>
+                                  <Button size="compact-xs" radius="xl">
+                                    Settle up
+                                  </Button>
+                                </Stack>
+                              </Group>
+                            </Paper>
+                          </>
+                        );
+                      }
+                    )}
+                  </>
+                );
+              })}
+            </Stack>
+          </Tabs.Panel>
           <Tabs.Panel value="summary">Summary</Tabs.Panel>
         </Tabs>
       </Container>
