@@ -611,103 +611,99 @@ const Page = () => {
                 const xName = users.find((user) => user.user === key)?.name;
                 return (
                   <>
-                    {Object.keys((balances as { [key: string]: any })[key]).map(
-                      (k) => {
-                        const yName = users.find(
-                          (user) => user.user === k
-                        )?.name;
-                        const balance = (balances as { [key: string]: any })[k];
-                        const sender = balance < 0 ? xName : yName;
-                        const receiver = balance < 0 ? yName : xName;
-                        return (
-                          <>
-                            <Paper p="sm" withBorder>
-                              <Group
-                                wrap="nowrap"
+                    {Object.keys(balances[key]).map((k) => {
+                      const yName = users.find((user) => user.user === k)?.name;
+                      const balance = balances[key][k];
+                      const sender = balance < 0 ? xName : yName;
+                      const receiver = balance < 0 ? yName : xName;
+                      return (
+                        <>
+                          <Paper p="sm" withBorder>
+                            <Group
+                              wrap="nowrap"
+                              gap={0}
+                              justify="space-between"
+                            >
+                              <Stack
                                 gap={0}
-                                justify="space-between"
+                                ta="center"
+                                align="center"
+                                maw={rem(60)}
                               >
-                                <Stack
-                                  gap={0}
-                                  ta="center"
-                                  align="center"
-                                  maw={rem(60)}
+                                <Avatar
+                                  size="md"
+                                  src={null}
+                                  alt={sender || ""}
+                                  variant="filled"
+                                  color={colors[getDigitByString(sender)]}
                                 >
-                                  <Avatar
-                                    size="md"
-                                    src={null}
-                                    alt={sender || ""}
-                                    variant="filled"
-                                    color={colors[getDigitByString(sender)]}
-                                  >
-                                    {getInitials(sender)}
-                                  </Avatar>
-                                  <Text size="xs" fw={700}>
-                                    {sender}
-                                  </Text>
-                                </Stack>
-                                <ThemeIcon size="xs" variant="transparent">
-                                  <IconMinus />
-                                </ThemeIcon>
-                                <Stack gap={0} align="center">
-                                  <Text
-                                    ta="right"
-                                    fz="sm"
-                                    fw={700}
-                                    c={balance < 0 ? "red" : "green"}
-                                    size="xs"
-                                  >
-                                    <NumberFormatter
-                                      value={balance}
-                                      prefix="₹"
-                                      thousandsGroupStyle="lakh"
-                                      thousandSeparator=","
-                                      decimalSeparator="."
-                                      decimalScale={2}
-                                    />
-                                  </Text>
-                                  <Text size="xs">will pay</Text>
-                                </Stack>
-                                <ThemeIcon size="xs" variant="transparent">
-                                  <IconArrowRight />
-                                </ThemeIcon>
-                                <Stack
-                                  gap={0}
-                                  ta="center"
-                                  align="center"
-                                  maw={rem(60)}
+                                  {getInitials(sender)}
+                                </Avatar>
+                                <Text size="xs" fw={700}>
+                                  {sender}
+                                </Text>
+                              </Stack>
+                              <ThemeIcon size="xs" variant="transparent">
+                                <IconMinus />
+                              </ThemeIcon>
+                              <Stack gap={0} align="center">
+                                <Text
+                                  ta="right"
+                                  fz="sm"
+                                  fw={700}
+                                  c={balance < 0 ? "red" : "green"}
+                                  size="xs"
                                 >
-                                  <Avatar
-                                    size="md"
-                                    src={null}
-                                    alt={receiver || ""}
-                                    variant="filled"
-                                    color={colors[getDigitByString(receiver)]}
-                                  >
-                                    {getInitials(receiver)}
-                                  </Avatar>
-                                  <Text size="xs" fw={700}>
-                                    {receiver}
-                                  </Text>
-                                </Stack>
-                                <Stack gap="xs">
-                                  <Button
-                                    variant="outline"
-                                    size="compact-xs"
-                                    radius="xl"
-                                  >
-                                    Remind
-                                  </Button>
-                                  <Button size="compact-xs" radius="xl">
-                                    Settle up
-                                  </Button>
-                                </Stack>
-                              </Group>
-                            </Paper>
-                          </>
-                        );
-                      }
-                    )}
+                                  <NumberFormatter
+                                    value={balance}
+                                    prefix="₹"
+                                    thousandsGroupStyle="lakh"
+                                    thousandSeparator=","
+                                    decimalSeparator="."
+                                    decimalScale={2}
+                                  />
+                                </Text>
+                                <Text size="xs">will pay</Text>
+                              </Stack>
+                              <ThemeIcon size="xs" variant="transparent">
+                                <IconArrowRight />
+                              </ThemeIcon>
+                              <Stack
+                                gap={0}
+                                ta="center"
+                                align="center"
+                                maw={rem(60)}
+                              >
+                                <Avatar
+                                  size="md"
+                                  src={null}
+                                  alt={receiver || ""}
+                                  variant="filled"
+                                  color={colors[getDigitByString(receiver)]}
+                                >
+                                  {getInitials(receiver)}
+                                </Avatar>
+                                <Text size="xs" fw={700}>
+                                  {receiver}
+                                </Text>
+                              </Stack>
+                              <Stack gap="xs">
+                                <Button
+                                  variant="outline"
+                                  size="compact-xs"
+                                  radius="xl"
+                                >
+                                  Remind
+                                </Button>
+                                <Button size="compact-xs" radius="xl">
+                                  Settle up
+                                </Button>
+                              </Stack>
+                            </Group>
+                          </Paper>
+                        </>
+                      );
+                    })}
                   </>
                 );
               })}
