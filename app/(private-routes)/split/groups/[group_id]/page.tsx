@@ -314,6 +314,7 @@ const Page = () => {
   }, [isEqually]);
 
   const submitExpense = async () => {
+    setLoading.open();
     if (!eForm.values.description) {
       showNotification({
         message: "Description is required field.",
@@ -369,6 +370,9 @@ const Page = () => {
           icon: <IconX />,
           color: "red",
         });
+      })
+      .finally(() => {
+        setLoading.close();
       });
   };
 
@@ -415,6 +419,7 @@ const Page = () => {
       confirmProps: { color: "red" },
       centered: true,
       onConfirm: async () => {
+        setLoading.open();
         await axios
           .delete(`/api/split/groups/${group?._id}/expenses?_id=${expense._id}`)
           .catch((error) => {
@@ -426,6 +431,7 @@ const Page = () => {
           });
         getExpenses();
         setExpense(null);
+        setLoading.close();
       },
     });
   };
