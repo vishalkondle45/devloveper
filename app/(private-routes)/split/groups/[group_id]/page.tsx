@@ -611,9 +611,13 @@ const Page = () => {
                 const xName = users.find((user) => user.user === key)?.name;
                 return (
                   <>
-                    {Object.keys(balances[key]).map((k) => {
+                    {Object.keys(
+                      (balances as { [key: string]: any })[key] as string
+                    ).map((k) => {
                       const yName = users.find((user) => user.user === k)?.name;
-                      const balance = balances[key][k];
+                      const balance = (balances as { [key: string]: any })[key][
+                        k
+                      ] as number;
                       const sender = balance < 0 ? xName : yName;
                       const receiver = balance < 0 ? yName : xName;
                       return (
