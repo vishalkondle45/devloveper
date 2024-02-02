@@ -5,6 +5,7 @@ import {
   GroupType,
   GroupUserType,
 } from "@/components/Split/Group/Group.Types";
+import SpendingItem from "@/components/Split/Group/Summary/SummarySpendingItem.tsx/SummarySpendingItem";
 import GroupUser from "@/components/Split/Group/User/GroupUser";
 import { AutoCompleteDataType } from "@/components/Split/Group/User/User.Types";
 import { colors, expenseCategories, groupTypes } from "@/lib/constants";
@@ -26,8 +27,6 @@ import {
   Divider,
   Grid,
   Group,
-  List,
-  ListItem,
   LoadingOverlay,
   Menu,
   MenuDropdown,
@@ -47,7 +46,6 @@ import {
   Text,
   TextInput,
   ThemeIcon,
-  Title,
   Tooltip,
   rem,
 } from "@mantine/core";
@@ -76,7 +74,7 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 import dayjs from "dayjs";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -448,7 +446,13 @@ const Page = () => {
     getData();
   }, []);
 
-  const [activeTab, setActiveTab] = useState<string | null>("balance");
+  const [activeTab, setActiveTab] = useState<string | null>("summary");
+
+  const nonSettlementExpenses = expenses
+    .filter(({ isSettelment }) => !isSettelment)
+    .map(({ _id }) => String(_id));
+
+  const findIsExist = (expense: any) => nonSettlementExpenses.includes(expense);
 
   if (status === "loading" || !group || loading) {
     return <LoadingOverlay visible />;
@@ -719,7 +723,53 @@ const Page = () => {
               })}
             </Stack>
           </Tabs.Panel>
-          <Tabs.Panel value="summary">Summary</Tabs.Panel>
+          <Tabs.Panel value="summary">
+            <Text>Summary</Text>
+            <Stack gap="xs">
+              {users.map((user) => {
+                return (
+                  <Stack>
+                    <SpendingItem
+                      data={data}
+                      color={colors[getDigitByString(user.name)]}
+                      name={user.name}
+                      spendings={paids
+                        .filter(
+                          (paid) =>
+                            paid.user === user.user && findIsExist(paid.expense)
+                        )
+                        .reduce((a, { amount }) => a + amount, 0)}
+                      share={splits
+                        .filter(
+                          (split) =>
+                            split.user === user.user &&
+                            findIsExist(split.expense)
+                        )
+                        .reduce((a, { amount }) => a + amount, 0)}
+                      paids={
+                        paids
+                          ?.filter(
+                            (paid) =>
+                              paid?.user === user.user &&
+                              !findIsExist(paid.expense)
+                          )
+                          ?.reduce((n, { amount }) => n + amount, 0) || 0
+                      }
+                      received={
+                        splits
+                          ?.filter(
+                            (split) =>
+                              split?.user === user.user &&
+                              !findIsExist(split.expense)
+                          )
+                          ?.reduce((n, { amount }) => n + amount, 0) || 0
+                      }
+                    />
+                  </Stack>
+                );
+              })}
+            </Stack>
+          </Tabs.Panel>
         </Tabs>
       </Container>
       <Modal
