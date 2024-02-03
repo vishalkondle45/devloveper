@@ -74,7 +74,7 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 import dayjs from "dayjs";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -84,6 +84,7 @@ const Page = () => {
   const userId = data?.user?._id || new mongoose.Types.ObjectId();
   const [group, setGroup] = useState<GroupType | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const [settleUpOpened, settleUpHandlers] = useDisclosure(false);
   const [newExpenseOpened, newExpenseHandler] = useDisclosure(false);
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -94,6 +95,17 @@ const Page = () => {
   const [searchValue, setSearchValue] = useState("");
   const [expense, setExpense] = useState<any>(null);
   const [balances, setBalances] = useState<any[]>([]);
+  const [settleUpData, setSettleUpData] = useState<{
+    user: string | null;
+    name: string | null;
+    isReceiving: boolean;
+    amount: number;
+  }>({
+    user: null,
+    name: null,
+    isReceiving: false,
+    amount: 0,
+  });
 
   const params = useParams();
   const router = useRouter();
@@ -720,7 +732,27 @@ const Page = () => {
                                 >
                                   Remind
                                 </Button>
-                                <Button size="compact-xs" radius="xl">
+                                <Button
+                                  size="compact-xs"
+                                  radius="xl"
+                                  disabled={
+                                    String(userId) !== key &&
+                                    String(userId) !== k
+                                  }
+                                  onClick={() => {
+                                    settleUpHandlers.open();
+                                    setSettleUpData({
+                                      user:
+                                        String(k) === String(userId) ? key : k,
+                                      isReceiving: sender !== data?.user?.name,
+                                      name:
+                                        String(k) === String(userId)
+                                          ? xName
+                                          : yName,
+                                      amount: Math.abs(balance),
+                                    });
+                                  }}
+                                >
                                   Settle up
                                 </Button>
                               </Stack>
@@ -1265,6 +1297,51 @@ const Page = () => {
               })}
           </Stack>
         </Paper>
+      </Modal>
+      <Modal
+        opened={settleUpOpened}
+        title="Record a payment"
+        onClose={() => {
+          settleUpHandlers.close();
+          setSettleUpData({
+            user: null,
+            name: "",
+            isReceiving: false,
+            amount: 0,
+          });
+        }}
+      >
+        <Group mb="xs" gap="xs">
+          <Text ta="left" c="gray" fw={500}>
+            {settleUpData.isReceiving ? "Received from" : "Sent to"}
+          </Text>
+          <Text ta="left" fw={700}>
+            {settleUpData?.name}
+          </Text>
+          <Avatar
+            size="sm"
+            src={null}
+            alt={settleUpData?.name || ""}
+            variant="filled"
+            color={colors[getDigitByString(settleUpData?.name)]}
+          >
+            {getInitials(settleUpData?.name)}
+          </Avatar>
+        </Group>
+        <Stack align="center">
+          <NumberInput
+            w="100%"
+            placeholder="Enter amount"
+            leftSection={<IconCurrencyRupee />}
+            value={settleUpData?.amount}
+            onChange={(amount) =>
+              setSettleUpData((old) => ({ ...old, amount: Number(amount) }))
+            }
+          />
+          <Button color="dark" radius="xl">
+            Settle Up
+          </Button>
+        </Stack>
       </Modal>
     </Container>
   );
