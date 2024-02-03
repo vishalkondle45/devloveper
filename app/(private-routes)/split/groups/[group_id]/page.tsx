@@ -901,7 +901,10 @@ const Page = () => {
                       key={category.category}
                       align="center"
                       gap={0}
-                      onClick={() => setEForm("category", category.category)}
+                      onClick={() => {
+                        setEForm("category", category.category);
+                        setOpened(false);
+                      }}
                       style={{ cursor: "pointer" }}
                     >
                       <ThemeIcon
