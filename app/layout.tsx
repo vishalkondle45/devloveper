@@ -13,6 +13,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/nprogress/styles.css";
 import "@mantine/spotlight/styles.css";
 import "@mantine/tiptap/styles.css";
+import "@mantine/charts/styles.css";
 import { Viewport } from "next";
 
 export const metadata = {

@@ -101,7 +101,7 @@ export interface ExpenseCategoryTypes {
     | "emi"
     | "investment"
     | "general";
-  label: String;
+  label: string;
   icon: ReactNode;
   color: DefaultMantineColor;
 }

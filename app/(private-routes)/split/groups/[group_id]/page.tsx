@@ -78,6 +78,7 @@ import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { PieChart } from "@mantine/charts";
 
 const Page = () => {
   const { status, data } = useSession();
@@ -456,7 +457,7 @@ const Page = () => {
     getData();
   }, []);
 
-  const [activeTab, setActiveTab] = useState<string | null>("expense");
+  const [activeTab, setActiveTab] = useState<string | null>("summary");
 
   const nonSettlementExpenses = expenses
     .filter(({ isSettelment }) => !isSettelment)
@@ -818,6 +819,79 @@ const Page = () => {
                 );
               })}
             </Stack>
+            <Group justify="center">
+              <Stack align="center">
+                <PieChart
+                  data={users.map((u) => ({
+                    name: u.name,
+                    value: paids
+                      .filter((paid) => paid.user === u.user)
+                      .reduce((a, { amount }) => a + amount, 0),
+                    color:
+                      colors[Math.floor(Math.random() * 10)] +
+                      "." +
+                      Math.floor(Math.random() * 10),
+                  }))}
+                  withTooltip
+                  tooltipDataSource="segment"
+                  mx="auto"
+                  withLabelsLine
+                  labelsPosition="outside"
+                  withLabels
+                />
+                <Text fz="xs" mb="sm" ta="center">
+                  PaidBy - User wise
+                </Text>
+              </Stack>
+              <Stack>
+                <PieChart
+                  data={users.map((u) => ({
+                    name: u.name,
+                    value: splits
+                      .filter((split) => split.user === u.user)
+                      .reduce((a, { amount }) => a + amount, 0),
+                    color:
+                      colors[Math.floor(Math.random() * 10)] +
+                      "." +
+                      Math.floor(Math.random() * 10),
+                  }))}
+                  withTooltip
+                  tooltipDataSource="segment"
+                  mx="auto"
+                  withLabelsLine
+                  labelsPosition="outside"
+                  withLabels
+                />
+                <Text fz="xs" mb="sm" ta="center">
+                  Splits - User wise
+                </Text>
+              </Stack>
+            </Group>
+            <Group justify="center">
+              <Stack align="center">
+                <PieChart
+                  data={expenseCategories.map((cat) => ({
+                    name: String(cat.label),
+                    value: expenses
+                      .filter(({ category }) => category === cat.category)
+                      .reduce((a, { price }) => a + price, 0),
+                    color:
+                      colors[Math.floor(Math.random() * 10)] +
+                      "." +
+                      Math.floor(Math.random() * 10),
+                  }))}
+                  withTooltip
+                  tooltipDataSource="segment"
+                  mx="auto"
+                  withLabelsLine
+                  labelsPosition="outside"
+                  withLabels
+                />
+                <Text fz="xs" mb="sm" ta="center">
+                  Amount - Category wise
+                </Text>
+              </Stack>
+            </Group>
           </Tabs.Panel>
         </Tabs>
       </Container>
