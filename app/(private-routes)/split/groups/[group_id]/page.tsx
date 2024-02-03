@@ -312,7 +312,6 @@ const Page = () => {
   }, [isEqually]);
 
   const submitExpense = async () => {
-    setLoading.open();
     if (!eForm.values.description) {
       showNotification({
         message: "Description is required field.",
@@ -346,6 +345,7 @@ const Page = () => {
       });
       return;
     }
+    setLoading.open();
     await axios
       .post(`/api/split/groups/${group?._id}/expenses`, {
         ...eForm.values,
