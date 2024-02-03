@@ -446,7 +446,7 @@ const Page = () => {
     getData();
   }, []);
 
-  const [activeTab, setActiveTab] = useState<string | null>("summary");
+  const [activeTab, setActiveTab] = useState<string | null>("expense");
 
   const nonSettlementExpenses = expenses
     .filter(({ isSettelment }) => !isSettelment)
@@ -488,49 +488,59 @@ const Page = () => {
               </Group>
             </Stack>
           </Group>
-          <Group wrap="nowrap" gap="xs">
-            <ActionIcon onClick={open} radius="xl">
-              <IconSettings style={{ width: rem(18), height: rem(18) }} />
-            </ActionIcon>
-            <ActionIcon color="red" onClick={deleteGroup} radius="xl">
-              <IconTrash style={{ width: rem(18), height: rem(18) }} />
-            </ActionIcon>
-          </Group>
+          <Stack gap="xs">
+            <Group justify="right">
+              <Menu shadow="md" width={150} position="bottom-end">
+                <MenuTarget>
+                  <Button
+                    leftSection={
+                      <IconPlus style={{ width: rem(18), height: rem(18) }} />
+                    }
+                    rightSection={
+                      <IconChevronDown
+                        style={{ width: rem(18), height: rem(18) }}
+                      />
+                    }
+                    variant="outline"
+                    size="compact-sm"
+                  >
+                    Add
+                  </Button>
+                </MenuTarget>
+                <MenuDropdown>
+                  <MenuItem
+                    leftSection={
+                      <IconReceipt
+                        style={{ width: rem(18), height: rem(18) }}
+                      />
+                    }
+                    onClick={newExpenseHandler.open}
+                  >
+                    Expense
+                  </MenuItem>
+                  <MenuItem
+                    leftSection={
+                      <IconUserPlus
+                        style={{ width: rem(18), height: rem(18) }}
+                      />
+                    }
+                  >
+                    User
+                  </MenuItem>
+                </MenuDropdown>
+              </Menu>
+            </Group>
+            <Group wrap="nowrap" justify="right" gap="xs">
+              <ActionIcon onClick={open} radius="xl">
+                <IconSettings style={{ width: rem(18), height: rem(18) }} />
+              </ActionIcon>
+              <ActionIcon color="red" onClick={deleteGroup} radius="xl">
+                <IconTrash style={{ width: rem(18), height: rem(18) }} />
+              </ActionIcon>
+            </Group>
+          </Stack>
         </Group>
       </Paper>
-      <Group justify="right">
-        <Menu shadow="md" width={150} position="bottom-end">
-          <MenuTarget>
-            <Button
-              leftSection={
-                <IconPlus style={{ width: rem(18), height: rem(18) }} />
-              }
-              rightSection={
-                <IconChevronDown style={{ width: rem(18), height: rem(18) }} />
-              }
-            >
-              Add
-            </Button>
-          </MenuTarget>
-          <MenuDropdown>
-            <MenuItem
-              leftSection={
-                <IconReceipt style={{ width: rem(18), height: rem(18) }} />
-              }
-              onClick={newExpenseHandler.open}
-            >
-              Expense
-            </MenuItem>
-            <MenuItem
-              leftSection={
-                <IconUserPlus style={{ width: rem(18), height: rem(18) }} />
-              }
-            >
-              User
-            </MenuItem>
-          </MenuDropdown>
-        </Menu>
-      </Group>
       <Container size="xs" px={0}>
         <Tabs variant="pills" value={activeTab} onChange={setActiveTab}>
           <Paper withBorder>
@@ -541,7 +551,7 @@ const Page = () => {
             </Tabs.List>
           </Paper>
           <Tabs.Panel value="expense">
-            <Container size="xs" my="xs" px={0}>
+            <Container size="xs" mt="sm" px={0}>
               {expenses.map(
                 (expense: {
                   _id: string;
@@ -557,6 +567,7 @@ const Page = () => {
                     withBorder
                     onClick={() => setExpense(expense)}
                     key={expense._id}
+                    radius="lg"
                   >
                     <Group justify="space-between">
                       <Group>
@@ -632,7 +643,7 @@ const Page = () => {
                       const receiver = balance < 0 ? yName : xName;
                       return (
                         <>
-                          <Paper p="sm" withBorder>
+                          <Paper p="sm" radius="xl" shadow="xl" withBorder>
                             <Group
                               wrap="nowrap"
                               gap={0}
@@ -724,8 +735,7 @@ const Page = () => {
             </Stack>
           </Tabs.Panel>
           <Tabs.Panel value="summary">
-            <Text>Summary</Text>
-            <Stack gap="xs">
+            <Stack gap="xs" mt="md">
               {users.map((user) => {
                 return (
                   <Stack>
