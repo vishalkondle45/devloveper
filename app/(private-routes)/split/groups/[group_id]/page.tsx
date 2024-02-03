@@ -839,7 +839,7 @@ const Page = () => {
                   labelsPosition="outside"
                   withLabels
                 />
-                <Text fz="xs" mb="sm" ta="center">
+                <Text fz="xs" ta="center">
                   PaidBy - User wise
                 </Text>
               </Stack>
@@ -862,7 +862,7 @@ const Page = () => {
                   labelsPosition="outside"
                   withLabels
                 />
-                <Text fz="xs" mb="sm" ta="center">
+                <Text fz="xs" ta="center">
                   Splits - User wise
                 </Text>
               </Stack>
@@ -887,7 +887,7 @@ const Page = () => {
                   labelsPosition="outside"
                   withLabels
                 />
-                <Text fz="xs" mb="sm" ta="center">
+                <Text fz="xs" ta="center">
                   Amount - Category wise
                 </Text>
               </Stack>
