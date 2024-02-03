@@ -21,20 +21,6 @@ const SplitSidebar = ({ navigate }: SplitSidebarProps) => {
     { path: "/split/activity", icon: IconActivity, title: "Activities" },
   ]);
 
-  const getTodoLists = async () => {
-    await axios.get("/api/todos/lists").then((res) => {
-      let labels = res.data.map(({ _id, title }: any) => ({
-        path: "/todos/" + _id,
-        title,
-      }));
-      handlers.append(...labels);
-    });
-  };
-
-  useEffect(() => {
-    getTodoLists();
-  }, []);
-
   return (
     <Group gap="xs">
       {list.map((item) => (
