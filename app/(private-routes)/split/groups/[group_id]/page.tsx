@@ -415,12 +415,10 @@ const Page = () => {
   };
 
   const getUserExpense = (expense: string) =>
-    paids?.find((item) => item.user === userId && item.expense === expense)
-      ?.amount ||
-    0 -
-      splits?.find((item) => item.user === userId && item.expense === expense)
-        ?.amount ||
-    0;
+    (paids?.find((item) => item.user === userId && item.expense === expense)
+      ?.amount || 0) -
+    (splits?.find((item) => item.user === userId && item.expense === expense)
+      ?.amount || 0);
 
   const deleteExpense = () => {
     modals.openConfirmModal({
