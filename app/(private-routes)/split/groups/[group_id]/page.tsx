@@ -655,109 +655,118 @@ const Page = () => {
                       const receiver = balance < 0 ? yName : xName;
                       return (
                         <>
-                          <Paper p="sm" radius="xl" shadow="xl" withBorder>
-                            <Group
-                              wrap="nowrap"
-                              gap={0}
-                              justify="space-between"
-                            >
-                              <Stack
+                          {Math.round(balance) !== 0 && (
+                            <Paper p="sm" radius="xl" shadow="xl" withBorder>
+                              <Group
+                                wrap="nowrap"
                                 gap={0}
-                                ta="center"
-                                align="center"
-                                maw={rem(60)}
+                                justify="space-between"
                               >
-                                <Avatar
-                                  size="md"
-                                  src={null}
-                                  alt={sender || ""}
-                                  variant="filled"
-                                  color={colors[getDigitByString(sender)]}
+                                <Stack
+                                  gap={0}
+                                  ta="center"
+                                  align="center"
+                                  maw={rem(60)}
                                 >
-                                  {getInitials(sender)}
-                                </Avatar>
-                                <Text size="xs" fw={700}>
-                                  {sender}
-                                </Text>
-                              </Stack>
-                              <ThemeIcon size="xs" variant="transparent">
-                                <IconMinus />
-                              </ThemeIcon>
-                              <Stack gap={0} align="center">
-                                <Text
-                                  ta="right"
-                                  fz="sm"
-                                  fw={700}
-                                  c={balance < 0 ? "red" : "green"}
-                                  size="xs"
+                                  <Avatar
+                                    size="md"
+                                    src={null}
+                                    alt={sender || ""}
+                                    variant="filled"
+                                    color={colors[getDigitByString(sender)]}
+                                  >
+                                    {getInitials(sender)}
+                                  </Avatar>
+                                  <Text size="xs" fw={700}>
+                                    {sender}
+                                  </Text>
+                                </Stack>
+                                <ThemeIcon size="xs" variant="transparent">
+                                  <IconMinus />
+                                </ThemeIcon>
+                                <Stack gap={0} align="center">
+                                  <Text
+                                    ta="right"
+                                    fz="sm"
+                                    fw={700}
+                                    c={
+                                      sender === data?.user?.name
+                                        ? "red"
+                                        : "green"
+                                    }
+                                    size="xs"
+                                  >
+                                    <NumberFormatter
+                                      value={balance}
+                                      prefix="₹"
+                                      thousandsGroupStyle="lakh"
+                                      thousandSeparator=","
+                                      decimalSeparator="."
+                                      decimalScale={2}
+                                    />
+                                  </Text>
+                                  <Text size="xs">will pay</Text>
+                                </Stack>
+                                <ThemeIcon size="xs" variant="transparent">
+                                  <IconArrowRight />
+                                </ThemeIcon>
+                                <Stack
+                                  gap={0}
+                                  ta="center"
+                                  align="center"
+                                  maw={rem(60)}
                                 >
-                                  <NumberFormatter
-                                    value={balance}
-                                    prefix="₹"
-                                    thousandsGroupStyle="lakh"
-                                    thousandSeparator=","
-                                    decimalSeparator="."
-                                    decimalScale={2}
-                                  />
-                                </Text>
-                                <Text size="xs">will pay</Text>
-                              </Stack>
-                              <ThemeIcon size="xs" variant="transparent">
-                                <IconArrowRight />
-                              </ThemeIcon>
-                              <Stack
-                                gap={0}
-                                ta="center"
-                                align="center"
-                                maw={rem(60)}
-                              >
-                                <Avatar
-                                  size="md"
-                                  src={null}
-                                  alt={receiver || ""}
-                                  variant="filled"
-                                  color={colors[getDigitByString(receiver)]}
-                                >
-                                  {getInitials(receiver)}
-                                </Avatar>
-                                <Text size="xs" fw={700}>
-                                  {receiver}
-                                </Text>
-                              </Stack>
-                              <Stack gap="xs">
-                                <Button
-                                  variant="outline"
-                                  size="compact-xs"
-                                  radius="xl"
-                                >
-                                  Remind
-                                </Button>
-                                <Button
-                                  size="compact-xs"
-                                  radius="xl"
-                                  disabled={
-                                    String(userId) !== key &&
-                                    String(userId) !== k
-                                  }
-                                  onClick={() => {
-                                    settleUpHandlers.open();
-                                    setSettleUpData({
-                                      user:
-                                        String(k) === String(userId) ? key : k,
-                                      isReceiving: sender !== data?.user?.name,
-                                      name:
-                                        String(k) === String(userId)
-                                          ? xName
-                                          : yName,
-                                      amount: Math.abs(balance),
-                                    });
-                                  }}
-                                >
-                                  Settle up
-                                </Button>
-                              </Stack>
-                            </Group>
-                          </Paper>
+                                  <Avatar
+                                    size="md"
+                                    src={null}
+                                    alt={receiver || ""}
+                                    variant="filled"
+                                    color={colors[getDigitByString(receiver)]}
+                                  >
+                                    {getInitials(receiver)}
+                                  </Avatar>
+                                  <Text size="xs" fw={700}>
+                                    {receiver}
+                                  </Text>
+                                </Stack>
+                                <Stack gap="xs">
+                                  <Button
+                                    variant="outline"
+                                    size="compact-xs"
+                                    radius="xl"
+                                  >
+                                    Remind
+                                  </Button>
+                                  <Button
+                                    size="compact-xs"
+                                    radius="xl"
+                                    disabled={
+                                      String(userId) !== key &&
+                                      String(userId) !== k
+                                    }
+                                    onClick={() => {
+                                      settleUpHandlers.open();
+                                      setSettleUpData({
+                                        user:
+                                          String(k) === String(userId)
+                                            ? key
+                                            : k,
+                                        isReceiving:
+                                          sender !== data?.user?.name,
+                                        name:
+                                          String(k) === String(userId)
+                                            ? xName
+                                            : yName,
+                                        amount: Math.abs(balance),
+                                      });
+                                    }}
+                                  >
+                                    Settle up
+                                  </Button>
+                                </Stack>
+                              </Group>
+                            </Paper>
+                          )}
                         </>
                       );
                     })}
