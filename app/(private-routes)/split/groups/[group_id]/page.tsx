@@ -304,7 +304,7 @@ const Page = () => {
   useEffect(() => {
     paidByHandlers.apply((item) => ({
       ...item,
-      amount: item.user === userId ? eForm?.values?.price || 0 : 0,
+      amount: price,
     }));
     eForm.setFieldValue("isMultiPayer", false);
     splitAmongHandlers.apply((item) => ({
@@ -312,6 +312,8 @@ const Page = () => {
       amount: (eForm?.values?.price || 0) / splitAmong.length,
       active: true,
     }));
+    setOpened(false);
+    setOpened2(false);
   }, [price]);
 
   useEffect(() => {
