@@ -15,10 +15,12 @@ import {
   getFormattedDate,
   getInitials,
 } from "@/lib/functions";
+import { PieChart } from "@mantine/charts";
 import {
   ActionIcon,
   Avatar,
   Badge,
+  Box,
   Button,
   Center,
   Checkbox,
@@ -78,7 +80,6 @@ import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { PieChart } from "@mantine/charts";
 
 const Page = () => {
   const { status, data } = useSession();
@@ -467,6 +468,70 @@ const Page = () => {
 
   const findIsExist = (expense: any) => nonSettlementExpenses.includes(expense);
 
+  const submitSettleUp = async () => {
+    if (!settleUpData.amount) {
+      showNotification({
+        message: "Please enter amount to settle up.",
+        icon: <IconX />,
+        color: "red",
+      });
+      return;
+    }
+    const description = settleUpData.isReceiving
+      ? `${users.find((u) => u.user === settleUpData.user)?.name} to ${
+          data?.user?.name
+        }`
+      : `${data?.user?.name} to ${
+          users.find((u) => u.user === settleUpData.user)?.name
+        }`;
+    await axios
+      .post(`/api/split/groups/${group?._id}/expenses`, {
+        description,
+        category: "transfer",
+        date: dayjs(),
+        isSettelment: true,
+        price: settleUpData.amount,
+        paidBy: [
+          {
+            user: settleUpData.isReceiving ? settleUpData.user : userId,
+            amount: settleUpData.amount,
+          },
+        ],
+        splitAmong: [
+          {
+            user: !settleUpData.isReceiving ? settleUpData.user : userId,
+            amount: settleUpData.amount,
+          },
+        ],
+      })
+      .then(() => {
+        showNotification({
+          message: "Succeess",
+          icon: <IconCheck />,
+          color: "green",
+        });
+        newExpenseHandler.close();
+        eForm.reset();
+        getData();
+      })
+      .catch(() => {
+        showNotification({
+          message: "Unable to settle up.",
+          icon: <IconX />,
+          color: "red",
+        });
+      })
+      .finally(() => {
+        settleUpHandlers.close();
+        setSettleUpData({
+          user: null,
+          name: "",
+          isReceiving: false,
+          amount: 0,
+        });
+      });
+  };
+
   if (status === "loading" || !group || loading) {
     return <LoadingOverlay visible />;
   }
@@ -572,6 +637,7 @@ const Page = () => {
                   description: string;
                   price: number;
                   date: string;
+                  isSettelment: boolean;
                 }) => (
                   <Paper
                     mt="xs"
@@ -582,35 +648,44 @@ const Page = () => {
                     key={expense._id}
                     radius="lg"
                   >
-                    <Group justify="space-between">
-                      <Group>
+                    <Group wrap="nowrap" gap="xs" justify="space-between">
+                      <Group wrap="nowrap" gap="xs">
                         <ThemeIcon radius="xl">
                           {getCategoryIcon(expense.category)}
                         </ThemeIcon>
                         <Stack gap={0}>
-                          <Text fz="sm" fw={500}>
-                            {expense.description}
-                          </Text>
-                          <Text fz="xs" fw={200}>
-                            {paids.filter(
-                              (item) => item.expense === expense._id
-                            ).length > 1
-                              ? "2 People "
-                              : "You "}
-                            <NumberFormatter
-                              value={paids
-                                .filter((item) => item.expense === expense._id)
-                                .reduce(
-                                  (accum, item) => accum + (item?.amount || 0),
-                                  0
-                                )}
-                              prefix="₹"
-                              thousandsGroupStyle="lakh"
-                              thousandSeparator=","
-                              decimalSeparator="."
-                              decimalScale={2}
-                            />
-                          </Text>
+                          <Box w={rem("55vw")}>
+                            <Text truncate fz="sm" fw={500}>
+                              {expense.description}
+                            </Text>
+                          </Box>
+                          {expense?.isSettelment ? (
+                            <Badge variant="light">Group Settlement</Badge>
+                          ) : (
+                            <Text fz="xs" fw={200}>
+                              {paids.filter(
+                                (item) => item.expense === expense._id
+                              ).length > 1
+                                ? "2 People "
+                                : "You "}
+                              <NumberFormatter
+                                value={paids
+                                  .filter(
+                                    (item) => item.expense === expense._id
+                                  )
+                                  .reduce(
+                                    (accum, item) =>
+                                      accum + (item?.amount || 0),
+                                    0
+                                  )}
+                                prefix="₹"
+                                thousandsGroupStyle="lakh"
+                                thousandSeparator=","
+                                decimalSeparator="."
+                                decimalScale={2}
+                              />
+                            </Text>
+                          )}
                         </Stack>
                       </Group>
                       <Stack gap={0}>
@@ -1246,8 +1321,8 @@ const Page = () => {
         withCloseButton={false}
       >
         <Paper mt="xs" shadow="xl" p="sm" withBorder>
-          <Group justify="space-between">
-            <Group gap="xs">
+          <Group wrap="nowrap" gap={0} justify="space-between">
+            <Group wrap="nowrap" gap="xs">
               <ThemeIcon radius="xl">
                 {getCategoryIcon(expense?.category)}
               </ThemeIcon>
@@ -1421,7 +1496,7 @@ const Page = () => {
               setSettleUpData((old) => ({ ...old, amount: Number(amount) }))
             }
           />
-          <Button color="dark" radius="xl">
+          <Button color="dark" radius="xl" onClick={submitSettleUp}>
             Settle Up
           </Button>
         </Stack>

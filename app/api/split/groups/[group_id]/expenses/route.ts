@@ -125,6 +125,7 @@ export const POST = async (
   await startDb();
   let object = {
     description: body.description,
+    isSettelment: body.isSettelment,
     category: body.category,
     price: body.price,
     date: new Date(body.date),
