@@ -754,7 +754,7 @@ const Page = () => {
                                     {getInitials(sender)}
                                   </Avatar>
                                   <Text size="xs" fw={700}>
-                                    {sender}
+                                    {sender || "Deleted User"}
                                   </Text>
                                 </Stack>
                                 <ThemeIcon size="xs" variant="transparent">
@@ -802,7 +802,7 @@ const Page = () => {
                                     {getInitials(receiver)}
                                   </Avatar>
                                   <Text size="xs" fw={700}>
-                                    {receiver}
+                                    {receiver || "Deleted User"}
                                   </Text>
                                 </Stack>
                                 <Stack gap="xs">
@@ -1400,7 +1400,7 @@ const Page = () => {
                       >
                         {getInitials(name)}
                       </Avatar>
-                      <Text>{name}</Text>
+                      <Text>{name || "Deleted User"}</Text>
                     </Group>
                     <NumberFormatter
                       style={{ textAlign: "right" }}
@@ -1439,7 +1439,7 @@ const Page = () => {
                       >
                         {getInitials(name)}
                       </Avatar>
-                      <Text>{name}</Text>
+                      <Text>{name || "Deleted User"}</Text>
                     </Group>
                     <NumberFormatter
                       style={{ textAlign: "right" }}
