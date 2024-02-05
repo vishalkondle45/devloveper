@@ -1,20 +1,19 @@
 import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import { expenseCategories } from "./constants";
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 dayjs.extend(advancedFormat);
 
 export const getInitials = (name: string | undefined | null) => {
-  if (!name || typeof name === "object") {
-    return "";
+  if (name) {
+    let nameArray = name.trim()?.split(" ");
+    return nameArray?.length < 2
+      ? nameArray[0][0]
+      : nameArray[0][0] + nameArray[nameArray.length - 1][0];
   }
-  let nameArray = name?.trim()?.split(" ");
-  return nameArray?.length < 2
-    ? nameArray[0][0]
-    : nameArray[0][0] + nameArray[nameArray.length - 1][0];
 };
 
 function isPrime(n: number) {

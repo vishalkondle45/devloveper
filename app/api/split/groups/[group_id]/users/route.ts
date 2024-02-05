@@ -1,7 +1,5 @@
 import startDb from "@/lib/db";
 import GroupModel from "@/models/Group";
-import PaidByModel from "@/models/PaidBy";
-import SplitAmongModel from "@/models/SplitAmong";
 import UserModel from "@/models/User";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
@@ -29,7 +27,10 @@ export const GET = async (
     $and: [
       {
         _id: {
-          $nin: [...group?.users],
+          $nin: [
+            ...group?.users,
+            new mongoose.Types.ObjectId(session.user?._id),
+          ],
         },
       },
     ],
@@ -57,16 +58,6 @@ export const PUT = async (
     newUsers = newUsers.filter(({ _id }) => String(_id) !== user);
   } else {
     newUsers = [...newUsers, new mongoose.Types.ObjectId(user)];
-  }
-  const paids = await PaidByModel.find({ user });
-  const splits = await SplitAmongModel.find({ user });
-  const paidsTotal = paids.reduce((a, i) => a + (i?.amount || 0), 0);
-  const splitsTotal = splits.reduce((a, i) => a + (i?.amount || 0), 0);
-  if (Math.round(paidsTotal) !== Math.round(splitsTotal)) {
-    return NextResponse.json(
-      { error: "Please settle user payments." },
-      { status: 409 }
-    );
   }
   const users = await GroupModel.findOneAndUpdate(
     { _id: params.group_id },
