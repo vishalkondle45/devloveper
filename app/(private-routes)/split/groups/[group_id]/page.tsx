@@ -1022,7 +1022,7 @@ const Page = () => {
             placeholder="Search user"
           />
           <Stack gap={0}>
-            {form.values.users.map((user: GroupUserType, index) => (
+            {group?.users.map((user: GroupUserType, index) => (
               <GroupUser
                 form={form}
                 index={index}
