@@ -654,7 +654,7 @@ const Page = () => {
                           {getCategoryIcon(expense.category)}
                         </ThemeIcon>
                         <Stack gap={0}>
-                          <Box w={rem("55vw")}>
+                          <Box>
                             <Text truncate fz="sm" fw={500}>
                               {expense.description}
                             </Text>
