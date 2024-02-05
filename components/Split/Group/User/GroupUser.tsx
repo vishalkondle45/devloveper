@@ -23,7 +23,7 @@ const GroupUser = ({ user, form, index, updateUser }: GroupUserProps) => {
           </Avatar>
           <Text fw={500}>{user?.name}</Text>
         </Group>
-        {data?.user?._id === form?.values.user && (
+        {data?.user?._id === form?.values.user._id && (
           <ActionIcon
             onClick={() => updateUser(String(user._id))}
             variant="transparent"

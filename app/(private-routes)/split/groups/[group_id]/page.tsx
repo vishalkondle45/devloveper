@@ -261,7 +261,14 @@ const Page = () => {
       .then(() => setSearchValue(""))
       .then(() => getGroup())
       .then(() => getFriends())
-      .then(() => getExpenses());
+      .then(() => getExpenses())
+      .catch((error) => {
+        notifications.show({
+          message: error.response.data.error,
+          icon: <IconX />,
+          color: "red",
+        });
+      });
   };
 
   const handlePaidByUser = (user: mongoose.Types.ObjectId | undefined) => {
@@ -532,6 +539,14 @@ const Page = () => {
       });
   };
 
+  const getNameByUserId = async (_id: string) => {
+    if (_id) {
+      const res = await axios.get(`/api/split/users?_id=${_id}`);
+      return res?.data?.name;
+    }
+    return;
+  };
+
   if (status === "loading" || !group || loading) {
     return <LoadingOverlay visible />;
   }
@@ -716,21 +731,25 @@ const Page = () => {
           </Tabs.Panel>
           <Tabs.Panel value="balance">
             <Stack mt="md">
-              {Object.keys(balances).map((key: string) => {
-                const xName = users.find((user) => user.user === key)?.name;
+              {Object.keys(balances).map((key: string, i: number) => {
+                const xName =
+                  users.find((user) => user.user === key)?.name ||
+                  getNameByUserId(key);
                 return (
-                  <>
+                  <Box key={i}>
                     {Object.keys(
                       (balances as { [key: string]: any })[key] as string
                     ).map((k) => {
-                      const yName = users.find((user) => user.user === k)?.name;
+                      const yName =
+                        users.find((user) => user.user === k)?.name ||
+                        getNameByUserId(k);
                       const balance = (balances as { [key: string]: any })[key][
                         k
                       ] as number;
                       const sender = balance < 0 ? xName : yName;
                       const receiver = balance < 0 ? yName : xName;
                       return (
-                        <>
+                        <Box key={String(k) + String(key)}>
                           {Math.round(balance) !== 0 && (
                             <Paper p="sm" radius="xl" shadow="xl" withBorder>
                               <Group
@@ -843,10 +862,10 @@ const Page = () => {
                               </Group>
                             </Paper>
                           )}
-                        </>
+                        </Box>
                       );
                     })}
-                  </>
+                  </Box>
                 );
               })}
             </Stack>
@@ -855,7 +874,7 @@ const Page = () => {
             <Stack gap="xs" mt="md">
               {users.map((user) => {
                 return (
-                  <Stack>
+                  <Stack key={user.user}>
                     <SpendingItem
                       data={data}
                       color={colors[getDigitByString(user.name)]}
@@ -902,7 +921,10 @@ const Page = () => {
                   data={users.map((u) => ({
                     name: u.name,
                     value: paids
-                      .filter((paid) => paid.user === u.user)
+                      .filter(
+                        (paid) =>
+                          paid.user === u.user && findIsExist(paid.expense)
+                      )
                       .reduce((a, { amount }) => a + amount, 0),
                     color:
                       colors[Math.floor(Math.random() * 10)] +
@@ -925,7 +947,10 @@ const Page = () => {
                   data={users.map((u) => ({
                     name: u.name,
                     value: splits
-                      .filter((split) => split.user === u.user)
+                      .filter(
+                        (split) =>
+                          split.user === u.user && findIsExist(split.expense)
+                      )
                       .reduce((a, { amount }) => a + amount, 0),
                     color:
                       colors[Math.floor(Math.random() * 10)] +
@@ -950,7 +975,10 @@ const Page = () => {
                   data={expenseCategories.map((cat) => ({
                     name: String(cat.label),
                     value: expenses
-                      .filter(({ category }) => category === cat.category)
+                      .filter(
+                        ({ category, _id }) =>
+                          category === cat.category && !findIsExist(_id)
+                      )
                       .reduce((a, { price }) => a + price, 0),
                     color:
                       colors[Math.floor(Math.random() * 10)] +
@@ -1386,8 +1414,9 @@ const Page = () => {
               .map((paid) => {
                 const name =
                   paid?.user === userId
-                    ? data?.user?.name
-                    : users.find((user) => paid?.user === user?.user)?.name;
+                    ? "You"
+                    : users.find((user) => paid?.user === user?.user)?.name ||
+                      getNameByUserId(paid.user);
                 return (
                   <Group justify="space-between" key={paid?.user}>
                     <Group gap="xs">
@@ -1425,8 +1454,9 @@ const Page = () => {
               .map((split) => {
                 const name =
                   split?.user === userId
-                    ? data?.user?.name
-                    : users.find((user) => split?.user === user?.user)?.name;
+                    ? "You"
+                    : users.find((user) => split?.user === user?.user)?.name ||
+                      getNameByUserId(split.user);
                 return (
                   <Group justify="space-between" key={split._id}>
                     <Group gap="xs">
