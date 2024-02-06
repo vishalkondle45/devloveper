@@ -81,6 +81,13 @@ import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+interface SettleUpDataTypes {
+  user: string | null;
+  name: string | null;
+  isReceiving: boolean;
+  amount: number;
+}
+
 const Page = () => {
   const { status, data } = useSession();
   const userId = data?.user?._id || new mongoose.Types.ObjectId();
@@ -97,12 +104,7 @@ const Page = () => {
   const [searchValue, setSearchValue] = useState("");
   const [expense, setExpense] = useState<any>(null);
   const [balances, setBalances] = useState<any[]>([]);
-  const [settleUpData, setSettleUpData] = useState<{
-    user: string | null;
-    name: string | null;
-    isReceiving: boolean;
-    amount: number;
-  }>({
+  const [settleUpData, setSettleUpData] = useState<SettleUpDataTypes>({
     user: null,
     name: null,
     isReceiving: false,
@@ -532,6 +534,27 @@ const Page = () => {
       });
   };
 
+  const remind = async (sender: string, amount: number) => {
+    const message = `You owe ₹${amount} to ${data?.user?.name}`;
+    const link = `/split/groups/${group?._id}`;
+    axios
+      .post("/api/notifications", { message, link, user: sender })
+      .then(() => {
+        showNotification({
+          message: "Reminded successfully...",
+          icon: <IconCheck />,
+          color: "green",
+        });
+      })
+      .catch((error) => {
+        showNotification({
+          message: error.response.data.error,
+          icon: <IconX />,
+          color: "red",
+        });
+      });
+  };
+
   if (status === "loading" || !group || loading) {
     return <LoadingOverlay visible />;
   }
@@ -810,6 +833,14 @@ const Page = () => {
                                     variant="outline"
                                     size="compact-xs"
                                     radius="xl"
+                                    onClick={() =>
+                                      remind(
+                                        users.find((user) =>
+                                          user.user === balance < 0 ? key : k
+                                        )?.user,
+                                        balance
+                                      )
+                                    }
                                   >
                                     Remind
                                   </Button>
@@ -902,7 +933,10 @@ const Page = () => {
                   data={users.map((u) => ({
                     name: u.name,
                     value: paids
-                      .filter((paid) => paid.user === u.user)
+                      .filter(
+                        (paid) =>
+                          paid.user === u.user && findIsExist(paid.expense)
+                      )
                       .reduce((a, { amount }) => a + amount, 0),
                     color:
                       colors[Math.floor(Math.random() * 10)] +
@@ -925,7 +959,10 @@ const Page = () => {
                   data={users.map((u) => ({
                     name: u.name,
                     value: splits
-                      .filter((split) => split.user === u.user)
+                      .filter(
+                        (split) =>
+                          split.user === u.user && findIsExist(split.expense)
+                      )
                       .reduce((a, { amount }) => a + amount, 0),
                     color:
                       colors[Math.floor(Math.random() * 10)] +
