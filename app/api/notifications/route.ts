@@ -54,7 +54,10 @@ export const DELETE = async (req: NextRequest): Promise<any> => {
   }
   const _id = req.nextUrl.searchParams.get("_id");
   await startDb();
-  await NotificationModel.findOneAndDelete({ _id });
+  await NotificationModel.findOneAndDelete({
+    _id,
+    user: session.user?._id,
+  });
   const notifications = await NotificationModel.find({
     user: session.user?._id,
   });
