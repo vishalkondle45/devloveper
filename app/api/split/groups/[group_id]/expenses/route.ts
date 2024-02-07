@@ -22,7 +22,7 @@ export const GET = async (
   await startDb();
   const expenses = await ExpenseModel.find({
     group: params.group_id,
-  });
+  }).sort("-createdAt");
   if (!expenses) {
     return NextResponse.json(
       { message: "Please check the expenses id..." },

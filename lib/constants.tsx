@@ -26,6 +26,19 @@ import {
   IconToolsKitchen2,
   TablerIconsProps,
 } from "@tabler/icons-react";
+
+import {
+  IconCalendar,
+  IconCircleCheck,
+  IconCloudRain,
+  IconCoinRupee,
+  IconFileText,
+  IconMessageCircle2,
+  IconMusic,
+  IconNote,
+  IconUserCircle,
+} from "@tabler/icons-react";
+
 import { ReactNode } from "react";
 
 export const colors = [
@@ -84,6 +97,32 @@ export const groupTypes: GroupTypeTypes[] = [
   { type: "office", label: "Office", icon: IconBuilding },
   { type: "sports", label: "Sports", icon: IconPingPong },
   { type: "others", label: "Others", icon: IconCircles },
+];
+
+export interface AppTypes {
+  type:
+    | "notes"
+    | "todos"
+    | "split"
+    | "calendar"
+    | "weather"
+    | "music"
+    | "blog"
+    | "forum"
+    | "profile";
+  icon: ReactNode;
+}
+
+export const appTypes: AppTypes[] = [
+  { type: "notes", icon: <IconNote /> },
+  { type: "todos", icon: <IconCircleCheck /> },
+  { type: "split", icon: <IconCoinRupee /> },
+  { type: "calendar", icon: <IconCalendar /> },
+  { type: "weather", icon: <IconCloudRain /> },
+  { type: "music", icon: <IconMusic /> },
+  { type: "blog", icon: <IconFileText /> },
+  { type: "forum", icon: <IconMessageCircle2 /> },
+  { type: "profile", icon: <IconUserCircle /> },
 ];
 
 export interface ExpenseCategoryTypes {

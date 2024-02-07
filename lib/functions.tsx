@@ -2,7 +2,8 @@ import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
 import advancedFormat from "dayjs/plugin/advancedFormat";
-import { expenseCategories } from "./constants";
+import { appTypes, expenseCategories } from "./constants";
+import { IconApps, IconGridDots } from "@tabler/icons-react";
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 dayjs.extend(advancedFormat);
@@ -64,3 +65,6 @@ export const getCategoryIcon = (string: string) =>
 
 export const getFormattedDate = (date: any) =>
   dayjs(date).format("Do MMM YYYY");
+
+export const getAppIcon = (string: string) =>
+  appTypes.find((item) => item.type === string)?.icon || <IconGridDots />;

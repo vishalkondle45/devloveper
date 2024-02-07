@@ -18,6 +18,7 @@ import classes from "./Navbar.module.css";
 import NoteSidebar from "./Notes";
 import SplitSidebar from "./Split";
 import TodoSidebar from "./Todos";
+import Notifications from "../Notifications";
 
 const Navbar = () => {
   const [opened, { toggle, close }] = useDisclosure();
@@ -58,7 +59,7 @@ const Navbar = () => {
           justify="space-between"
           wrap="nowrap"
         >
-          <Group gap="xs" wrap="nowrap">
+          <Group gap={0} wrap="nowrap">
             <Burger
               opened={opened}
               onClick={toggle}
@@ -67,6 +68,7 @@ const Navbar = () => {
             <DevLovePer />
           </Group>
           <Group gap="xs" justify="right" wrap="nowrap">
+            <Notifications />
             <Apps />
             <ColorSchemeToggle
               toggleColorScheme={toggleColorScheme}

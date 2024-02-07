@@ -462,7 +462,7 @@ const Page = () => {
     getData();
   }, []);
 
-  const [activeTab, setActiveTab] = useState<string | null>("summary");
+  const [activeTab, setActiveTab] = useState<string | null>("expense");
 
   const nonSettlementExpenses = expenses
     .filter(({ isSettelment }) => !isSettelment)
@@ -537,8 +537,9 @@ const Page = () => {
   const remind = async (sender: string, amount: number) => {
     const message = `You owe ₹${amount} to ${data?.user?.name}`;
     const link = `/split/groups/${group?._id}`;
+    const type = "split";
     axios
-      .post("/api/notifications", { message, link, user: sender })
+      .post("/api/notifications", { message, link, user: sender, type })
       .then(() => {
         showNotification({
           message: "Reminded successfully...",
