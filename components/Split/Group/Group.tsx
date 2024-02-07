@@ -34,7 +34,7 @@ const GroupItem = ({ group }: GroupProps) => {
         </Group>
         <Group wrap="nowrap" gap={0}>
           <Avatar.Group>
-            {group?.users.slice(0, 5)?.map((user) => (
+            {group?.users.slice(0, 5)?.map((user: any) => (
               <Tooltip label={user?.name} withArrow>
                 <Avatar
                   size={rem(36)}
@@ -50,7 +50,7 @@ const GroupItem = ({ group }: GroupProps) => {
               <Tooltip
                 label={group?.users
                   .slice(5)
-                  .map(({ name }) => name)
+                  .map(({ name }: { name: any }) => name)
                   .join(", ")}
                 withArrow
               >

@@ -32,17 +32,17 @@ const GroupUser = ({ user, index, updateUser, group }: GroupUserProps) => {
           <Text fw={500}>{user?.name}</Text>
         </Group>
         <Group>
-          {data?.user?._id === group.user._id && user._id === group.user._id ? (
-            <Badge color="red">Admin</Badge>
-          ) : (
-            <ActionIcon
-              onClick={() => updateUser(String(user._id))}
-              variant="transparent"
-              color="red"
-            >
-              <IconX />
-            </ActionIcon>
-          )}
+          {user._id === group.user._id && <Badge color="red">Admin</Badge>}
+          {data?.user?._id === group.user._id &&
+            user._id !== group.user._id && (
+              <ActionIcon
+                onClick={() => updateUser(String(user._id))}
+                variant="transparent"
+                color="red"
+              >
+                <IconX />
+              </ActionIcon>
+            )}
         </Group>
       </Group>
       {group.users.length - 1 !== index && <Divider my="xs" variant="dashed" />}
