@@ -16,7 +16,7 @@ export interface GroupType {
   type: "home" | "trip" | "office" | "sports" | "others";
   simplify: Boolean;
   user: GroupUserType;
-  users: GroupUserType[];
+  users: GroupUserType[] | any;
   createdAt: string;
 }
 

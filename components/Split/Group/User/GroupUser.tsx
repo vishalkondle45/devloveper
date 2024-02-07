@@ -13,13 +13,7 @@ import { IconX } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { GroupUserProps } from "./User.Types";
 
-const GroupUser = ({
-  user,
-  form,
-  index,
-  updateUser,
-  group,
-}: GroupUserProps) => {
+const GroupUser = ({ user, index, updateUser, group }: GroupUserProps) => {
   const { data } = useSession();
 
   return (
@@ -51,9 +45,7 @@ const GroupUser = ({
           )}
         </Group>
       </Group>
-      {form.values.users.length - 1 !== index && (
-        <Divider my="xs" variant="dashed" />
-      )}
+      {group.users.length - 1 !== index && <Divider my="xs" variant="dashed" />}
     </Box>
   );
 };

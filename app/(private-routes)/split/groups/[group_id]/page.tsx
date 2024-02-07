@@ -48,6 +48,7 @@ import {
   Text,
   TextInput,
   ThemeIcon,
+  Title,
   Tooltip,
   rem,
 } from "@mantine/core";
@@ -129,7 +130,7 @@ const Page = () => {
       title: "",
       type: "home",
       users: [],
-      user: new mongoose.Types.ObjectId(),
+      user: {},
     },
     validate: {
       title: (value) => (value ? null : "This field is required."),
@@ -556,6 +557,14 @@ const Page = () => {
       });
   };
 
+  const editGroup = () => {
+    open();
+    if (group) {
+      const { title, type, user, users } = group;
+      form.setValues({ title, type, user, users });
+    }
+  };
+
   if (status === "loading" || !group || loading) {
     return <LoadingOverlay visible />;
   }
@@ -633,7 +642,7 @@ const Page = () => {
               </Menu>
             </Group>
             <Group wrap="nowrap" justify="right" gap="xs">
-              <ActionIcon onClick={open} radius="xl">
+              <ActionIcon onClick={() => editGroup()} radius="xl">
                 <IconSettings style={{ width: rem(18), height: rem(18) }} />
               </ActionIcon>
               <ActionIcon color="red" onClick={deleteGroup} radius="xl">
@@ -740,154 +749,162 @@ const Page = () => {
           </Tabs.Panel>
           <Tabs.Panel value="balance">
             <Stack mt="md">
-              {Object.keys(balances).map((key: string) => {
-                const xName = users.find((user) => user.user === key)?.name;
-                return (
-                  <>
-                    {Object.keys(
-                      (balances as { [key: string]: any })[key] as string
-                    ).map((k) => {
-                      const yName = users.find((user) => user.user === k)?.name;
-                      const balance = (balances as { [key: string]: any })[key][
-                        k
-                      ] as number;
-                      const sender = balance < 0 ? xName : yName;
-                      const receiver = balance < 0 ? yName : xName;
-                      return (
-                        <>
-                          {Math.round(balance) !== 0 && (
-                            <Paper p="sm" radius="xl" shadow="xl" withBorder>
-                              <Group
-                                wrap="nowrap"
-                                gap={0}
-                                justify="space-between"
-                              >
-                                <Stack
+              {Object.keys(balances).length ? (
+                Object.keys(balances).map((key: string) => {
+                  const xName = users.find((user) => user.user === key)?.name;
+                  return (
+                    <>
+                      {Object.keys(
+                        (balances as { [key: string]: any })[key] as string
+                      ).map((k) => {
+                        const yName = users.find(
+                          (user) => user.user === k
+                        )?.name;
+                        const balance = (balances as { [key: string]: any })[
+                          key
+                        ][k] as number;
+                        const sender = balance < 0 ? xName : yName;
+                        const receiver = balance < 0 ? yName : xName;
+                        return (
+                          <>
+                            {Math.round(balance) !== 0 && (
+                              <Paper p="sm" radius="xl" shadow="xl" withBorder>
+                                <Group
+                                  wrap="nowrap"
                                   gap={0}
-                                  ta="center"
-                                  align="center"
-                                  maw={rem(60)}
+                                  justify="space-between"
                                 >
-                                  <Avatar
-                                    size="md"
-                                    src={null}
-                                    alt={sender || ""}
-                                    variant="filled"
-                                    color={colors[getDigitByString(sender)]}
+                                  <Stack
+                                    gap={0}
+                                    ta="center"
+                                    align="center"
+                                    maw={rem(60)}
                                   >
-                                    {getInitials(sender)}
-                                  </Avatar>
-                                  <Text size="xs" fw={700}>
-                                    {sender || "Deleted User"}
-                                  </Text>
-                                </Stack>
-                                <ThemeIcon size="xs" variant="transparent">
-                                  <IconMinus />
-                                </ThemeIcon>
-                                <Stack gap={0} align="center">
-                                  <Text
-                                    ta="right"
-                                    fz="sm"
-                                    fw={700}
-                                    c={
-                                      sender === data?.user?.name
-                                        ? "red"
-                                        : "green"
-                                    }
-                                    size="xs"
+                                    <Avatar
+                                      size="md"
+                                      src={null}
+                                      alt={sender || ""}
+                                      variant="filled"
+                                      color={colors[getDigitByString(sender)]}
+                                    >
+                                      {getInitials(sender)}
+                                    </Avatar>
+                                    <Text size="xs" fw={700}>
+                                      {sender || "Deleted User"}
+                                    </Text>
+                                  </Stack>
+                                  <ThemeIcon size="xs" variant="transparent">
+                                    <IconMinus />
+                                  </ThemeIcon>
+                                  <Stack gap={0} align="center">
+                                    <Text
+                                      ta="right"
+                                      fz="sm"
+                                      fw={700}
+                                      c={
+                                        sender === data?.user?.name
+                                          ? "red"
+                                          : "green"
+                                      }
+                                      size="xs"
+                                    >
+                                      <NumberFormatter
+                                        value={balance}
+                                        prefix="₹"
+                                        thousandsGroupStyle="lakh"
+                                        thousandSeparator=","
+                                        decimalSeparator="."
+                                        decimalScale={2}
+                                      />
+                                    </Text>
+                                    <Text size="xs">will pay</Text>
+                                  </Stack>
+                                  <ThemeIcon size="xs" variant="transparent">
+                                    <IconArrowRight />
+                                  </ThemeIcon>
+                                  <Stack
+                                    gap={0}
+                                    ta="center"
+                                    align="center"
+                                    maw={rem(60)}
                                   >
-                                    <NumberFormatter
-                                      value={balance}
-                                      prefix="₹"
-                                      thousandsGroupStyle="lakh"
-                                      thousandSeparator=","
-                                      decimalSeparator="."
-                                      decimalScale={2}
-                                    />
-                                  </Text>
-                                  <Text size="xs">will pay</Text>
-                                </Stack>
-                                <ThemeIcon size="xs" variant="transparent">
-                                  <IconArrowRight />
-                                </ThemeIcon>
-                                <Stack
-                                  gap={0}
-                                  ta="center"
-                                  align="center"
-                                  maw={rem(60)}
-                                >
-                                  <Avatar
-                                    size="md"
-                                    src={null}
-                                    alt={receiver || ""}
-                                    variant="filled"
-                                    color={colors[getDigitByString(receiver)]}
-                                  >
-                                    {getInitials(receiver)}
-                                  </Avatar>
-                                  <Text size="xs" fw={700}>
-                                    {receiver || "Deleted User"}
-                                  </Text>
-                                </Stack>
-                                <Stack gap="xs">
-                                  <Button
-                                    variant="outline"
-                                    size="compact-xs"
-                                    radius="xl"
-                                    onClick={() =>
-                                      remind(
-                                        users.find((user) =>
-                                          user.user === balance < 0 ? key : k
-                                        )?.user,
-                                        balance
-                                      )
-                                    }
-                                  >
-                                    Remind
-                                  </Button>
-                                  <Button
-                                    size="compact-xs"
-                                    radius="xl"
-                                    disabled={
-                                      String(userId) !== key &&
-                                      String(userId) !== k
-                                    }
-                                    onClick={() => {
-                                      settleUpHandlers.open();
-                                      setSettleUpData({
-                                        user:
-                                          String(k) === String(userId)
-                                            ? key
-                                            : k,
-                                        isReceiving:
-                                          sender !== data?.user?.name,
-                                        name:
-                                          String(k) === String(userId)
-                                            ? xName
-                                            : yName,
-                                        amount: Math.abs(balance),
-                                      });
-                                    }}
-                                  >
-                                    Settle up
-                                  </Button>
-                                </Stack>
-                              </Group>
-                            </Paper>
-                          )}
-                        </>
-                      );
-                    })}
-                  </>
-                );
-              })}
+                                    <Avatar
+                                      size="md"
+                                      src={null}
+                                      alt={receiver || ""}
+                                      variant="filled"
+                                      color={colors[getDigitByString(receiver)]}
+                                    >
+                                      {getInitials(receiver)}
+                                    </Avatar>
+                                    <Text size="xs" fw={700}>
+                                      {receiver || "Deleted User"}
+                                    </Text>
+                                  </Stack>
+                                  <Stack gap="xs">
+                                    <Button
+                                      variant="outline"
+                                      size="compact-xs"
+                                      radius="xl"
+                                      onClick={() =>
+                                        remind(
+                                          users.find((user) =>
+                                            user.user === balance < 0 ? key : k
+                                          )?.user,
+                                          balance
+                                        )
+                                      }
+                                    >
+                                      Remind
+                                    </Button>
+                                    <Button
+                                      size="compact-xs"
+                                      radius="xl"
+                                      disabled={
+                                        String(userId) !== key &&
+                                        String(userId) !== k
+                                      }
+                                      onClick={() => {
+                                        settleUpHandlers.open();
+                                        setSettleUpData({
+                                          user:
+                                            String(k) === String(userId)
+                                              ? key
+                                              : k,
+                                          isReceiving:
+                                            sender !== data?.user?.name,
+                                          name:
+                                            String(k) === String(userId)
+                                              ? xName
+                                              : yName,
+                                          amount: Math.abs(balance),
+                                        });
+                                      }}
+                                    >
+                                      Settle up
+                                    </Button>
+                                  </Stack>
+                                </Group>
+                              </Paper>
+                            )}
+                          </>
+                        );
+                      })}
+                    </>
+                  );
+                })
+              ) : (
+                <Center h="auto" mih="50vh">
+                  <Title>No balance</Title>
+                </Center>
+              )}
             </Stack>
           </Tabs.Panel>
           <Tabs.Panel value="summary">
             <Stack gap="xs" mt="md">
               {users.map((user) => {
                 return (
-                  <Stack>
+                  <Stack key={user.user}>
                     <SpendingItem
                       data={data}
                       color={colors[getDigitByString(user.name)]}
@@ -1056,7 +1073,8 @@ const Page = () => {
             searchValue={searchValue}
             onSearchChange={setSearchValue}
             data={friends.filter(
-              ({ value }) => !group.users.some((e) => e._id === value)
+              ({ value }) =>
+                !group.users.some((e: { _id: string }) => e._id === value)
             )}
             onChange={(_value) => updateUser(_value)}
             mb="sm"
@@ -1064,10 +1082,9 @@ const Page = () => {
             placeholder="Search user"
           />
           <Stack gap={0}>
-            {group?.users.map((user: GroupUserType, index) => (
+            {group?.users.map((user: GroupUserType, index: number) => (
               <GroupUser
                 group={group}
-                form={form}
                 index={index}
                 user={user}
                 key={String(user._id)}
