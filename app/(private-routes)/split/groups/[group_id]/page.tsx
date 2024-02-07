@@ -1064,18 +1064,16 @@ const Page = () => {
             placeholder="Search user"
           />
           <Stack gap={0}>
-            {group?.users
-              .filter(({ _id }) => _id !== data?.user?._id)
-              .map((user: GroupUserType, index) => (
-                <GroupUser
-                  group={group}
-                  form={form}
-                  index={index}
-                  user={user}
-                  key={String(user._id)}
-                  updateUser={updateUser}
-                />
-              ))}
+            {group?.users.map((user: GroupUserType, index) => (
+              <GroupUser
+                group={group}
+                form={form}
+                index={index}
+                user={user}
+                key={String(user._id)}
+                updateUser={updateUser}
+              />
+            ))}
           </Stack>
         </Paper>
       </Modal>
