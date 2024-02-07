@@ -1,6 +1,14 @@
 import { colors, groupTypes } from "@/lib/constants";
 import { getDigitByString, getInitials } from "@/lib/functions";
-import { Avatar, Group, Paper, Text, ThemeIcon, rem } from "@mantine/core";
+import {
+  Avatar,
+  Group,
+  Paper,
+  Text,
+  ThemeIcon,
+  Tooltip,
+  rem,
+} from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { GroupProps } from "./Group.Types";
 
@@ -22,34 +30,39 @@ const GroupItem = ({ group }: GroupProps) => {
           <ThemeIcon variant="light" radius="xl" size="xl">
             {groupType && <groupType.icon />}
           </ThemeIcon>
-          <Text>{group.title}</Text>
+          <Text fw={700}>{group.title}</Text>
         </Group>
         <Group wrap="nowrap" gap={0}>
           <Avatar.Group>
             {group?.users.slice(0, 5)?.map((user) => (
-              <Avatar
-                size={rem(28)}
-                radius="xl"
-                title={user?.name}
-                color={colors[getDigitByString(String(user?.name))]}
-                variant="filled"
-              >
-                {getInitials(user?.name)}
-              </Avatar>
+              <Tooltip label={user?.name} withArrow>
+                <Avatar
+                  size={rem(36)}
+                  radius="xl"
+                  color={colors[getDigitByString(String(user?.name))]}
+                  variant="filled"
+                >
+                  {getInitials(user?.name)}
+                </Avatar>
+              </Tooltip>
             ))}
             {group?.users?.length > 5 && (
-              <Avatar
-                size={rem(28)}
-                color="cyan"
-                radius="xl"
-                variant="filled"
-                title={group?.users
+              <Tooltip
+                label={group?.users
                   .slice(5)
                   .map(({ name }) => name)
-                  .join(",")}
+                  .join(", ")}
+                withArrow
               >
-                +{group?.users?.length - 5}
-              </Avatar>
+                <Avatar
+                  size={rem(36)}
+                  color="cyan"
+                  radius="xl"
+                  variant="filled"
+                >
+                  +{group?.users?.length - 5}
+                </Avatar>
+              </Tooltip>
             )}
           </Avatar.Group>
         </Group>
