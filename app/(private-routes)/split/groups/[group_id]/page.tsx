@@ -246,7 +246,7 @@ const Page = () => {
   };
 
   const getFriends = async () => {
-    const res = await axios.get(`/api/split/groups/${params?.group_id}/users`);
+    const res = await axios.get(`/api/split/friends`);
     setFriends(
       res.data.map((item: AutoCompleteDataType) => ({
         value: item._id,
@@ -1051,24 +1051,31 @@ const Page = () => {
         <Paper p="sm" withBorder>
           <Select
             searchable
+            value=""
+            withCheckIcon={false}
             searchValue={searchValue}
             onSearchChange={setSearchValue}
-            data={friends}
+            data={friends.filter(
+              ({ value }) => !group.users.some((e) => e._id === value)
+            )}
             onChange={(_value) => updateUser(_value)}
             mb="sm"
             leftSection={<IconUserSearch />}
             placeholder="Search user"
           />
           <Stack gap={0}>
-            {group?.users.map((user: GroupUserType, index) => (
-              <GroupUser
-                form={form}
-                index={index}
-                user={user}
-                key={String(user._id)}
-                updateUser={updateUser}
-              />
-            ))}
+            {group?.users
+              .filter(({ _id }) => _id !== data?.user?._id)
+              .map((user: GroupUserType, index) => (
+                <GroupUser
+                  group={group}
+                  form={form}
+                  index={index}
+                  user={user}
+                  key={String(user._id)}
+                  updateUser={updateUser}
+                />
+              ))}
           </Stack>
         </Paper>
       </Modal>

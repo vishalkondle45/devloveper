@@ -5,7 +5,13 @@ import { IconX } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { GroupUserProps } from "./User.Types";
 
-const GroupUser = ({ user, form, index, updateUser }: GroupUserProps) => {
+const GroupUser = ({
+  user,
+  form,
+  index,
+  updateUser,
+  group,
+}: GroupUserProps) => {
   const { data } = useSession();
 
   return (
@@ -23,7 +29,7 @@ const GroupUser = ({ user, form, index, updateUser }: GroupUserProps) => {
           </Avatar>
           <Text fw={500}>{user?.name}</Text>
         </Group>
-        {data?.user?._id === form?.values.user && (
+        {data?.user?._id === group.user._id && (
           <ActionIcon
             onClick={() => updateUser(String(user._id))}
             variant="transparent"

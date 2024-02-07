@@ -28,6 +28,7 @@ export interface GroupUserProps {
       user: mongoose.Types.ObjectId;
     }
   >;
+  group: any;
   index: number;
   updateUser: (user: string | null) => Promise<void>;
 }
