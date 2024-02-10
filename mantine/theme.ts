@@ -1,5 +1,5 @@
 "use client";
-import { Loader, createTheme } from "@mantine/core";
+import { Loader, createTheme, Avatar } from "@mantine/core";
 
 const theme = createTheme({
   primaryColor: "teal",
@@ -8,6 +8,12 @@ const theme = createTheme({
     Loader: Loader.extend({
       defaultProps: {
         type: "bars",
+      },
+    }),
+    Avatar: Avatar.extend({
+      defaultProps: {
+        variant: "filled",
+        radius: "xl",
       },
     }),
   },
