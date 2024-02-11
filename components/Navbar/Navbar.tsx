@@ -14,11 +14,11 @@ import Apps from "../Apps";
 import AuthButton from "../AuthButton";
 import ColorSchemeToggle from "../ColorSchemeToggle";
 import DevLovePer from "../DevLovePer";
+import Notifications from "../Notifications";
 import classes from "./Navbar.module.css";
 import NoteSidebar from "./Notes";
 import SplitSidebar from "./Split";
 import TodoSidebar from "./Todos";
-import Notifications from "../Notifications";
 
 const Navbar = () => {
   const [opened, { toggle, close }] = useDisclosure();
@@ -58,12 +58,14 @@ const Navbar = () => {
           py="xs"
           justify="space-between"
           wrap="nowrap"
+          gap={0}
         >
-          <Group gap={0} wrap="nowrap">
+          <Group gap="xs" wrap="nowrap">
             <Burger
               opened={opened}
               onClick={toggle}
               aria-label="Toggle navigation"
+              size="sm"
             />
             <DevLovePer />
           </Group>
@@ -84,7 +86,7 @@ const Navbar = () => {
           withCloseButton={false}
         >
           <Group justify="">
-            <Burger opened={opened} onClick={close} />
+            <Burger opened={opened} onClick={close} size="sm" />
             <DevLovePer />
             {renderSwitch(page)}
           </Group>

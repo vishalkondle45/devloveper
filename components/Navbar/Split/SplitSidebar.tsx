@@ -1,15 +1,12 @@
 import { Button, Group, rem } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import {
-  IconActivity,
   IconCoinRupee,
   IconList,
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
-import axios from "axios";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
 import { SplitSidebarProps } from "./SplitSidebar.types";
 
 const SplitSidebar = ({ navigate }: SplitSidebarProps) => {
@@ -18,7 +15,7 @@ const SplitSidebar = ({ navigate }: SplitSidebarProps) => {
     { path: "/split", icon: IconCoinRupee, title: "Home" },
     { path: "/split/groups", icon: IconUsersGroup, title: "Groups" },
     { path: "/split/friends", icon: IconUsers, title: "Friends" },
-    { path: "/split/activity", icon: IconActivity, title: "Activities" },
+    // { path: "/split/activity", icon: IconActivity, title: "Activities" },
   ]);
 
   return (
