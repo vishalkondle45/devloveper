@@ -66,6 +66,7 @@ const LoggedIn = ({ data }: { data: Session }) => {
           <Stack align="center" mt="md">
             <Avatar
               size="xl"
+              radius="50%"
               src={null}
               alt={data?.user?.name || ""}
               variant="filled"
@@ -82,6 +83,7 @@ const LoggedIn = ({ data }: { data: Session }) => {
                   setOpened(false);
                   router.push("/profile");
                 }}
+                radius="xl"
               >
                 Manage Account
               </Button>
@@ -89,6 +91,8 @@ const LoggedIn = ({ data }: { data: Session }) => {
                 leftSection={<IconLogout width={18} />}
                 variant="outline"
                 onClick={logout}
+                radius="xl"
+                color="red"
               >
                 Logout
               </Button>
