@@ -677,87 +677,95 @@ const Page = () => {
           </Paper>
           <Tabs.Panel value="expense">
             <Container size="xs" mt="sm" px={0}>
-              {expenses.map(
-                (expense: {
-                  _id: string;
-                  category: string;
-                  description: string;
-                  price: number;
-                  date: string;
-                  isSettelment: boolean;
-                }) => (
-                  <Paper
-                    mt="xs"
-                    shadow="xl"
-                    p="sm"
-                    withBorder
-                    onClick={() => setExpense(expense)}
-                    key={expense._id}
-                    radius="lg"
-                  >
-                    <Group wrap="nowrap" gap="xs" justify="space-between">
-                      <Group wrap="nowrap" gap="xs">
-                        <ThemeIcon radius="xl">
-                          {getCategoryIcon(expense.category)}
-                        </ThemeIcon>
+              {expenses.length ? (
+                expenses.map(
+                  (expense: {
+                    _id: string;
+                    category: string;
+                    description: string;
+                    price: number;
+                    date: string;
+                    isSettelment: boolean;
+                  }) => (
+                    <Paper
+                      mt="xs"
+                      shadow="xl"
+                      p="sm"
+                      withBorder
+                      onClick={() => setExpense(expense)}
+                      key={expense._id}
+                      radius="lg"
+                    >
+                      <Group wrap="nowrap" gap="xs" justify="space-between">
+                        <Group wrap="nowrap" gap="xs">
+                          <ThemeIcon radius="xl">
+                            {getCategoryIcon(expense.category)}
+                          </ThemeIcon>
+                          <Stack gap={0}>
+                            <Box>
+                              <Text truncate fz="sm" fw={500}>
+                                {expense.description}
+                              </Text>
+                            </Box>
+                            {expense?.isSettelment ? (
+                              <Badge variant="light">Group Settlement</Badge>
+                            ) : (
+                              <Text fz="xs" fw={200}>
+                                {paids.filter(
+                                  (item) => item.expense === expense._id
+                                ).length > 1
+                                  ? "2 People "
+                                  : "You "}
+                                <NumberFormatter
+                                  value={paids
+                                    .filter(
+                                      (item) => item.expense === expense._id
+                                    )
+                                    .reduce(
+                                      (accum, item) =>
+                                        accum + (item?.amount || 0),
+                                      0
+                                    )}
+                                  prefix="₹"
+                                  thousandsGroupStyle="lakh"
+                                  thousandSeparator=","
+                                  decimalSeparator="."
+                                  decimalScale={2}
+                                />
+                              </Text>
+                            )}
+                          </Stack>
+                        </Group>
                         <Stack gap={0}>
-                          <Box>
-                            <Text truncate fz="sm" fw={500}>
-                              {expense.description}
-                            </Text>
-                          </Box>
-                          {expense?.isSettelment ? (
-                            <Badge variant="light">Group Settlement</Badge>
-                          ) : (
-                            <Text fz="xs" fw={200}>
-                              {paids.filter(
-                                (item) => item.expense === expense._id
-                              ).length > 1
-                                ? "2 People "
-                                : "You "}
-                              <NumberFormatter
-                                value={paids
-                                  .filter(
-                                    (item) => item.expense === expense._id
-                                  )
-                                  .reduce(
-                                    (accum, item) =>
-                                      accum + (item?.amount || 0),
-                                    0
-                                  )}
-                                prefix="₹"
-                                thousandsGroupStyle="lakh"
-                                thousandSeparator=","
-                                decimalSeparator="."
-                                decimalScale={2}
-                              />
-                            </Text>
-                          )}
+                          <Badge ta="right" variant="outline" size="xs">
+                            {dayjs(expense.date).format("DD-MMM")}
+                          </Badge>
+                          <Text
+                            ta="right"
+                            fz="sm"
+                            fw={700}
+                            c={
+                              getUserExpense(expense._id) < 0 ? "red" : "green"
+                            }
+                          >
+                            <NumberFormatter
+                              value={getUserExpense(expense._id)}
+                              prefix="₹"
+                              thousandsGroupStyle="lakh"
+                              thousandSeparator=","
+                              decimalSeparator="."
+                              decimalScale={2}
+                            />
+                          </Text>
                         </Stack>
                       </Group>
-                      <Stack gap={0}>
-                        <Badge ta="right" variant="outline" size="xs">
-                          {dayjs(expense.date).format("DD-MMM")}
-                        </Badge>
-                        <Text
-                          ta="right"
-                          fz="sm"
-                          fw={700}
-                          c={getUserExpense(expense._id) < 0 ? "red" : "green"}
-                        >
-                          <NumberFormatter
-                            value={getUserExpense(expense._id)}
-                            prefix="₹"
-                            thousandsGroupStyle="lakh"
-                            thousandSeparator=","
-                            decimalSeparator="."
-                            decimalScale={2}
-                          />
-                        </Text>
-                      </Stack>
-                    </Group>
-                  </Paper>
+                    </Paper>
+                  )
                 )
+              ) : (
+                <Center h="auto" mih="50vh">
+                  <Title>No Expenses</Title>
+                </Center>
               )}
             </Container>
           </Tabs.Panel>
