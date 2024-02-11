@@ -96,7 +96,7 @@ const Page = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [settleUpOpened, settleUpHandlers] = useDisclosure(false);
   const [newExpenseOpened, newExpenseHandler] = useDisclosure(false);
-  const [friends, setFriends] = useState([]);
+  const [friends, setFriends] = useState<null | any[]>(null);
   const [expenses, setExpenses] = useState([]);
   const [paids, setPaids] = useState<any[]>([]);
   const [splits, setSplits] = useState<any[]>([]);
@@ -247,12 +247,19 @@ const Page = () => {
   };
 
   const getFriends = async () => {
+    setFriends([]);
     const res = await axios.get(`/api/split/friends`);
     setFriends(
-      res.data.map((item: AutoCompleteDataType) => ({
-        value: item._id,
-        label: item.name,
-      }))
+      res.data.map((item: AutoCompleteDataType) => {
+        const other =
+          item.sender._id === String(data?.user?._id)
+            ? item.receiver
+            : item.sender;
+        return {
+          value: other._id,
+          label: other.name,
+        };
+      })
     );
   };
 
@@ -264,7 +271,14 @@ const Page = () => {
       .then(() => setSearchValue(""))
       .then(() => getGroup())
       .then(() => getFriends())
-      .then(() => getExpenses());
+      .then(() => getExpenses())
+      .catch((error) => {
+        notifications.show({
+          message: error.response.data.error,
+          icon: <IconX />,
+          color: "red",
+        });
+      });
   };
 
   const handlePaidByUser = (user: mongoose.Types.ObjectId | undefined) => {
@@ -1066,21 +1080,25 @@ const Page = () => {
           Users
         </Text>
         <Paper p="sm" withBorder>
-          <Select
-            searchable
-            value=""
-            withCheckIcon={false}
-            searchValue={searchValue}
-            onSearchChange={setSearchValue}
-            data={friends.filter(
-              ({ value }) =>
-                !group.users.some((e: { _id: string }) => e._id === value)
-            )}
-            onChange={(_value) => updateUser(_value)}
-            mb="sm"
-            leftSection={<IconUserSearch />}
-            placeholder="Search user"
-          />
+          {friends && group?.users && (
+            <Select
+              searchable
+              value=""
+              withCheckIcon={false}
+              searchValue={searchValue}
+              onSearchChange={setSearchValue}
+              data={friends?.filter(
+                ({ value }: { value: string }) =>
+                  !group?.users.find(
+                    ({ _id }: { _id: string }) => value === _id
+                  )
+              )}
+              onChange={(_value) => updateUser(_value)}
+              mb="sm"
+              leftSection={<IconUserSearch />}
+              placeholder="Search user"
+            />
+          )}
           <Stack gap={0}>
             {group?.users.map((user: GroupUserType, index: number) => (
               <GroupUser

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Receiver, Sender } from "../../Friends/Friends.Types";
 
 export interface GroupUserType {
   _id: mongoose.Types.ObjectId;
@@ -16,4 +17,6 @@ export interface GroupUserProps {
 export interface AutoCompleteDataType {
   _id: mongoose.Types.ObjectId;
   name: string;
+  sender: Sender;
+  receiver: Receiver;
 }
