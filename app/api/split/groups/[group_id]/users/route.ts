@@ -92,7 +92,7 @@ export const PUT = async (
     const admin = await UserModel.findById(group?.user);
     await NotificationModel.create({
       user: user,
-      message: `<b>${admin?.name}</b> added you in <b>${group?.title}</b>`,
+      message: `${admin?.name} added you in ${group?.title}.`,
       type: "split",
       link: `/split/groups/${group?._id}`,
     });
