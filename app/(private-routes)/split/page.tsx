@@ -136,7 +136,7 @@ const Page = () => {
             </Text>
           </Carousel.Slide>
         </Carousel>
-        <Box mt="sm">
+        <Box mt="lg">
           <Title mb="xs" order={3}>
             Recent Groups
           </Title>
@@ -155,19 +155,113 @@ const Page = () => {
                     shadow="xl"
                     radius="lg"
                     withBorder
-                    onClick={() => router.push(`/split/${group?._id}`)}
+                    onClick={() => router.push(`/split/groups/${group?._id}`)}
                     style={{ cursor: "pointer" }}
                     key={group?._id}
                   >
                     <ThemeIcon variant="transparent">
                       {groupType && <groupType.icon />}
                     </ThemeIcon>
-                    <Text>{group?.title}</Text>
+                    <Text fw={700}>{group?.title}</Text>
                   </Paper>
                 );
               })}
             </Group>
           </ScrollArea>
+        </Box>
+        <Box mt="lg">
+          <Title mb="xs" order={3}>
+            Recent Paids
+          </Title>
+          <Stack>
+            {data?.lastFivePaids?.map((paid: any) => {
+              const groupType = groupTypes.find(
+                ({ type }) => type === paid?.group?.type
+              );
+              return (
+                <Paper
+                  key={paid._id}
+                  p="xs"
+                  shadow="xl"
+                  radius="lg"
+                  withBorder
+                  onClick={() =>
+                    router.push(`/split/groups/${paid.group?._id}`)
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <Group wrap="nowrap" justify="space-between">
+                    <Group wrap="nowrap">
+                      <ThemeIcon variant="light" radius="xl" size="xl">
+                        {groupType && <groupType.icon />}
+                      </ThemeIcon>
+                      <Stack gap={0}>
+                        <Text fw={700}>{paid.expense?.description}</Text>
+                        <Text fw={300}>{paid.group?.title}</Text>
+                      </Stack>
+                    </Group>
+                    <Text style={{ whiteSpace: "nowrap" }} fw={700} c="red">
+                      <NumberFormatter
+                        value={paid?.amount?.toFixed(2)}
+                        prefix="₹ "
+                        thousandsGroupStyle="lakh"
+                        thousandSeparator=","
+                        decimalSeparator="."
+                        decimalScale={2}
+                      />
+                    </Text>
+                  </Group>
+                </Paper>
+              );
+            })}
+          </Stack>
+        </Box>
+        <Box mt="lg">
+          <Title mb="xs" order={3}>
+            Recent Splits
+          </Title>
+          <Stack>
+            {data?.lastFiveSplits?.map((split: any) => {
+              const groupType = groupTypes.find(
+                ({ type }) => type === split?.group?.type
+              );
+              return (
+                <Paper
+                  key={split?._id}
+                  p="xs"
+                  shadow="xl"
+                  radius="lg"
+                  onClick={() =>
+                    router.push(`/split/groups/${split?.group?._id}`)
+                  }
+                  style={{ cursor: "pointer" }}
+                  withBorder
+                >
+                  <Group wrap="nowrap" justify="space-between">
+                    <Group wrap="nowrap">
+                      <ThemeIcon variant="light" radius="xl" size="xl">
+                        {groupType && <groupType.icon />}
+                      </ThemeIcon>
+                      <Stack gap={0}>
+                        <Text fw={700}>{split?.expense?.description}</Text>
+                        <Text fw={300}>{split?.group?.title}</Text>
+                      </Stack>
+                    </Group>
+                    <Text style={{ whiteSpace: "nowrap" }} fw={700} c="red">
+                      <NumberFormatter
+                        value={split?.amount?.toFixed(2)}
+                        prefix="₹ "
+                        thousandsGroupStyle="lakh"
+                        thousandSeparator=","
+                        decimalSeparator="."
+                        decimalScale={2}
+                      />
+                    </Text>
+                  </Group>
+                </Paper>
+              );
+            })}
+          </Stack>
         </Box>
       </Container>
     </Container>

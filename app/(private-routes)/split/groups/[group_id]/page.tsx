@@ -20,7 +20,6 @@ import {
   ActionIcon,
   Avatar,
   Badge,
-  Box,
   Button,
   Center,
   Checkbox,
@@ -702,11 +701,9 @@ const Page = () => {
                             {getCategoryIcon(expense.category)}
                           </ThemeIcon>
                           <Stack gap={0}>
-                            <Box>
-                              <Text truncate fz="sm" fw={500}>
-                                {expense.description}
-                              </Text>
-                            </Box>
+                            <Text fz="sm" fw={500}>
+                              {expense.description}
+                            </Text>
                             {expense?.isSettelment ? (
                               <Badge variant="light">Group Settlement</Badge>
                             ) : (
