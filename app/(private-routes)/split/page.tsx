@@ -150,7 +150,7 @@ const Page = () => {
                   <Paper
                     px="lg"
                     ta="center"
-                    w="min-content"
+                    w="max-content"
                     p="xs"
                     shadow="xl"
                     radius="lg"
