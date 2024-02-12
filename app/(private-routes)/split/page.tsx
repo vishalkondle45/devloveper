@@ -42,7 +42,7 @@ const Page = () => {
     getSplit();
   }, []);
 
-  if (status === "loading") {
+  if (status === "loading" || !data) {
     return <LoadingOverlay visible />;
   }
 
