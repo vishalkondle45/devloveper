@@ -185,6 +185,9 @@ const Page = () => {
       );
       paidByHandlers.setState([{ user: userId, amount: price || 0 }]);
     }
+    if (data) {
+      getFriends();
+    }
   }, [users]);
 
   const setEForm = (key: string, value: any) => eForm.setFieldValue(key, value);
@@ -246,12 +249,11 @@ const Page = () => {
   };
 
   const getFriends = async () => {
-    setFriends([]);
     const res = await axios.get(`/api/split/friends`);
     setFriends(
       res.data.map((item: AutoCompleteDataType) => {
         const other =
-          item.sender._id === String(data?.user?._id)
+          String(item.sender._id) === String(data?.user?._id)
             ? item.receiver
             : item.sender;
         return {
@@ -269,7 +271,6 @@ const Page = () => {
       })
       .then(() => setSearchValue(""))
       .then(() => getGroup())
-      .then(() => getFriends())
       .then(() => getExpenses())
       .catch((error) => {
         notifications.show({
@@ -1085,6 +1086,7 @@ const Page = () => {
           Users
         </Text>
         <Paper p="sm" withBorder>
+          {JSON.stringify(friends)}
           {friends && group?.users && (
             <Select
               searchable
@@ -1093,10 +1095,7 @@ const Page = () => {
               searchValue={searchValue}
               onSearchChange={setSearchValue}
               data={friends?.filter(
-                ({ value }: { value: string }) =>
-                  !group?.users.find(
-                    ({ _id }: { _id: string }) => value === _id
-                  )
+                (i: any) => !group?.users.find((j: any) => i.value === j._id)
               )}
               onChange={(_value) => updateUser(_value)}
               mb="sm"

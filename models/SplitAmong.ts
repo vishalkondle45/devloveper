@@ -11,7 +11,7 @@ const splitAmongSchema = new Schema<SplitAmongDocument>(
   {
     group: { type: Schema.Types.ObjectId, ref: "Group" },
     expense: { type: Schema.Types.ObjectId, ref: "Expense" },
-    user: { type: Schema.Types.ObjectId, ref: "Expense" },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     amount: { type: Number, default: 0, required: true },
   },
   { timestamps: true }
