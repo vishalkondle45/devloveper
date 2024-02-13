@@ -1086,7 +1086,6 @@ const Page = () => {
           Users
         </Text>
         <Paper p="sm" withBorder>
-          {JSON.stringify(friends)}
           {friends && group?.users && (
             <Select
               searchable
