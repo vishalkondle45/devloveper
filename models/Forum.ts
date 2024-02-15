@@ -5,7 +5,7 @@ interface ForumDocument extends Document {
   description?: string;
   user?: Types.ObjectId;
   tags: string[];
-  likes?: number;
+  votes?: number;
   views?: number;
   answers?: number;
 }
@@ -16,7 +16,7 @@ const forumSchema = new Schema<ForumDocument>(
     description: { type: String, required: true, trim: true },
     user: { type: Types.ObjectId, required: false, ref: "User" },
     tags: [{ type: String }],
-    likes: { type: Number, default: 0 },
+    votes: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
     answers: { type: Number, default: 0 },
   },

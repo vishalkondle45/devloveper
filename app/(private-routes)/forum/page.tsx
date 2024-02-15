@@ -28,6 +28,7 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 const Page = () => {
   const { status } = useSession();
@@ -49,6 +50,8 @@ const Page = () => {
     getForums();
   }, []);
 
+  const router = useRouter();
+
   if (status === "loading") {
     return <LoadingOverlay visible />;
   }
@@ -66,7 +69,12 @@ const Page = () => {
 
       <Stack>
         {forums.map((forum) => (
-          <Paper shadow="xl" p="sm" withBorder>
+          <Paper
+            shadow="xl"
+            p="sm"
+            onClick={() => router.push(`forum/${forum?._id}`)}
+            withBorder
+          >
             <Group wrap="nowrap" align="baseline">
               <Stack gap="xs">
                 <Badge
@@ -75,7 +83,7 @@ const Page = () => {
                   color="red"
                   leftSection={<IconHeartFilled width={16} />}
                 >
-                  {forum?.likes}
+                  {forum?.votes}
                 </Badge>
                 <Badge
                   size="lg"

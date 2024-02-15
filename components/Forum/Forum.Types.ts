@@ -8,7 +8,7 @@ export interface ForumType {
   description: string;
   user: User;
   tags: string[];
-  likes: number;
+  votes: number;
   views: number;
   answers: number;
   createdAt: string;
