@@ -1,12 +1,14 @@
+import { IconGridDots } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
-import advancedFormat from "dayjs/plugin/advancedFormat";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { appTypes, expenseCategories } from "./constants";
-import { IconApps, IconGridDots } from "@tabler/icons-react";
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 dayjs.extend(advancedFormat);
+dayjs.extend(relativeTime);
 
 export const getInitials = (name: string | undefined | null) => {
   if (name) {
@@ -68,3 +70,8 @@ export const getFormattedDate = (date: any) =>
 
 export const getAppIcon = (string: string) =>
   appTypes.find((item) => item.type === string)?.icon || <IconGridDots />;
+
+export const timeFromNow = (date: string) => dayjs(date).fromNow();
+
+export const getFormattedDateWithTime = (date: any) =>
+  dayjs(date).format("Do MMM YYYY HH:MM A");

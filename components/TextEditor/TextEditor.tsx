@@ -19,6 +19,7 @@ export default function TextEditor({
   placeholder,
   withImage = true,
   withParagraph = true,
+  style,
 }: any) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -58,7 +59,7 @@ export default function TextEditor({
   }
 
   return (
-    <Box>
+    <Box style={style}>
       <InputLabel>{label}</InputLabel>
       <RichTextEditor style={{ borderRadius: 0 }} editor={editor}>
         {isFocused && (
