@@ -30,6 +30,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import {
   IconBookmark,
+  IconBookmarkFilled,
   IconCaretDownFilled,
   IconCaretUpFilled,
   IconShare,
@@ -44,6 +45,7 @@ const Page = () => {
   const { status } = useSession();
   const params = useParams();
   const [forum, setForum] = useState<ForumType | null>(null);
+  const [saved, setSaved] = useState<boolean>(false);
 
   const breadcrumbs = [
     { title: "Home", href: "/" },
@@ -51,10 +53,13 @@ const Page = () => {
     { title: forum?.question || "", href: `/forum/${forum?._id}` },
   ];
 
-  const getForum = () => {
-    axios.get(`/api/forum/${params?.forum_id}`).then(({ data }) => {
+  const getForum = async () => {
+    await axios.get(`/api/forum/${params?.forum_id}`).then(({ data }) => {
       setForum(data);
     });
+    await axios
+      .get(`/api/forum/${params?.forum_id}/saved`)
+      .then(({ data }) => setSaved(data));
   };
 
   const upVote = async (object: any) => {
@@ -96,6 +101,19 @@ const Page = () => {
             });
           });
       })
+      .catch((error) => {
+        notifications.show({
+          icon: <IconX />,
+          color: "red",
+          message: error.response.data.error,
+        });
+      });
+  };
+
+  const saveForum = async () => {
+    await axios
+      .post(`/api/forum/${params?.forum_id}/saved`)
+      .then(() => getForum())
       .catch((error) => {
         notifications.show({
           icon: <IconX />,
@@ -150,7 +168,7 @@ const Page = () => {
             >
               <IconCaretUpFilled />
             </ActionIcon>
-            <Text fw={700}>{forum.votes}</Text>
+            <Text fw={700}>{forum?.votes}</Text>
             <ActionIcon
               radius="xl"
               variant="filled"
@@ -158,8 +176,8 @@ const Page = () => {
             >
               <IconCaretDownFilled />
             </ActionIcon>
-            <ActionIcon variant="transparent">
-              <IconBookmark />
+            <ActionIcon variant="transparent" onClick={saveForum}>
+              {saved ? <IconBookmarkFilled /> : <IconBookmark />}
             </ActionIcon>
           </Stack>
           <ScrollArea>
@@ -222,11 +240,11 @@ const Page = () => {
                   <Group gap="xs">
                     <Avatar
                       size="sm"
-                      color={colors[getDigitByString(forum.user.name)]}
+                      color={colors[getDigitByString(forum?.user?.name)]}
                     >
-                      {getInitials(forum.user.name)}
+                      {getInitials(forum?.user?.name)}
                     </Avatar>
-                    <Text fz="sm">{forum.user.name}</Text>
+                    <Text fz="sm">{forum?.user?.name}</Text>
                   </Group>
                 </Stack>
               </Paper>
