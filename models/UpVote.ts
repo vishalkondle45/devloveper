@@ -1,13 +1,18 @@
 import { Document, Model, Schema, Types, model, models } from "mongoose";
 
 interface UpVoteDocument extends Document {
-  forum?: string;
+  forum?: Types.ObjectId;
   user?: Types.ObjectId;
 }
 
 const forumSchema = new Schema<UpVoteDocument>(
   {
-    forum: { type: String, required: true, trim: true },
+    forum: {
+      type: Types.ObjectId,
+      required: true,
+      trim: true,
+      ref: "Forum" || "Answer",
+    },
     user: { type: Types.ObjectId, required: false, ref: "User" },
   },
   { timestamps: true }

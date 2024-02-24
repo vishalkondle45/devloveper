@@ -47,6 +47,11 @@ const Apps = () => {
             <App setOpened={setOpened} icon={<IconCoinRupee />} text="Split" />
             <App
               setOpened={setOpened}
+              icon={<IconMessageCircle2 />}
+              text="Forum"
+            />
+            <App
+              setOpened={setOpened}
               icon={<IconCalendar />}
               text="Calendar"
             />
@@ -57,11 +62,6 @@ const Apps = () => {
             />
             <App setOpened={setOpened} icon={<IconMusic />} text="Music" />
             <App setOpened={setOpened} icon={<IconFileText />} text="Blog" />
-            <App
-              setOpened={setOpened}
-              icon={<IconMessageCircle2 />}
-              text="Forum"
-            />
             <App
               setOpened={setOpened}
               icon={<IconUserCircle />}

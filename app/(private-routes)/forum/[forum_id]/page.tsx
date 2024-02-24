@@ -1,5 +1,7 @@
 "use client";
-import { ForumType } from "@/components/Forum/Forum.Types";
+import Answer from "@/components/Forum/Answer";
+import { AnswerTypes, ForumType } from "@/components/Forum/Forum.Types";
+import YourAnswer from "@/components/Forum/YourAnswer";
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import { colors } from "@/lib/constants";
 import {
@@ -33,6 +35,7 @@ import {
   IconBookmarkFilled,
   IconCaretDownFilled,
   IconCaretUpFilled,
+  IconCheck,
   IconShare,
   IconUserPlus,
   IconX,
@@ -46,6 +49,7 @@ const Page = () => {
   const params = useParams();
   const [forum, setForum] = useState<ForumType | null>(null);
   const [saved, setSaved] = useState<boolean>(false);
+  const [answers, setAnswers] = useState<AnswerTypes | null>(null);
 
   const breadcrumbs = [
     { title: "Home", href: "/" },
@@ -60,22 +64,23 @@ const Page = () => {
     await axios
       .get(`/api/forum/${params?.forum_id}/saved`)
       .then(({ data }) => setSaved(data));
+    await axios
+      .get(`/api/forum/${params?.forum_id}/answer`)
+      .then(({ data }) => {
+        setAnswers(data);
+      });
   };
 
-  const upVote = async (object: any) => {
+  const upVote = async () => {
     await axios
-      .post(`/api/forum/${params?.forum_id}/upvote`)
-      .then(async () => {
-        await axios
-          .put(`/api/forum/${params?.forum_id}`, object)
-          .then(() => getForum())
-          .catch((error) => {
-            notifications.show({
-              icon: <IconX />,
-              color: "red",
-              message: error.response.data.error,
-            });
-          });
+      .put(`/api/forum/upvote`, { _id: params?.forum_id })
+      .then(() => {
+        notifications.show({
+          icon: <IconCheck />,
+          color: "green",
+          message: "Forum liked successfully.",
+        });
+        getForum();
       })
       .catch((error) => {
         notifications.show({
@@ -86,20 +91,16 @@ const Page = () => {
       });
   };
 
-  const downVote = async (object: any) => {
+  const downVote = async () => {
     await axios
-      .post(`/api/forum/${params?.forum_id}/downvote`)
+      .put(`/api/forum/downvote`, { _id: params?.forum_id })
       .then(async () => {
-        await axios
-          .put(`/api/forum/${params?.forum_id}`, object)
-          .then(() => getForum())
-          .catch((error) => {
-            notifications.show({
-              icon: <IconX />,
-              color: "red",
-              message: error.response.data.error,
-            });
-          });
+        notifications.show({
+          icon: <IconCheck />,
+          color: "green",
+          message: "Forum disliked successfully.",
+        });
+        getForum();
       })
       .catch((error) => {
         notifications.show({
@@ -161,19 +162,11 @@ const Page = () => {
         <Divider variant="solid" mt="xs" />
         <Group wrap="nowrap" align="flex-start">
           <Stack align="center" mt="lg">
-            <ActionIcon
-              radius="xl"
-              variant="filled"
-              onClick={() => upVote({ votes: forum?.votes + 1 })}
-            >
+            <ActionIcon radius="xl" variant="filled" onClick={upVote}>
               <IconCaretUpFilled />
             </ActionIcon>
             <Text fw={700}>{forum?.votes}</Text>
-            <ActionIcon
-              radius="xl"
-              variant="filled"
-              onClick={() => downVote({ votes: forum?.votes - 1 })}
-            >
+            <ActionIcon radius="xl" variant="filled" onClick={downVote}>
               <IconCaretDownFilled />
             </ActionIcon>
             <ActionIcon variant="transparent" onClick={saveForum}>
@@ -252,6 +245,11 @@ const Page = () => {
           </Group>
         </Stack>
       </Paper>
+      <Divider my="xl" />
+      {answers?.map((answer) => (
+        <Answer answer={answer} getForum={getForum} />
+      ))}
+      <YourAnswer getForum={getForum} />
     </Container>
   );
 };

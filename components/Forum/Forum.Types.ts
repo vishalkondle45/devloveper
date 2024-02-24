@@ -20,3 +20,15 @@ export interface User {
   _id: string;
   name: string;
 }
+
+export type AnswerTypes = AnswerType[];
+
+export interface AnswerType {
+  _id: string;
+  answer: string;
+  forum: string;
+  user: User;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
