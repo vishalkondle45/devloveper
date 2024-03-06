@@ -13,12 +13,15 @@ import { IconHash } from "@tabler/icons-react";
 import axios from "axios";
 import { useState } from "react";
 
-const NewForum = ({ getForums }: any) => {
-  const [forum, setForum] = useState({
+const NewForum = ({
+  getForums,
+  forumData = {
     question: "",
     description: "",
     tags: [],
-  });
+  },
+}: any) => {
+  const [forum, setForum] = useState(forumData);
 
   const [opened, { open, close }] = useDisclosure();
 

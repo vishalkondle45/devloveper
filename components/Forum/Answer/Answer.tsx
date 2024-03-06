@@ -70,7 +70,7 @@ const Answer = ({ answer, getForum }: any) => {
         </Stack>
         <ScrollArea>
           <Text
-            style={{ whiteSpace: "wrap" }}
+            style={{ whiteSpace: "wrap", pointerEvents: "none" }}
             dangerouslySetInnerHTML={{ __html: answer?.answer || "" }}
           ></Text>
         </ScrollArea>
