@@ -1,10 +1,12 @@
 import { Box, InputLabel } from "@mantine/core";
-import { Link, RichTextEditor } from "@mantine/tiptap";
+import { Link, RichTextEditor, getTaskListExtension } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import SubScript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
+import TaskItem from "@tiptap/extension-task-item";
+import TipTapTaskList from "@tiptap/extension-task-list";
 import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
@@ -42,6 +44,13 @@ export default function TextEditor({
         },
       }),
       Placeholder.configure({ placeholder }),
+      getTaskListExtension(TipTapTaskList),
+      TaskItem.configure({
+        nested: true,
+        HTMLAttributes: {
+          class: "test-item",
+        },
+      }),
     ],
     editorProps: {
       handleKeyDown(view, { code }) {
@@ -94,6 +103,12 @@ export default function TextEditor({
               <RichTextEditor.AlignCenter />
               <RichTextEditor.AlignJustify />
               <RichTextEditor.AlignRight />
+            </RichTextEditor.ControlsGroup>
+
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.TaskList />
+              <RichTextEditor.TaskListLift />
+              <RichTextEditor.TaskListSink />
             </RichTextEditor.ControlsGroup>
           </RichTextEditor.Toolbar>
         )}
