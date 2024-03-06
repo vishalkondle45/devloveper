@@ -47,7 +47,7 @@ export default function RootLayout({
         <body>
           <MantineProvider theme={theme}>
             <ModalsProvider>
-              <Notifications />
+              <Notifications autoClose={2000} />
               <Navbar />
               <Box pt={rem(60)} pb={rem(4)}>
                 {children}
