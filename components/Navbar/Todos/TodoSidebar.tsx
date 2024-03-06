@@ -40,7 +40,7 @@ const TodoSidebar = ({ navigate }: TodoSidebarProps) => {
       {list.map((item) => (
         <Button
           key={item.path}
-          variant={pathname === item.path ? "filled" : "outline"}
+          variant={pathname === item.path ? "light" : "transparent"}
           leftSection={
             item.icon ? (
               <item.icon style={{ width: rem(20), height: rem(20) }} />
