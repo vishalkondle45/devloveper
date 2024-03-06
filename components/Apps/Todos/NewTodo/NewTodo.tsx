@@ -9,7 +9,6 @@ import {
   Popover,
   PopoverTarget,
   TextInput,
-  getThemeColor,
   rem,
   useMantineTheme,
 } from "@mantine/core";
@@ -18,11 +17,11 @@ import { useForm } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
 import { IconCalendar, IconSun, IconX } from "@tabler/icons-react";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { TodoType } from "../Todo.types";
 import classes from "./NewTodo.module.css";
 import { Props } from "./NewTodo.types";
-import dayjs from "dayjs";
 
 const NewTodo = ({
   getTodos,
@@ -64,13 +63,14 @@ const NewTodo = ({
           <TextInput
             leftSection={
               <Checkbox
-                styles={{ input: { borderColor: getThemeColor(color, theme) } }}
+                styles={{ input: { borderColor: color } }}
                 checked={false}
                 radius="xl"
                 readOnly
               />
             }
             classNames={{ input: classes.input }}
+            color={color}
             placeholder="Add a task"
             {...form.getInputProps("todo")}
             ref={focusTrapRef}
@@ -81,11 +81,13 @@ const NewTodo = ({
                 <Badge
                   variant="light"
                   size="xs"
+                  color={color}
                   rightSection={
                     <ActionIcon
                       size="xs"
                       variant="transparent"
                       onClick={() => form.setFieldValue("date", "")}
+                      color={color}
                     >
                       <IconX />
                     </ActionIcon>
@@ -105,6 +107,7 @@ const NewTodo = ({
                     <ActionIcon
                       variant="transparent"
                       onClick={() => setOpened((o) => !o)}
+                      color={color}
                     >
                       <IconCalendar
                         style={{ width: rem(20), height: rem(20) }}
@@ -122,11 +125,13 @@ const NewTodo = ({
                     <Badge
                       variant="light"
                       size="xs"
+                      color={color}
                       rightSection={
                         <ActionIcon
                           size="xs"
                           variant="transparent"
                           onClick={() => form.setFieldValue("myday", false)}
+                          color={color}
                         >
                           <IconX />
                         </ActionIcon>
@@ -138,6 +143,7 @@ const NewTodo = ({
                     <ActionIcon
                       variant="transparent"
                       onClick={() => form.setFieldValue("myday", true)}
+                      color={color}
                     >
                       <IconSun style={{ width: rem(20), height: rem(20) }} />
                     </ActionIcon>
