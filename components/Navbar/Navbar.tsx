@@ -15,6 +15,7 @@ import AuthButton from "../AuthButton";
 import ColorSchemeToggle from "../ColorSchemeToggle";
 import DevLovePer from "../DevLovePer";
 import Notifications from "../Notifications";
+import ForumSidebar from "./Forum/ForumSidebar";
 import classes from "./Navbar.module.css";
 import NoteSidebar from "./Notes";
 import SplitSidebar from "./Split";
@@ -39,6 +40,8 @@ const Navbar = () => {
         return <TodoSidebar navigate={navigate} />;
       case "split":
         return <SplitSidebar navigate={navigate} />;
+      case "forum":
+        return <ForumSidebar navigate={navigate} />;
       default:
         return <Text>Please select app</Text>;
     }
