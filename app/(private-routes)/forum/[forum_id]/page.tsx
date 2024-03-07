@@ -29,6 +29,7 @@ import {
   Title,
   rem,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
   IconBookmark,
@@ -37,19 +38,22 @@ import {
   IconCaretUpFilled,
   IconCheck,
   IconShare,
+  IconTrash,
   IconUserPlus,
   IconX,
 } from "@tabler/icons-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 const Page = () => {
-  const { status } = useSession();
+  const { status, data } = useSession();
+  const userId = data?.user?._id;
   const params = useParams();
   const [forum, setForum] = useState<ForumType | null>(null);
   const [saved, setSaved] = useState<boolean>(false);
   const [answers, setAnswers] = useState<AnswerTypes | null>(null);
+  const router = useRouter();
 
   const breadcrumbs = [
     { title: "Home", href: "/" },
@@ -124,6 +128,40 @@ const Page = () => {
       });
   };
 
+  const isCreator = userId === forum?.user?._id;
+
+  const deleteForum = async () => {
+    axios
+      .delete(`/api/forum/${params?.forum_id}`)
+      .then(() => {
+        notifications.show({
+          icon: <IconCheck />,
+          color: "green",
+          message: "Forum deleted successfully.",
+        });
+        router.push("/forum");
+      })
+      .catch(() => {
+        notifications.show({
+          icon: <IconX />,
+          color: "red",
+          message: "Something went wrong.",
+        });
+      });
+  };
+
+  const openModal = () =>
+    modals.openConfirmModal({
+      title: "Please confirm your action",
+      children: (
+        <Text size="sm">This forum will be deleted with the answers.</Text>
+      ),
+      labels: { confirm: "Confirm", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onCancel: () => {},
+      onConfirm: deleteForum,
+    });
+
   useEffect(() => {
     getForum();
   }, []);
@@ -195,7 +233,7 @@ const Page = () => {
             ))}
           </Group>
           <Group align="start" justify="space-between">
-            <Group>
+            <Group gap="xs">
               <CopyButton
                 value={`https://devloveper.vercel.app/forum/${forum?._id}`}
               >
@@ -203,7 +241,7 @@ const Page = () => {
                   <Button
                     color={copied ? "blue" : "gray"}
                     onClick={copy}
-                    variant="transparent"
+                    variant="subtle"
                     size="compact-sm"
                     leftSection={
                       <IconShare style={{ width: rem(16), height: rem(16) }} />
@@ -214,7 +252,7 @@ const Page = () => {
                 )}
               </CopyButton>
               <Button
-                variant="transparent"
+                variant="subtle"
                 size="compact-sm"
                 color="gray"
                 leftSection={
@@ -223,6 +261,19 @@ const Page = () => {
               >
                 Follow
               </Button>
+              {isCreator && (
+                <Button
+                  variant="subtle"
+                  size="compact-sm"
+                  color="gray"
+                  leftSection={
+                    <IconTrash style={{ width: rem(16), height: rem(16) }} />
+                  }
+                  onClick={openModal}
+                >
+                  Delete
+                </Button>
+              )}
             </Group>
             <Group justify="right">
               <Paper p="sm" withBorder>
