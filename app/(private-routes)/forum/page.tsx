@@ -70,7 +70,7 @@ const Page = () => {
           <Paper
             shadow="xl"
             p="sm"
-            onClick={() => router.push(`forum/${forum?._id}`)}
+            onClick={() => router.push(`/forum/${forum?._id}`)}
             withBorder
           >
             <Group wrap="nowrap" align="baseline">
