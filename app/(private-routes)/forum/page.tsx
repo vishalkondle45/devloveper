@@ -59,14 +59,12 @@ const Page = () => {
   return (
     <Container my="md" size="md">
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
-      <Group justify="space-between">
+      <Group my="md" justify="space-between">
         <Text fz={rem(40)} fw={700}>
-          Forum
+          Top Questions
         </Text>
         <NewForum getForums={getForums} />
       </Group>
-      <Title order={2}>Top Questions</Title>
-
       <Stack>
         {forums.map((forum) => (
           <Paper

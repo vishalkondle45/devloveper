@@ -16,6 +16,7 @@ import {
   Container,
   Group,
   LoadingOverlay,
+  NumberFormatter,
   Pagination,
   Paper,
   Stack,
@@ -50,7 +51,7 @@ const Page = () => {
   const getForums = () => {
     axios.get(`/api/forum?page=${page}`).then(({ data }) => {
       setForums(data.forums);
-      setTotal(Math.ceil(data.count / 10));
+      setTotal(data.count);
     });
   };
 
@@ -67,14 +68,22 @@ const Page = () => {
   return (
     <Container my="md" size="md">
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
-      <Group justify="space-between">
+      <Group my="md" justify="space-between">
         <Text fz={rem(40)} fw={700}>
-          Forum
+          All Questions
         </Text>
         <NewForum getForums={getForums} />
       </Group>
-      <Title order={2}>All Questions</Title>
-
+      <Text fz="lg" mb="xs" fw={500}>
+        <NumberFormatter
+          value={total}
+          thousandsGroupStyle="lakh"
+          thousandSeparator=","
+          decimalSeparator="."
+          decimalScale={2}
+        />{" "}
+        questions
+      </Text>
       <Stack>
         {forums.map((forum) => (
           <Paper
@@ -147,7 +156,12 @@ const Page = () => {
         ))}
       </Stack>
       <Center mt="xl">
-        <Pagination size="md" value={page} onChange={onChange} total={total} />
+        <Pagination
+          size="md"
+          value={page}
+          onChange={onChange}
+          total={Math.ceil(total / 10)}
+        />
       </Center>
     </Container>
   );
