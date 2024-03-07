@@ -29,6 +29,7 @@ import {
   Title,
   rem,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
@@ -54,6 +55,7 @@ const Page = () => {
   const [saved, setSaved] = useState<boolean>(false);
   const [answers, setAnswers] = useState<AnswerTypes | null>(null);
   const router = useRouter();
+  const [opened, handlers] = useDisclosure(true);
 
   const breadcrumbs = [
     { title: "Home", href: "/" },
@@ -62,20 +64,30 @@ const Page = () => {
   ];
 
   const getForum = async () => {
-    await axios.get(`/api/forum/${params?.forum_id}`).then(({ data }) => {
-      setForum(data);
-    });
+    await axios
+      .get(`/api/forum/${params?.forum_id}`)
+      .then(({ data }) => setForum(data))
+      .catch(() => {
+        notifications.show({
+          icon: <IconX />,
+          color: "red",
+          message: "Forum not found.",
+        });
+        router.push("/forum");
+      });
     await axios
       .get(`/api/forum/${params?.forum_id}/saved`)
-      .then(({ data }) => setSaved(data));
+      .then(({ data }) => setSaved(data))
+      .catch(() => router.push("/forum"));
     await axios
       .get(`/api/forum/${params?.forum_id}/answer`)
-      .then(({ data }) => {
-        setAnswers(data);
-      });
+      .then(({ data }) => setAnswers(data))
+      .catch(() => router.push("/forum"))
+      .finally(() => handlers.close());
   };
 
   const upVote = async () => {
+    handlers.open();
     await axios
       .put(`/api/forum/upvote`, { _id: params?.forum_id })
       .then(() => {
@@ -93,9 +105,11 @@ const Page = () => {
           message: error.response.data.error,
         });
       });
+    handlers.close();
   };
 
   const downVote = async () => {
+    handlers.open();
     await axios
       .put(`/api/forum/downvote`, { _id: params?.forum_id })
       .then(async () => {
@@ -113,9 +127,11 @@ const Page = () => {
           message: error.response.data.error,
         });
       });
+    handlers.close();
   };
 
   const saveForum = async () => {
+    handlers.open();
     await axios
       .post(`/api/forum/${params?.forum_id}/saved`)
       .then(() => getForum())
@@ -126,11 +142,13 @@ const Page = () => {
           message: error.response.data.error,
         });
       });
+    handlers.close();
   };
 
   const isCreator = userId === forum?.user?._id;
 
   const deleteForum = async () => {
+    handlers.open();
     axios
       .delete(`/api/forum/${params?.forum_id}`)
       .then(() => {
@@ -148,6 +166,7 @@ const Page = () => {
           message: "Something went wrong.",
         });
       });
+    handlers.close();
   };
 
   const openModal = () =>
@@ -166,7 +185,7 @@ const Page = () => {
     getForum();
   }, []);
 
-  if (status === "loading" || !forum) {
+  if (status === "loading" || !forum || opened) {
     return <LoadingOverlay visible />;
   }
 
