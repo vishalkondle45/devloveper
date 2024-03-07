@@ -31,13 +31,17 @@ export const GET = async (req: NextRequest): Promise<any> => {
     );
   }
   await startDb();
-  const notes = await ForumModel.find({ user: session.user?._id })
+  const page = req.nextUrl.searchParams.get("page") || 1;
+  const forums = await ForumModel.find()
+    .skip(10 * (Number(page) - 1))
+    .limit(10)
     .sort("-createdAt")
     .populate({
       path: "user",
       select: ["name"],
     });
-  return NextResponse.json(notes, { status: 200 });
+  const count = await ForumModel.countDocuments();
+  return NextResponse.json({ forums, count }, { status: 200 });
 };
 
 export const PUT = async (req: NextRequest): Promise<any> => {

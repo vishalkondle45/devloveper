@@ -14,6 +14,7 @@ import "@mantine/nprogress/styles.css";
 import "@mantine/spotlight/styles.css";
 import "@mantine/tiptap/styles.css";
 import "@mantine/charts/styles.css";
+import "@mantine/core/styles/Pagination.css";
 import { Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
 

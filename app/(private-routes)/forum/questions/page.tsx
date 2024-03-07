@@ -12,15 +12,18 @@ import {
 import {
   Avatar,
   Badge,
+  Center,
   Container,
   Group,
   LoadingOverlay,
+  Pagination,
   Paper,
   Stack,
   Text,
   Title,
   rem,
 } from "@mantine/core";
+import { usePagination } from "@mantine/hooks";
 import {
   IconEye,
   IconHeartFilled,
@@ -40,15 +43,20 @@ const Page = () => {
 
   const [forums, setForums] = useState<ForumTypes>([]);
 
+  // Pagination
+  const [total, setTotal] = useState(0);
+  const [page, onChange] = useState(1);
+
   const getForums = () => {
-    axios.get("/api/forum/top-questions").then(({ data }) => {
-      setForums(data);
+    axios.get(`/api/forum?page=${page}`).then(({ data }) => {
+      setForums(data.forums);
+      setTotal(Math.ceil(data.count / 10));
     });
   };
 
   useEffect(() => {
     getForums();
-  }, []);
+  }, [page]);
 
   const router = useRouter();
 
@@ -65,7 +73,7 @@ const Page = () => {
         </Text>
         <NewForum getForums={getForums} />
       </Group>
-      <Title order={2}>Top Questions</Title>
+      <Title order={2}>All Questions</Title>
 
       <Stack>
         {forums.map((forum) => (
@@ -138,6 +146,9 @@ const Page = () => {
           </Paper>
         ))}
       </Stack>
+      <Center mt="xl">
+        <Pagination size="md" value={page} onChange={onChange} total={total} />
+      </Center>
     </Container>
   );
 };
