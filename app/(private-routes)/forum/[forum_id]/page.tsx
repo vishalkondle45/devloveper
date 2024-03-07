@@ -64,6 +64,7 @@ const Page = () => {
   ];
 
   const getForum = async () => {
+    handlers.open();
     await axios
       .get(`/api/forum/${params?.forum_id}`)
       .then(({ data }) => setForum(data))
@@ -319,7 +320,7 @@ const Page = () => {
       {answers?.map((answer) => (
         <Answer answer={answer} getForum={getForum} />
       ))}
-      <YourAnswer getForum={getForum} />
+      <YourAnswer getForum={getForum} handlers={handlers} />
     </Container>
   );
 };

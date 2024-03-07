@@ -1,13 +1,11 @@
 import TextEditor from "@/components/TextEditor";
-import { Button, Loader, LoadingOverlay, Title } from "@mantine/core";
+import { Button, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import { useState } from "react";
 
-const YourAnswer = ({ getForum }: any) => {
+const YourAnswer = ({ getForum, handlers }: any) => {
   const params = useParams();
-  const [value, setValue] = useState(true);
 
   const form = useForm({
     initialValues: {
@@ -24,31 +22,27 @@ const YourAnswer = ({ getForum }: any) => {
   };
 
   const handleSubmit = async (values: any) => {
-    setValue(false);
+    handlers.open();
     handleAnswer("answer", "");
     await axios
       .post(`/api/forum/${params?.forum_id}/answer`, values)
       .then(() => {
         getForum();
-      });
-    setValue(true);
+      })
+      .finally(() => handlers.close());
   };
 
   return (
     <>
       <Title order={3}>Your Answer</Title>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        {value ? (
-          <TextEditor
-            placeholder="Your answer"
-            name="answer"
-            text={form.values.answer}
-            style={{ marginTop: -20 }}
-            handleText={handleAnswer}
-          />
-        ) : (
-          <Loader />
-        )}
+        <TextEditor
+          placeholder="Your answer"
+          name="answer"
+          text={form.values.answer}
+          style={{ marginTop: -20 }}
+          handleText={handleAnswer}
+        />
         <Button type="submit" mt="lg">
           Post Your Answer
         </Button>

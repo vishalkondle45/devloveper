@@ -17,11 +17,12 @@ export const GET = async (
     );
   }
   await startDb();
-  let user = new mongoose.Types.ObjectId(session?.user?._id);
-  let answers = await AnswerModel.find({ forum: params?.forum_id }).populate({
-    path: "user",
-    select: ["name"],
-  });
+  let answers = await AnswerModel.find({ forum: params?.forum_id })
+    .populate({
+      path: "user",
+      select: ["name"],
+    })
+    .sort("-votes");
   return NextResponse.json(answers, { status: 200 });
 };
 
