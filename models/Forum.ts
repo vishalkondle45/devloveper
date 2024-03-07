@@ -13,7 +13,7 @@ interface ForumDocument extends Document {
 const forumSchema = new Schema<ForumDocument>(
   {
     question: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true },
+    description: { type: String, required: false, trim: true },
     user: { type: Types.ObjectId, required: false, ref: "User" },
     tags: [{ type: String }],
     votes: { type: Number, default: 0 },

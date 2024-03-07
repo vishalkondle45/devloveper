@@ -68,11 +68,7 @@ const NewForum = ({ getForums }: any) => {
           splitChars={[",", " "]}
         />
         <Center>
-          <Button
-            mt="xs"
-            onClick={submitForum}
-            disabled={!forum.question && !forum.description}
-          >
+          <Button mt="xs" onClick={submitForum} disabled={!forum.question}>
             Submit
           </Button>
         </Center>
