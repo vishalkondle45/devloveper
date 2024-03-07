@@ -15,6 +15,7 @@ export const GET = async (req: NextRequest): Promise<any> => {
   await startDb();
   const forums = await ForumModel.find()
     .sort("-votes")
+    .limit(10)
     .populate({
       path: "user",
       select: ["name"],
