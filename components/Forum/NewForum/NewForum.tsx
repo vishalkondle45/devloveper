@@ -23,6 +23,9 @@ const NewForum = ({ getForums }: any) => {
   const [opened, { open, close }] = useDisclosure();
 
   const handleQuestion = (name: string, text: string | string[]) => {
+    if (name === "tags" && Array.isArray(text)) {
+      text = text.map((tag) => tag.replace(/\s/g, ""));
+    }
     setForum((old) => ({ ...old, [name]: text }));
   };
 
@@ -62,6 +65,7 @@ const NewForum = ({ getForums }: any) => {
           placeholder="Pick value"
           onChange={(v) => handleQuestion("tags", v)}
           value={forum.tags}
+          splitChars={[",", " "]}
         />
         <Center>
           <Button
