@@ -15,6 +15,7 @@ import "@mantine/spotlight/styles.css";
 import "@mantine/tiptap/styles.css";
 import "@mantine/charts/styles.css";
 import { Viewport } from "next";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "Devloveper",
@@ -45,6 +46,7 @@ export default function RootLayout({
           <ColorSchemeScript />
         </head>
         <body>
+          <Analytics />
           <MantineProvider theme={theme}>
             <ModalsProvider>
               <Notifications autoClose={2000} />
