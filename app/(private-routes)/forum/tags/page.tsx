@@ -15,6 +15,7 @@ import {
 import { IconHash } from "@tabler/icons-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface TagType {
@@ -32,6 +33,7 @@ const Page = () => {
   ];
 
   const [tags, setTags] = useState<TagType[]>([]);
+  const router = useRouter();
 
   const getTags = () => {
     axios.get("/api/forum/tags").then(({ data }) => {
@@ -61,7 +63,13 @@ const Page = () => {
         verticalSpacing={{ base: "md", sm: "sm" }}
       >
         {tags.map((tag) => (
-          <Paper p="md" radius="md" shadow="xs" withBorder>
+          <Paper
+            p="md"
+            radius="md"
+            shadow="xs"
+            withBorder
+            onClick={() => router.push(`/forum/tags/${tag.tag}`)}
+          >
             <Stack gap="xl">
               <Badge
                 key={tag.tag}

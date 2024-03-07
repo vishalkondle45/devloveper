@@ -22,22 +22,10 @@ export const GET = async (req: NextRequest): Promise<any> => {
         lastAdded: { $max: "$updatedAt" },
       },
     },
-    {
-      $project: {
-        tag: "$_id",
-        count: 1,
-        lastAdded: 1,
-        _id: 0,
-      },
-    },
+    { $project: { tag: "$_id", count: 1, lastAdded: 1, _id: 0 } },
     { $skip: 0 },
     { $limit: 10 },
-    // { $sort: { count: -1 } },
-    {
-      $sort: {
-        lastAdded: -1,
-      },
-    },
+    { $sort: { lastAdded: -1 } },
   ]);
   return NextResponse.json(forums, { status: 200 });
 };

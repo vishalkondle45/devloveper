@@ -7,7 +7,7 @@ export default function BreadcrumbsComp({ breadcrumbs }: BreadcrumbsProps) {
   const navigateTo = (path: string): void => router.push(path);
   return (
     <>
-      <Breadcrumbs>
+      <Breadcrumbs separator="→">
         {breadcrumbs?.map((item: BreadcrumbItem, i: number) =>
           i !== breadcrumbs.length - 1 ? (
             <Anchor onClick={() => navigateTo(item.href)} key={item.href}>
