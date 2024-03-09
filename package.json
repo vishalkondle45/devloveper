@@ -40,6 +40,7 @@
     "@types/chance": "^1.1.6",
     "@types/nodemailer": "^6.4.14",
     "@vercel/analytics": "^1.2.2",
+    "@vercel/speed-insights": "^1.0.10",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "chance": "^1.1.11",

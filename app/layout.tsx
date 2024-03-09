@@ -2,9 +2,11 @@ import Navbar from "@/components/Navbar";
 import AuthProvider from "@/components/Providers/AuthProvider";
 import theme from "@/mantine/theme";
 import "@mantine/carousel/styles.css";
+import "@mantine/charts/styles.css";
 import "@mantine/code-highlight/styles.css";
 import { Box, ColorSchemeScript, MantineProvider, rem } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/core/styles/Pagination.css";
 import "@mantine/dates/styles.css";
 import "@mantine/dropzone/styles.css";
 import { ModalsProvider } from "@mantine/modals";
@@ -13,10 +15,9 @@ import "@mantine/notifications/styles.css";
 import "@mantine/nprogress/styles.css";
 import "@mantine/spotlight/styles.css";
 import "@mantine/tiptap/styles.css";
-import "@mantine/charts/styles.css";
-import "@mantine/core/styles/Pagination.css";
-import { Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Viewport } from "next";
 
 export const metadata = {
   title: "Devloveper",
@@ -48,6 +49,7 @@ export default function RootLayout({
         </head>
         <body>
           <Analytics />
+          <SpeedInsights />
           <MantineProvider theme={theme}>
             <ModalsProvider>
               <Notifications autoClose={2000} />
