@@ -3,7 +3,7 @@ import AnswerModel from "@/models/Answer";
 import ForumModel from "@/models/Forum";
 import mongoose, { Types } from "mongoose";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/authOptions";
 
 export const GET = async (
@@ -68,7 +68,7 @@ export const PUT = async (
 };
 
 export const DELETE = async (
-  req: Request,
+  req: NextRequest,
   { params }: { params: { forum_id: Types.ObjectId } }
 ): Promise<any> => {
   const session = await getServerSession(authOptions);
@@ -79,6 +79,8 @@ export const DELETE = async (
     );
   }
   await startDb();
+  const _id = req.nextUrl.searchParams.get("_id");
+  await AnswerModel.findByIdAndDelete(_id);
   const forum = await ForumModel.findById(params.forum_id);
   await ForumModel.findByIdAndUpdate(params.forum_id, {
     answers: (forum?.answers || 0) - 1,
