@@ -19,10 +19,13 @@ import {
   rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import {
   IconEye,
+  IconHash,
   IconHeartFilled,
   IconMessageCircle2,
+  IconX,
 } from "@tabler/icons-react";
 import axios from "axios";
 import { Types } from "mongoose";
@@ -58,7 +61,7 @@ const Page = () => {
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Forum", href: "/forum" },
-    { title: "Tags", href: "/tags" },
+    { title: "Tags", href: "/forum/tags" },
     { title: `#${String(params.tag)}`, href: `/tags/${String(params.tag)}` },
   ];
 
@@ -68,10 +71,21 @@ const Page = () => {
 
   const getTag = async () => {
     handlers.open();
-    await axios.get(`/api/forum/tags/${params?.tag}`).then(({ data }) => {
-      setTag(data);
-    });
-    handlers.close();
+    await axios
+      .get(`/api/forum/tags/${params?.tag}`)
+      .then(({ data }) => {
+        setTag(data);
+      })
+      .catch(() => {
+        notifications.show({
+          icon: <IconX />,
+          color: "red",
+          message: "Error while fetchings data. Please try again later.",
+        });
+      })
+      .finally(() => {
+        handlers.close();
+      });
   };
 
   useEffect(() => {
@@ -86,9 +100,16 @@ const Page = () => {
     <Container my="md" size="md">
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
       <Group my="md" justify="space-between">
-        <Text fz={rem(40)} fw={700}>
+        <Badge
+          color={colors[getDigitByString(String(params?.tag))]}
+          tt="lowercase"
+          variant="light"
+          radius="xs"
+          size="xl"
+          leftSection={<IconHash size={14} />}
+        >
           {String(params.tag)}
-        </Text>
+        </Badge>
       </Group>
       <Paper
         shadow="xl"
