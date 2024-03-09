@@ -161,7 +161,11 @@ const Answer = ({ answer, getForum, handlers }: any) => {
             Delete
           </Button>
         )}
-        <ForumUser createdAt={answer.createdAt} name={answer.user.name} />
+        <ForumUser
+          createdAt={answer.createdAt}
+          name={answer.user.name}
+          isAnswer
+        />
       </Group>
       <Divider my="xl" />
     </>

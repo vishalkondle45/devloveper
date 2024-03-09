@@ -9,14 +9,19 @@ import { Avatar, Group, Paper, Stack, Text, rem } from "@mantine/core";
 interface Props {
   name: string;
   createdAt: string;
+  isAnswer?: boolean;
 }
 
-const ForumUser = ({ name, createdAt }: Props) => {
+const ForumUser = ({ name, createdAt, isAnswer = false }: Props) => {
   return (
     <Group justify="right">
       <Paper p="sm" withBorder>
         <Stack gap={rem(4)}>
-          <Text fz="sm">asked {getFormattedDateWithTime(createdAt)}</Text>
+          <Text fz="sm">
+            {isAnswer ? "answered" : "asked"}
+            {" on "}
+            {getFormattedDateWithTime(createdAt)}
+          </Text>
           <Group gap="xs">
             <Avatar size="sm" color={colors[getDigitByString(name)]}>
               {getInitials(name)}
