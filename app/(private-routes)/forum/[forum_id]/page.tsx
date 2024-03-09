@@ -49,90 +49,6 @@ const Page = () => {
     handlers.close();
   };
 
-  const upVoteAnswer = async (
-    _id: Types.ObjectId,
-    upvotes: Types.ObjectId[],
-    downvotes: Types.ObjectId[]
-  ) => {
-    if (!userId) return;
-    const data = {
-      upvotes: [...upvotes, userId],
-      downvotes: downvotes?.filter((u) => u !== userId),
-    };
-    if (upvotes?.find((u) => u === userId)) {
-      notifications.show({
-        icon: <IconX />,
-        color: "red",
-        message: "Already upvoted",
-      });
-      return;
-    }
-    if (downvotes?.find((u) => u === userId)) {
-      data.upvotes = upvotes;
-    }
-    handlers.open();
-    await axios
-      .put(`/api/forum/${String(_id)}/answer`, data)
-      .then(() => {
-        notifications.show({
-          icon: <IconCheck />,
-          color: "green",
-          message: "Forum upvoted successfully.",
-        });
-        getForum();
-      })
-      .catch((error) => {
-        notifications.show({
-          icon: <IconX />,
-          color: "red",
-          message: error.response.data.error,
-        });
-      });
-    handlers.close();
-  };
-
-  const downVoteAnswer = async (
-    _id: Types.ObjectId,
-    upvotes: Types.ObjectId[],
-    downvotes: Types.ObjectId[]
-  ) => {
-    if (!userId) return;
-    const data = {
-      upvotes: upvotes.filter((u) => u !== userId),
-      downvotes: [...downvotes, userId],
-    };
-    if (downvotes.find((u) => u === userId)) {
-      notifications.show({
-        icon: <IconX />,
-        color: "red",
-        message: "Already downvoted",
-      });
-      return;
-    }
-    if (upvotes?.find((u) => u === userId)) {
-      data.downvotes = downvotes;
-    }
-    handlers.open();
-    await axios
-      .put(`/api/forum/${String(_id)}/answer`, data)
-      .then(async () => {
-        notifications.show({
-          icon: <IconCheck />,
-          color: "green",
-          message: "Forum downvoted successfully.",
-        });
-        getForum();
-      })
-      .catch((error) => {
-        notifications.show({
-          icon: <IconX />,
-          color: "red",
-          message: error.response.data.error,
-        });
-      });
-    handlers.close();
-  };
-
   useEffect(() => {
     getForum();
   }, []);
@@ -147,12 +63,7 @@ const Page = () => {
       {forum && <Forum forum={forum} getForum={getForum} handlers={handlers} />}
       <Divider my="xl" />
       {answers?.map((answer) => (
-        <Answer
-          answer={answer}
-          getForum={getForum}
-          upVote={upVoteAnswer}
-          downvotes={downVoteAnswer}
-        />
+        <Answer answer={answer} getForum={getForum} handlers={handlers} />
       ))}
       <YourAnswer getForum={getForum} handlers={handlers} />
     </Container>

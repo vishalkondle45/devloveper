@@ -1,0 +1,32 @@
+import { colors } from "@/lib/constants";
+import {
+  getDigitByString,
+  getFormattedDateWithTime,
+  getInitials,
+} from "@/lib/functions";
+import { Avatar, Group, Paper, Stack, Text, rem } from "@mantine/core";
+
+interface Props {
+  name: string;
+  createdAt: string;
+}
+
+const ForumUser = ({ name, createdAt }: Props) => {
+  return (
+    <Group justify="right">
+      <Paper p="sm" withBorder>
+        <Stack gap={rem(4)}>
+          <Text fz="sm">asked {getFormattedDateWithTime(createdAt)}</Text>
+          <Group gap="xs">
+            <Avatar size="sm" color={colors[getDigitByString(name)]}>
+              {getInitials(name)}
+            </Avatar>
+            <Text fz="sm">{name}</Text>
+          </Group>
+        </Stack>
+      </Paper>
+    </Group>
+  );
+};
+
+export default ForumUser;

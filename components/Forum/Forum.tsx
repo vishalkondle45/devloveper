@@ -43,6 +43,7 @@ import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
 import { ForumType } from "./Forum.Types";
+import ForumUser from "./ForumUser/ForumUser";
 
 interface Arguments {
   forum: ForumType;
@@ -321,24 +322,7 @@ const Forum = ({ forum, getForum, handlers }: Arguments) => {
                 </Button>
               )}
             </Group>
-            <Group justify="right">
-              <Paper p="sm" withBorder>
-                <Stack gap={rem(4)}>
-                  <Text fz="sm">
-                    asked {getFormattedDateWithTime(forum?.createdAt)}
-                  </Text>
-                  <Group gap="xs">
-                    <Avatar
-                      size="sm"
-                      color={colors[getDigitByString(forum?.user?.name)]}
-                    >
-                      {getInitials(forum?.user?.name)}
-                    </Avatar>
-                    <Text fz="sm">{forum?.user?.name}</Text>
-                  </Group>
-                </Stack>
-              </Paper>
-            </Group>
+            <ForumUser createdAt={forum.createdAt} name={forum.user.name} />
           </Group>
         </Stack>
       </Paper>
