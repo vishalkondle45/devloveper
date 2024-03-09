@@ -63,13 +63,16 @@ const Answer = ({ answer, upVote, downVote, getForum }: any) => {
         <Stack justify="space-between">
           <ScrollArea>
             <Text
+              mt="-md"
               style={{ whiteSpace: "wrap", pointerEvents: "none" }}
               dangerouslySetInnerHTML={{ __html: answer?.answer || "" }}
             ></Text>
           </ScrollArea>
           <Button
+            mt="md"
             variant="subtle"
             size="compact-sm"
+            w="min-content"
             color="gray"
             leftSection={
               <IconTrash style={{ width: rem(16), height: rem(16) }} />
