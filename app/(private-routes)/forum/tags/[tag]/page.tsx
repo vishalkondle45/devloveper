@@ -18,6 +18,7 @@ import {
   Text,
   rem,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconEye,
   IconHeartFilled,
@@ -62,19 +63,22 @@ const Page = () => {
   ];
 
   const [tag, setTag] = useState<TagType>();
+  const [opened, handlers] = useDisclosure(false);
   const router = useRouter();
 
-  const getTag = () => {
-    axios.get(`/api/forum/tags/${params?.tag}`).then(({ data }) => {
+  const getTag = async () => {
+    handlers.open();
+    await axios.get(`/api/forum/tags/${params?.tag}`).then(({ data }) => {
       setTag(data);
     });
+    handlers.close();
   };
 
   useEffect(() => {
     getTag();
   }, []);
 
-  if (status === "loading") {
+  if (status === "loading" || opened) {
     return <LoadingOverlay visible />;
   }
 
