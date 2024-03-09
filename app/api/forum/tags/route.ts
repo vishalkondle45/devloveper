@@ -13,19 +13,16 @@ export const GET = async (req: NextRequest): Promise<any> => {
     );
   }
   await startDb();
-  const forums = await ForumModel.aggregate([
-    { $unwind: "$tags" },
-    {
-      $group: {
-        _id: "$tags",
-        count: { $sum: 1 },
-        lastAdded: { $max: "$updatedAt" },
-      },
-    },
-    { $project: { tag: "$_id", count: 1, lastAdded: 1, _id: 0 } },
-    { $skip: 0 },
-    { $limit: 10 },
-    { $sort: { lastAdded: -1 } },
-  ]);
+  const forums = await ForumModel.aggregate()
+    .unwind("$tags")
+    .group({
+      _id: "$tags",
+      count: { $sum: 1 },
+      lastAdded: { $max: "$updatedAt" },
+    })
+    .project({ tag: "$_id", count: 1, lastAdded: 1, _id: 0 })
+    .skip(0)
+    .limit(10)
+    .sort({ lastAdded: -1 });
   return NextResponse.json(forums, { status: 200 });
 };
