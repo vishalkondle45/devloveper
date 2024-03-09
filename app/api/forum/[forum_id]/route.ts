@@ -18,11 +18,14 @@ export const GET = async (
     );
   }
   await startDb();
-  const forums = await ForumModel.findById(params.forum_id).populate({
+  const forum = await ForumModel.findById(params.forum_id).populate({
     path: "user",
     select: ["name"],
   });
-  return NextResponse.json(forums, { status: 200 });
+  if (!forum) {
+    return NextResponse.json(null, { status: 404 });
+  }
+  return NextResponse.json(forum, { status: 200 });
 };
 
 export const PUT = async (

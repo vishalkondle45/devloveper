@@ -1,5 +1,6 @@
 import startDb from "@/lib/db";
 import AnswerModel from "@/models/Answer";
+import ForumModel from "@/models/Forum";
 import mongoose, { Types } from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -41,6 +42,10 @@ export const POST = async (
   await startDb();
   let user = new mongoose.Types.ObjectId(session?.user?._id);
   await AnswerModel.create({ ...body, user, forum: params.forum_id });
+  const forum = await ForumModel.findById(params.forum_id);
+  await ForumModel.findByIdAndUpdate(params.forum_id, {
+    answers: (forum?.answers || 0) + 1,
+  });
   return NextResponse.json(null, { status: 201 });
 };
 
@@ -58,6 +63,25 @@ export const PUT = async (
   const body = await req.json();
   await startDb();
   let user = new mongoose.Types.ObjectId(session?.user?._id);
-  await AnswerModel.findOneAndUpdate({ user, _id: body?.answer }, body);
+  await AnswerModel.findOneAndUpdate({ user, _id: params.forum_id }, body);
+  return NextResponse.json(null, { status: 201 });
+};
+
+export const DELETE = async (
+  req: Request,
+  { params }: { params: { forum_id: Types.ObjectId } }
+): Promise<any> => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { error: "You are not authenticated!" },
+      { status: 401 }
+    );
+  }
+  await startDb();
+  const forum = await ForumModel.findById(params.forum_id);
+  await ForumModel.findByIdAndUpdate(params.forum_id, {
+    answers: (forum?.answers || 0) - 1,
+  });
   return NextResponse.json(null, { status: 201 });
 };

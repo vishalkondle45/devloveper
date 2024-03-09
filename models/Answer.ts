@@ -4,7 +4,8 @@ interface AnswerDocument extends Document {
   answer: string;
   forum?: Types.ObjectId;
   user?: Types.ObjectId;
-  votes?: number;
+  upvotes?: Types.ObjectId[];
+  downvotes?: Types.ObjectId[];
 }
 
 const forumSchema = new Schema<AnswerDocument>(
@@ -12,7 +13,8 @@ const forumSchema = new Schema<AnswerDocument>(
     answer: { type: String, required: true },
     forum: { type: Types.ObjectId, required: true, trim: true, ref: "Forum" },
     user: { type: Types.ObjectId, required: false, ref: "User" },
-    votes: { type: Number, required: false, default: 0 },
+    upvotes: { type: [Types.ObjectId], default: [] },
+    downvotes: { type: [Types.ObjectId], default: [] },
   },
   { timestamps: true }
 );

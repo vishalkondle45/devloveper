@@ -6,65 +6,32 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import {
-  IconCaretDownFilled,
-  IconCaretUpFilled,
-  IconCheck,
-  IconX,
-} from "@tabler/icons-react";
-import axios from "axios";
+import { IconCaretDownFilled, IconCaretUpFilled } from "@tabler/icons-react";
 
-const Answer = ({ answer, getForum }: any) => {
-  const upVote = async () => {
-    await axios
-      .put(`/api/forum/upvote`, { _id: answer._id })
-      .then(() => {
-        notifications.show({
-          icon: <IconCheck />,
-          color: "green",
-          message: "Answer liked successfully.",
-        });
-        getForum();
-      })
-      .catch((error) => {
-        notifications.show({
-          icon: <IconX />,
-          color: "red",
-          message: error.response.data.error,
-        });
-      });
-  };
-
-  const downVote = async () => {
-    await axios
-      .put(`/api/forum/downvote`, { _id: answer._id })
-      .then(async () => {
-        notifications.show({
-          icon: <IconCheck />,
-          color: "green",
-          message: "Answer disliked successfully.",
-        });
-        getForum();
-      })
-      .catch((error) => {
-        notifications.show({
-          icon: <IconX />,
-          color: "red",
-          message: error.response.data.error,
-        });
-      });
-  };
-
+const Answer = ({ answer, upVote, downVote }: any) => {
   return (
     <>
       <Group wrap="nowrap" align="flex-start">
         <Stack align="center">
-          <ActionIcon radius="xl" variant="filled" onClick={upVote}>
+          <ActionIcon
+            radius="xl"
+            variant="filled"
+            onClick={() =>
+              upVote(answer?._id, answer?.upvotes, answer?.downvotes)
+            }
+          >
             <IconCaretUpFilled />
           </ActionIcon>
-          <Text fw={700}>{answer?.votes}</Text>
-          <ActionIcon radius="xl" variant="filled" onClick={downVote}>
+          <Text fw={700}>
+            {answer?.upvotes?.length - answer?.downvotes?.length}
+          </Text>
+          <ActionIcon
+            radius="xl"
+            variant="filled"
+            onClick={() =>
+              downVote(answer?._id, answer?.upvotes, answer?.downvotes)
+            }
+          >
             <IconCaretDownFilled />
           </ActionIcon>
         </Stack>

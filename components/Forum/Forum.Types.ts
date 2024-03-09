@@ -8,8 +8,10 @@ export interface ForumType {
   description: string;
   user: User;
   tags: string[];
-  votes: number;
-  views: number;
+  upvotes: Types.ObjectId[];
+  downvotes: Types.ObjectId[];
+  views: Types.ObjectId[];
+  saved: Types.ObjectId[];
   answers: number;
   createdAt: string;
   updatedAt: string;

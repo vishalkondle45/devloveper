@@ -81,7 +81,7 @@ const Page = () => {
                   color="red"
                   leftSection={<IconHeartFilled width={16} />}
                 >
-                  {forum?.votes}
+                  {forum?.upvotes?.length - forum?.downvotes?.length}
                 </Badge>
                 <Badge
                   size="lg"
@@ -95,7 +95,7 @@ const Page = () => {
                   color="gray"
                   leftSection={<IconEye width={16} />}
                 >
-                  {forum?.views}
+                  {forum?.views?.length}
                 </Badge>
               </Stack>
               <Stack gap="xs">

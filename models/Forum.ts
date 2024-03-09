@@ -5,8 +5,10 @@ interface ForumDocument extends Document {
   description?: string;
   user?: Types.ObjectId;
   tags: string[];
-  votes?: number;
-  views?: number;
+  upvotes?: Types.ObjectId[];
+  downvotes?: Types.ObjectId[];
+  views?: Types.ObjectId[];
+  saved?: Types.ObjectId[];
   answers?: number;
 }
 
@@ -16,8 +18,10 @@ const forumSchema = new Schema<ForumDocument>(
     description: { type: String, required: false, trim: true },
     user: { type: Types.ObjectId, required: false, ref: "User" },
     tags: [{ type: String }],
-    votes: { type: Number, default: 0 },
-    views: { type: Number, default: 0 },
+    views: { type: [Types.ObjectId], default: [] },
+    upvotes: { type: [Types.ObjectId], default: [] },
+    downvotes: { type: [Types.ObjectId], default: [] },
+    saved: { type: [Types.ObjectId], default: [] },
     answers: { type: Number, default: 0 },
   },
   { timestamps: true }

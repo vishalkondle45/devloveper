@@ -24,6 +24,7 @@ import {
   IconMessageCircle2,
 } from "@tabler/icons-react";
 import axios from "axios";
+import { Types } from "mongoose";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,8 +35,10 @@ interface TagType {
   description: string;
   user: User;
   tags: string[];
-  votes: number;
-  views: number;
+  upvotes: Types.ObjectId[];
+  downvotes: Types.ObjectId[];
+  views: Types.ObjectId[];
+  saved: Types.ObjectId[];
   answers: number;
   createdAt: string;
   updatedAt: string;
@@ -97,7 +100,7 @@ const Page = () => {
               color="red"
               leftSection={<IconHeartFilled width={16} />}
             >
-              {tag?.votes}
+              {Number(tag?.upvotes?.length) - Number(tag?.downvotes?.length)}
             </Badge>
             <Badge size="lg" leftSection={<IconMessageCircle2 width={16} />}>
               {tag?.answers}
@@ -108,7 +111,7 @@ const Page = () => {
               color="gray"
               leftSection={<IconEye width={16} />}
             >
-              {tag?.views}
+              {tag?.views?.length}
             </Badge>
           </Stack>
           <Stack gap="xs">
