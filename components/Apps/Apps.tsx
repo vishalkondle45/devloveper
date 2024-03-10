@@ -8,8 +8,8 @@ import {
   IconFileText,
   IconGridDots,
   IconMessageCircle2,
-  IconMusic,
   IconNote,
+  IconRobotFace,
   IconUserCircle,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -50,6 +50,7 @@ const Apps = () => {
               icon={<IconMessageCircle2 />}
               text="Forum"
             />
+            <App setOpened={setOpened} icon={<IconRobotFace />} text="Robot" />
             <App
               setOpened={setOpened}
               icon={<IconCalendar />}
@@ -60,7 +61,6 @@ const Apps = () => {
               icon={<IconCloudRain />}
               text="Weather"
             />
-            <App setOpened={setOpened} icon={<IconMusic />} text="Music" />
             <App setOpened={setOpened} icon={<IconFileText />} text="Blog" />
             <App
               setOpened={setOpened}

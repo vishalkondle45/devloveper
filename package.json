@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.2.1",
     "@mantine/carousel": "^7.5.1",
     "@mantine/charts": "^7.5.1",
     "@mantine/code-highlight": "^7.5.1",

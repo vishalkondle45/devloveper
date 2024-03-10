@@ -1,4 +1,5 @@
 import { SortOptionProps } from "@/components/Apps/Todos/ListTitle/ListTitle.types";
+import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 import { DefaultMantineColor, rem } from "@mantine/core";
 import {
   IconArrowsDownUp,
@@ -227,3 +228,25 @@ export const expenseCategories: ExpenseCategoryTypes[] = [
     color: "dark",
   },
 ];
+
+export const geminiModelConfig = {
+  model: "gemini-pro",
+  safetySettings: [
+    {
+      category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+      threshold: HarmBlockThreshold.BLOCK_NONE,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+      threshold: HarmBlockThreshold.BLOCK_NONE,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+      threshold: HarmBlockThreshold.BLOCK_NONE,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+      threshold: HarmBlockThreshold.BLOCK_NONE,
+    },
+  ],
+};

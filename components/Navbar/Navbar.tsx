@@ -18,6 +18,7 @@ import Notifications from "../Notifications";
 import ForumSidebar from "./Forum/ForumSidebar";
 import classes from "./Navbar.module.css";
 import NoteSidebar from "./Notes";
+import RobotSidebar from "./Robot";
 import SplitSidebar from "./Split";
 import TodoSidebar from "./Todos";
 
@@ -42,6 +43,8 @@ const Navbar = () => {
         return <SplitSidebar navigate={navigate} />;
       case "forum":
         return <ForumSidebar navigate={navigate} />;
+      case "robot":
+        return <RobotSidebar navigate={navigate} />;
       default:
         return <Text>Please select app</Text>;
     }
@@ -88,7 +91,13 @@ const Navbar = () => {
           size={rem(240)}
           withCloseButton={false}
         >
-          <Group justify="">
+          <Group
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             <Burger opened={opened} onClick={close} size="sm" />
             <DevLovePer />
             {renderSwitch(page)}
