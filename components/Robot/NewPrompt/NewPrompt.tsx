@@ -1,10 +1,18 @@
-import { ActionIcon, Group, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { IconPrompt, IconSend } from "@tabler/icons-react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import { ActionIcon, FocusTrap, Group, Textarea } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { IconArrowUp, IconPrompt } from "@tabler/icons-react";
 
 interface Props {
+  sendMessage: (prompt: string) => Promise<void>;
+  form: UseFormReturnType<
+    {
+      prompt: string;
+    },
+    (values: { prompt: string }) => {
+      prompt: string;
+    }
+  >;
+  active: boolean;
   handlers: {
     readonly open: () => void;
     readonly close: () => void;
@@ -12,56 +20,34 @@ interface Props {
   };
 }
 
-const NewPrompt = ({ handlers }: Props) => {
-  const form = useForm({
-    initialValues: {
-      prompt: "",
-    },
-    validate: {
-      prompt: (value) => (value ? null : "This field is required."),
-    },
-  });
-
-  const router = useRouter();
-
-  const sendMessage = async () => {
-    if (form.values.prompt.trim() === "") {
-      form.setFieldError("prompt", "This field is required.");
-      return;
-    }
-    handlers.open();
-    await axios
-      .post(`/api/robot`, { prompt: form.values.prompt.trim() })
-      .then((response) => {
-        router.push(`/robot/${response.data._id}`);
-      })
-      .catch((error) => {
-        router.push(`/robot`);
-      });
-  };
+const NewPrompt = ({ sendMessage, form, active, handlers }: Props) => {
   return (
     <>
-      <form onSubmit={form.onSubmit(sendMessage)}>
+      <form onSubmit={form.onSubmit(({ prompt }) => sendMessage(prompt))}>
         <Group wrap="nowrap" gap={0}>
-          <Textarea
-            rows={3}
-            w="100%"
-            placeholder="Enter a prompt..."
-            autosize
-            {...form.getInputProps("prompt")}
-            leftSection={<IconPrompt />}
-            rightSection={
-              <ActionIcon variant="light" size="lg" type="submit">
-                <IconSend />
-              </ActionIcon>
-            }
-            onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
+          <FocusTrap active={active}>
+            <Textarea
+              rows={3}
+              w="100%"
+              placeholder="Enter a prompt..."
+              autosize
+              {...form.getInputProps("prompt")}
+              leftSection={<IconPrompt />}
+              rightSection={
+                <ActionIcon variant="filled" size="lg" type="submit">
+                  <IconArrowUp />
+                </ActionIcon>
               }
-            }}
-          />
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                  event.preventDefault();
+                  sendMessage(form.values.prompt);
+                }
+              }}
+              data-autofocus
+              onBlur={() => handlers.close()}
+            />
+          </FocusTrap>
         </Group>
       </form>
     </>

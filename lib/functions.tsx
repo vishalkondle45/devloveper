@@ -75,3 +75,33 @@ export const timeFromNow = (date: string) => dayjs(date).fromNow();
 
 export const getFormattedDateWithTime = (date: any) =>
   dayjs(date).format("Do MMM YYYY HH:MM A");
+
+export const textToSpeech = (
+  string: string,
+  open: () => void = () => {},
+  close: () => void = () => {}
+) => {
+  if (window.speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+    close();
+  } else {
+    open();
+    let msg = new SpeechSynthesisUtterance(string);
+    msg.voice = speechSynthesis.getVoices()[0];
+    msg.lang = "en-IN";
+    window.speechSynthesis.speak(msg);
+    window.onbeforeunload = function (e) {
+      if (window.speechSynthesis.speaking) {
+        e.preventDefault();
+        msg.addEventListener("end", function () {
+          speechSynthesis.cancel();
+          close();
+        });
+      }
+    };
+    msg.onend = function (event) {
+      speechSynthesis.cancel();
+      close();
+    };
+  }
+};
