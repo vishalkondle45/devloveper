@@ -3,7 +3,7 @@ import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import NewPrompt from "@/components/Robot/NewPrompt";
 import { useResponsiveness } from "@/hooks/useResonsiveness";
 import { promptExamples } from "@/lib/constants";
-import { getRandomElements } from "@/lib/functions";
+import { errorNotification, getRandomElements } from "@/lib/functions";
 import {
   Center,
   Container,
@@ -56,8 +56,10 @@ const Page = () => {
         router.push(`/robot/${response.data._id}`);
       })
       .catch((error) => {
+        errorNotification(error.response.data.error);
         router.push(`/robot`);
-      });
+      })
+      .finally(() => handlers.close());
   };
 
   if (status === "loading" || opened) {
@@ -98,6 +100,7 @@ const Page = () => {
                 onClick={() => sendMessage(prompt.prompt)}
                 style={{ cursor: "pointer" }}
                 shadow="xs"
+                key={prompt.header}
               >
                 <Text
                   style={{ whiteSpace: "nowrap", overflow: "hidden" }}

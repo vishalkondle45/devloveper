@@ -1,10 +1,11 @@
-import { IconGridDots } from "@tabler/icons-react";
+import { IconGridDots, IconX } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { appTypes, expenseCategories } from "./constants";
+import { notifications } from "@mantine/notifications";
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 dayjs.extend(advancedFormat);
@@ -114,5 +115,13 @@ export const renderBoldText = (text: string) => {
   const boldRegex = /\*\*(.*?)\*\*/g;
   return text.split(boldRegex).map((part, index) => {
     return index % 2 === 0 ? part : `<strong key={index}>${part}</strong>`;
+  });
+};
+
+export const errorNotification = (error: string) => {
+  notifications.show({
+    message: error,
+    icon: <IconX />,
+    color: "red",
   });
 };

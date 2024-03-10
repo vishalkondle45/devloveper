@@ -24,6 +24,12 @@ export const POST = async (req: Request): Promise<any> => {
     const prompt = body.prompt;
     const result = await model.generateContent(body.prompt);
     const response = result.response.text();
+    if (!prompt || !response) {
+      return NextResponse.json(
+        { error: "Prompt or response is empty" },
+        { status: 404 }
+      );
+    }
     const newPrompt = await PromptModel.create({ user, prompt, response });
     return NextResponse.json(newPrompt, { status: 200 });
   } catch (error) {

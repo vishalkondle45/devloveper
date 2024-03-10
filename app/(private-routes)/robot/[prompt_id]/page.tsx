@@ -2,7 +2,11 @@
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import NewPrompt from "@/components/Robot/NewPrompt";
 import { Prompt } from "@/components/Robot/Prompt.types";
-import { renderBoldText, textToSpeech } from "@/lib/functions";
+import {
+  errorNotification,
+  renderBoldText,
+  textToSpeech,
+} from "@/lib/functions";
 import { CodeHighlight } from "@mantine/code-highlight";
 import {
   ActionIcon,
@@ -130,8 +134,10 @@ const Page = () => {
         router.push(`/robot/${response.data._id}`);
       })
       .catch((error) => {
+        errorNotification(error.response.data.error);
         router.push(`/robot`);
-      });
+      })
+      .finally(() => handlers.close());
   };
 
   const editPrompt = (prompt: string) => {
