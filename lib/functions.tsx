@@ -105,3 +105,15 @@ export const textToSpeech = (
     };
   }
 };
+
+export function getRandomElements(arr: any[], numElements: number) {
+  const shuffledArray = arr.sort(() => Math.random() - 0.5);
+  return shuffledArray.slice(0, numElements);
+}
+
+export const renderBoldText = (text: string) => {
+  const boldRegex = /\*\*(.*?)\*\*/g;
+  return text.split(boldRegex).map((part, index) => {
+    return index % 2 === 0 ? part : `<strong key={index}>${part}</strong>`;
+  });
+};

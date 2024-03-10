@@ -2,9 +2,11 @@
 import BreadcrumbsComp from "@/components/Navbar/Breadcrumbs";
 import NewPrompt from "@/components/Robot/NewPrompt";
 import { Prompt } from "@/components/Robot/Prompt.types";
-import { textToSpeech } from "@/lib/functions";
+import { renderBoldText, textToSpeech } from "@/lib/functions";
+import { CodeHighlight } from "@mantine/code-highlight";
 import {
   ActionIcon,
+  Box,
   Container,
   CopyButton,
   Divider,
@@ -17,6 +19,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import {
   IconCheck,
   IconClipboard,
@@ -24,11 +27,36 @@ import {
   IconPlayerStopFilled,
   IconReload,
   IconVolume,
+  IconX,
 } from "@tabler/icons-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+
+const CodeRenderer = ({ text }: { text: string }) => {
+  const codeRegex = /```([\s\S]*?)```/g;
+  return text.split(codeRegex).map((part, index) => {
+    if (index % 2 === 0) {
+      return <Text key={index} dangerouslySetInnerHTML={{ __html: part }} />;
+    } else {
+      const [firstLine, ...remainingLines] = part.split("\n");
+      return (
+        <Box key={index}>
+          <Text
+            key={index}
+            dangerouslySetInnerHTML={{ __html: firstLine }}
+            fw={700}
+          />
+          <CodeHighlight
+            code={remainingLines.join("\n")}
+            language={firstLine}
+          />
+        </Box>
+      );
+    }
+  });
+};
 
 const Page = () => {
   const { status } = useSession();
@@ -67,8 +95,12 @@ const Page = () => {
       .then((response) => {
         setResponse(response.data);
       })
-      .catch((error) => {
-        setResponse(error.response.data.error);
+      .catch(() => {
+        notifications.show({
+          message: "Prompt not found.",
+          icon: <IconX />,
+          color: "red",
+        });
       })
       .finally(() => {
         handlers.close();
@@ -186,11 +218,9 @@ const Page = () => {
               </ActionIcon>
             </Group>
             <Divider variant="dashed" />
-            <Text
-              style={{ whiteSpace: "pre-wrap" }}
-              fw={500}
-              dangerouslySetInnerHTML={{ __html: response?.response }}
-            />
+            <Text style={{ whiteSpace: "pre-wrap" }} fw={500}>
+              <CodeRenderer text={renderBoldText(response.response).join("")} />
+            </Text>
             <Group>
               <CopyButton value={response?.response}>
                 {({ copied, copy }) => (
