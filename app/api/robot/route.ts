@@ -6,11 +6,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/authOptions";
 
-if (!process.env.GEMINI_KEY) {
-  throw new Error("GEMINI_KEY is not defined");
-}
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY as string);
 
 export const POST = async (req: Request): Promise<any> => {
   try {
