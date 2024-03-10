@@ -28,7 +28,7 @@ import {
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Page = () => {
   const { status } = useSession();
@@ -47,6 +47,13 @@ const Page = () => {
       href: String(params?.prompt_id),
     },
   ];
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const handleButtonClick = () => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  };
 
   const form = useForm({
     initialValues: {
@@ -101,9 +108,17 @@ const Page = () => {
   };
 
   const editPrompt = (prompt: string) => {
-    focusHandlers.open();
+    if (textareaRef.current) {
+      textareaRef?.current?.focus();
+      textareaRef?.current.setSelectionRange(
+        textareaRef?.current.value.length,
+        textareaRef?.current.value.length
+      );
+    }
     form.setFieldValue("prompt", prompt);
   };
+
+  const closeEditPrompt = () => textareaRef?.current?.blur();
 
   if (status === "loading" || opened) {
     return <LoadingOverlay visible />;
@@ -120,8 +135,8 @@ const Page = () => {
       <NewPrompt
         sendMessage={sendMessage}
         form={form}
-        active={active}
-        handlers={handlers}
+        closeEditPrompt={closeEditPrompt}
+        refEle={textareaRef}
       />
       {response && (
         <Paper key={String(response?._id)} p="xs" mt="xl" withBorder>
