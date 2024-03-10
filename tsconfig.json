@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/(private-routes)/robot/[prompt_id]/page.tsx"
+    "app/(private-routes)/robot/prompts/[prompt_id]/page.tsx"
   ],
   "exclude": ["node_modules"]
 }

@@ -14,9 +14,10 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconTrash } from "@tabler/icons-react";
+import { IconEye, IconTrash } from "@tabler/icons-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface PromptType {
@@ -28,6 +29,7 @@ const Page = () => {
   const { status } = useSession();
   const [opened, { open, close }] = useDisclosure(false);
   const [prompts, setPrompts] = useState<PromptType[]>([]);
+  const router = useRouter();
 
   const breadcrumbs = [
     { title: "Home", href: "/" },
@@ -102,13 +104,22 @@ const Page = () => {
           <Paper withBorder p="md" key={prompt?._id}>
             <Group justify="space-between" wrap="nowrap">
               <Text>{prompt?.prompt}</Text>
-              <ActionIcon
-                color="red"
-                variant="transparent"
-                onClick={() => deletePrompt(prompt?._id)}
-              >
-                <IconTrash />
-              </ActionIcon>
+              <Group wrap="nowrap">
+                <ActionIcon
+                  color="blue"
+                  variant="transparent"
+                  onClick={() => router.push(`/robot/prompts/${prompt?._id}`)}
+                >
+                  <IconEye />
+                </ActionIcon>
+                <ActionIcon
+                  color="red"
+                  variant="transparent"
+                  onClick={() => deletePrompt(prompt?._id)}
+                >
+                  <IconTrash />
+                </ActionIcon>
+              </Group>
             </Group>
           </Paper>
         ))}

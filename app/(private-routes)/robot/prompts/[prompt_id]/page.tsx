@@ -131,13 +131,13 @@ const Page = () => {
     await axios
       .post(`/api/robot`, { prompt })
       .then((response) => {
-        router.push(`/robot/${response.data._id}`);
+        router.push(`/robot/prompts/${response.data._id}`);
       })
       .catch((error) => {
         errorNotification(error.response.data.error);
         router.push(`/robot`);
-      })
-      .finally(() => handlers.close());
+      });
+    // .finally(() => handlers.close());
   };
 
   const editPrompt = (prompt: string) => {
@@ -224,9 +224,7 @@ const Page = () => {
               </ActionIcon>
             </Group>
             <Divider variant="dashed" />
-            <Text style={{ whiteSpace: "pre-wrap" }} fw={500}>
-              <CodeRenderer text={renderBoldText(response.response).join("")} />
-            </Text>
+            <CodeRenderer text={renderBoldText(response.response).join("")} />
             <Group>
               <CopyButton value={response?.response}>
                 {({ copied, copy }) => (

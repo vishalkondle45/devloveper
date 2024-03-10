@@ -18,7 +18,7 @@ const TodoSidebar = ({ navigate }: RobotSidebarProps) => {
     open();
     await axios.get("/api/robot/prompts/list").then((res) => {
       let labels = res.data.map(({ _id, prompt }: Breadcrumbs) => ({
-        path: "/robot/" + _id,
+        path: `/robot/prompts/${_id}`,
         title: prompt,
       }));
       handlers.append(...labels);
