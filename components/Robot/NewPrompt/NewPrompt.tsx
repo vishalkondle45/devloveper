@@ -25,7 +25,7 @@ const NewPrompt = ({ sendMessage, form, refEle, closeEditPrompt }: Props) => {
           <Textarea
             rows={3}
             w="100%"
-            placeholder="Enter a prompt..."
+            placeholder="Enter a prompt.. (Shift+Enter for new line)"
             autosize
             {...form.getInputProps("prompt")}
             leftSection={<IconPrompt />}
