@@ -11,17 +11,46 @@ import {
   ThemeIcon,
   rem,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { IconRobot } from "@tabler/icons-react";
+import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 const Page = () => {
   const { status } = useSession();
+  const router = useRouter();
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Robot", href: "/robot" },
   ];
 
   const [opened, handlers] = useDisclosure(false);
+
+  const form = useForm({
+    initialValues: {
+      prompt: "",
+    },
+    validate: {
+      prompt: (value) => (value ? null : "This field is required."),
+    },
+  });
+
+  const sendMessage = async (prompt: string) => {
+    if (prompt === "") {
+      form.setFieldError("prompt", "This field is required.");
+      return;
+    }
+    handlers.open();
+    await axios
+      .post(`/api/robot`, { prompt })
+      .then((response) => {
+        router.push(`/robot/${response.data._id}`);
+      })
+      .catch((error) => {
+        router.push(`/robot`);
+      });
+  };
 
   if (status === "loading" || opened) {
     return <LoadingOverlay visible />;
@@ -35,7 +64,7 @@ const Page = () => {
           Robot
         </Text>
       </Group>
-      <NewPrompt handlers={handlers} />
+      <NewPrompt form={form} sendMessage={sendMessage} />
       <Center h={500}>
         <Stack align="center">
           <ThemeIcon color="gray" variant="transparent" size={rem(100)}>

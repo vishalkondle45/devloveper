@@ -13,8 +13,8 @@ interface Props {
       prompt: string;
     }
   >;
-  closeEditPrompt: () => void | undefined;
-  refEle: RefObject<HTMLTextAreaElement>;
+  closeEditPrompt?: () => void | undefined;
+  refEle?: RefObject<HTMLTextAreaElement>;
 }
 
 const NewPrompt = ({ sendMessage, form, refEle, closeEditPrompt }: Props) => {
