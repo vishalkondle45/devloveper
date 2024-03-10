@@ -106,9 +106,8 @@ export const textToSpeech = (
   }
 };
 
-export function getRandomElements(arr: any[], numElements: number) {
-  const shuffledArray = arr.sort(() => Math.random() - 0.5);
-  return shuffledArray.slice(0, numElements);
+export function getRandomElements(arr: any[]) {
+  return arr.sort(() => Math.random() - 0.5);
 }
 
 export const renderBoldText = (text: string) => {

@@ -22,6 +22,7 @@ import { IconRobot } from "@tabler/icons-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 const Page = () => {
   const { status } = useSession();
   const router = useRouter();
@@ -40,6 +41,8 @@ const Page = () => {
       prompt: (value) => (value ? null : "This field is required."),
     },
   });
+
+  const visibleTodos = useMemo(() => getRandomElements(promptExamples), []);
 
   const sendMessage = async (prompt: string) => {
     if (prompt === "") {
@@ -86,27 +89,25 @@ const Page = () => {
             spacing="sm"
             verticalSpacing="sm"
           >
-            {getRandomElements(promptExamples, isDesktop ? 4 : 2).map(
-              (prompt) => (
-                <Paper
-                  radius="md"
-                  w="100%"
-                  p="sm"
-                  withBorder
-                  onClick={() => sendMessage(prompt.prompt)}
-                  style={{ cursor: "pointer" }}
-                  shadow="xs"
+            {visibleTodos.slice(0, isDesktop ? 4 : 2).map((prompt) => (
+              <Paper
+                radius="md"
+                w="100%"
+                p="sm"
+                withBorder
+                onClick={() => sendMessage(prompt.prompt)}
+                style={{ cursor: "pointer" }}
+                shadow="xs"
+              >
+                <Text
+                  style={{ whiteSpace: "nowrap", overflow: "hidden" }}
+                  fw={700}
                 >
-                  <Text
-                    style={{ whiteSpace: "nowrap", overflow: "hidden" }}
-                    fw={700}
-                  >
-                    {prompt.header}
-                  </Text>
-                  <Text c="gray">{prompt.subheader}</Text>
-                </Paper>
-              )
-            )}
+                  {prompt.header}
+                </Text>
+                <Text c="gray">{prompt.subheader}</Text>
+              </Paper>
+            ))}
           </SimpleGrid>
         </Stack>
       </Center>
