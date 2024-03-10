@@ -1,6 +1,6 @@
 import { Button, Center, Group, Loader, rem } from "@mantine/core";
 import { useDisclosure, useListState } from "@mantine/hooks";
-import { IconHome, IconList } from "@tabler/icons-react";
+import { IconHome, IconList, IconPrompt } from "@tabler/icons-react";
 import axios from "axios";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -10,6 +10,7 @@ const TodoSidebar = ({ navigate }: RobotSidebarProps) => {
   const pathname = usePathname();
   const [list, handlers] = useListState([
     { path: "/robot", icon: IconHome, title: "Home" },
+    { path: "/robot/prompts", icon: IconList, title: "Prompts" },
   ]);
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -46,7 +47,7 @@ const TodoSidebar = ({ navigate }: RobotSidebarProps) => {
             item.icon ? (
               <item.icon style={{ width: rem(20), height: rem(20) }} />
             ) : (
-              <IconList />
+              <IconPrompt />
             )
           }
           onClick={() => navigate(item.path)}

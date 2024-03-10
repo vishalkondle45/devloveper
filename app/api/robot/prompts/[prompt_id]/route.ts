@@ -29,3 +29,30 @@ export const GET = async (
     );
   }
 };
+export const DELETE = async (
+  req: Request,
+  { params }: { params: { prompt_id: Types.ObjectId } }
+): Promise<any> => {
+  try {
+    const session = await getServerSession(authOptions);
+    const user = session?.user?._id;
+    if (!session) {
+      return NextResponse.json(
+        { error: "You are not authenticated!" },
+        { status: 401 }
+      );
+    }
+    await startDb();
+    await PromptModel.findOneAndDelete({
+      user,
+      _id: params.prompt_id,
+    });
+    return NextResponse.json(null, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+};

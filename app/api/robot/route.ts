@@ -62,3 +62,25 @@ export const GET = async (req: Request): Promise<any> => {
     );
   }
 };
+
+export const DELETE = async (req: Request): Promise<any> => {
+  try {
+    const session = await getServerSession(authOptions);
+    const user = session?.user?._id;
+    if (!session) {
+      return NextResponse.json(
+        { error: "You are not authenticated!" },
+        { status: 401 }
+      );
+    }
+    await startDb();
+    await PromptModel.deleteMany({ user });
+    return NextResponse.json(null, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+};
