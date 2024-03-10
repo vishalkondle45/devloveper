@@ -36,8 +36,8 @@ const Page = () => {
   const [response, setResponse] = useState<Prompt | null>(null);
   const router = useRouter();
   const [opened, handlers] = useDisclosure(false);
-  const [speaking, { open, close }] = useDisclosure(false);
-  const [active, focusHandlers] = useDisclosure(false);
+  const [speakingPrompt, speakingPromptHandlers] = useDisclosure(false);
+  const [speakingResponse, speakingResponseHandlers] = useDisclosure(false);
 
   const breadcrumbs = [
     { title: "Home", href: "/" },
@@ -49,11 +49,6 @@ const Page = () => {
   ];
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const handleButtonClick = () => {
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
-  };
 
   const form = useForm({
     initialValues: {
@@ -166,10 +161,16 @@ const Page = () => {
               <ActionIcon
                 variant="transparent"
                 color="gray"
-                onClick={() => textToSpeech(response?.prompt, open, close)}
+                onClick={() =>
+                  textToSpeech(
+                    response?.prompt,
+                    speakingPromptHandlers.open,
+                    speakingPromptHandlers.close
+                  )
+                }
                 title="Read Aloud"
               >
-                {speaking ? (
+                {speakingPrompt ? (
                   <IconPlayerStopFilled size={18} />
                 ) : (
                   <IconVolume size={18} />
@@ -210,10 +211,16 @@ const Page = () => {
               <ActionIcon
                 variant="transparent"
                 color="gray"
-                onClick={() => textToSpeech(response?.response, open, close)}
+                onClick={() =>
+                  textToSpeech(
+                    response?.response,
+                    speakingResponseHandlers.open,
+                    speakingResponseHandlers.close
+                  )
+                }
                 title="Read Aloud"
               >
-                {speaking ? (
+                {speakingResponse ? (
                   <IconPlayerStopFilled size={18} />
                 ) : (
                   <IconVolume size={18} />
