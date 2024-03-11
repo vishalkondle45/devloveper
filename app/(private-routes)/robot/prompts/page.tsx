@@ -34,6 +34,7 @@ const Page = () => {
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Robot", href: "/robot" },
+    { title: "Prompts", href: "/robot/prompts" },
   ];
 
   const getPromptsList = async () => {
