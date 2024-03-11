@@ -1,42 +1,39 @@
-import { Button, Center, Group, Loader, rem } from "@mantine/core";
-import { useDisclosure, useListState } from "@mantine/hooks";
-import { IconHome, IconList, IconPrompt } from "@tabler/icons-react";
+import { Button, Group, rem } from "@mantine/core";
+import { useListState } from "@mantine/hooks";
+import {
+  IconHome,
+  IconList,
+  IconLoader,
+  IconPrompt,
+} from "@tabler/icons-react";
 import axios from "axios";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { Breadcrumbs, RobotSidebarProps } from "./RobotSidebar.types";
 
-const TodoSidebar = ({ navigate }: RobotSidebarProps) => {
+const RobotSidebar = ({ navigate }: RobotSidebarProps) => {
   const pathname = usePathname();
   const [list, handlers] = useListState([
     { path: "/robot", icon: IconHome, title: "Home" },
     { path: "/robot/prompts", icon: IconList, title: "Prompts" },
+    { path: "", icon: IconLoader, title: "" },
   ]);
-  const [opened, { open, close }] = useDisclosure(false);
 
   const getPromptsList = async () => {
-    open();
     await axios.get("/api/robot/prompts/list").then((res) => {
       let labels = res.data.map(({ _id, prompt }: Breadcrumbs) => ({
         path: `/robot/prompts/${_id}`,
         title: prompt,
       }));
       handlers.append(...labels);
+      handlers.remove(2);
     });
-    close();
   };
 
   useEffect(() => {
     getPromptsList();
   }, []);
 
-  if (opened) {
-    return (
-      <Center w="100%">
-        <Loader />
-      </Center>
-    );
-  }
   return (
     <Group w="100%" gap="xs">
       {list.map((item) => (
@@ -51,7 +48,10 @@ const TodoSidebar = ({ navigate }: RobotSidebarProps) => {
             )
           }
           onClick={() => navigate(item.path)}
-          justify="left"
+          justify={item.path ? "left" : "center"}
+          style={{
+            pointerEvents: item.path ? "auto" : "none",
+          }}
           w="100%"
           fullWidth
         >
@@ -62,4 +62,4 @@ const TodoSidebar = ({ navigate }: RobotSidebarProps) => {
   );
 };
 
-export default TodoSidebar;
+export default RobotSidebar;
