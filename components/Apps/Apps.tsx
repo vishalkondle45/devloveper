@@ -1,10 +1,10 @@
 "use client";
 import { ActionIcon, Popover, SimpleGrid } from "@mantine/core";
 import {
-  IconCalendar,
   IconCircleCheck,
   IconCloudRain,
   IconCoinRupee,
+  IconCricket,
   IconFileText,
   IconGridDots,
   IconMessageCircle2,
@@ -51,11 +51,7 @@ const Apps = () => {
               text="Forum"
             />
             <App setOpened={setOpened} icon={<IconRobotFace />} text="Robot" />
-            <App
-              setOpened={setOpened}
-              icon={<IconCalendar />}
-              text="Calendar"
-            />
+            <App setOpened={setOpened} icon={<IconCricket />} text="Scorer" />
             <App
               setOpened={setOpened}
               icon={<IconCloudRain />}
