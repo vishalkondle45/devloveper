@@ -10,7 +10,6 @@ import {
   Group,
   LoadingOverlay,
   Paper,
-  Skeleton,
   Stack,
   Text,
   ThemeIcon,
@@ -65,13 +64,11 @@ const Page = () => {
   return (
     <Container my="md" size="md">
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
-      <Container size="xs" px={0}>
+      <Container mt="lg" size="xs" px={0}>
         <Group justify="space-between">
-          <Skeleton visible={loading}>
-            <Text fz={rem(30)} fw={700}>
-              {team?.name}
-            </Text>
-          </Skeleton>
+          <Text fz={rem(30)} fw={700}>
+            {team?.name}
+          </Text>
         </Group>
         <Group mb="xs" justify="right">
           <ActionIcon
@@ -93,7 +90,7 @@ const Page = () => {
                   <ThemeIcon variant="transparent">
                     {roles.find((role) => role.role === player?.role)?.icon}
                   </ThemeIcon>
-                  <Text>{player.user.name}</Text>
+                  <Text fw={700}>{player.user.name}</Text>
                 </Group>
                 {team.captain === player._id && <Badge circle>C</Badge>}
               </Group>
