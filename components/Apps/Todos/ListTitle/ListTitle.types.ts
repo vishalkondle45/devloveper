@@ -1,6 +1,11 @@
-import { TablerIconsProps } from "@tabler/icons-react";
+import { IconProps } from "@tabler/icons-react";
 import { Types } from "mongoose";
-import { Dispatch, SetStateAction } from "react";
+import {
+  Dispatch,
+  ForwardRefExoticComponent,
+  RefAttributes,
+  SetStateAction,
+} from "react";
 
 export interface SortTypes {
   sort: "asc" | "desc";
@@ -10,7 +15,9 @@ export interface SortTypes {
 export interface Props {
   title: string;
   color: string;
-  icon?: (props: TablerIconsProps) => JSX.Element;
+  icon?: ForwardRefExoticComponent<
+    Omit<IconProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
   getTodos: (list?: string, sort?: string, way?: string) => Promise<void>;
   setSort: Dispatch<SetStateAction<SortTypes>>;
   sort: SortTypes;
@@ -20,7 +27,9 @@ export interface Props {
 export interface SortOptionProps {
   name: "important" | "date" | "todo" | "createdAt" | "myday" | "";
   label: string;
-  icon: (props: TablerIconsProps) => JSX.Element;
+  icon: ForwardRefExoticComponent<
+    Omit<IconProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
 }
 
 export interface ListUpdateTypes {

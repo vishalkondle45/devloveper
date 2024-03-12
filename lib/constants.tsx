@@ -19,13 +19,13 @@ import {
   IconMilkshake,
   IconPigMoney,
   IconPingPong,
+  IconProps,
   IconReceipt,
   IconShoppingCartFilled,
   IconStar,
   IconSun,
   IconTicket,
   IconToolsKitchen2,
-  TablerIconsProps,
 } from "@tabler/icons-react";
 
 import {
@@ -40,7 +40,11 @@ import {
   IconUserCircle,
 } from "@tabler/icons-react";
 
-import { ReactNode } from "react";
+import { ForwardRefExoticComponent, ReactNode, RefAttributes } from "react";
+
+import { BiSolidCricketBall } from "react-icons/bi";
+import { GiBaseballBat, GiChopsticks } from "react-icons/gi";
+import { MdSportsCricket } from "react-icons/md";
 
 export const colors = [
   "grey",
@@ -89,7 +93,9 @@ export const sortOptions: SortOptionProps[] = [
 export interface GroupTypeTypes {
   type: "home" | "trip" | "office" | "sports" | "others";
   label: String;
-  icon: (props: TablerIconsProps) => JSX.Element;
+  icon: ForwardRefExoticComponent<
+    Omit<IconProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
 }
 
 export const groupTypes: GroupTypeTypes[] = [
@@ -275,5 +281,24 @@ export const promptExamples = [
     subheader: "on a budget",
     prompt:
       "Create a budget-friendly plan to decorate a home office space for increased productivity and comfort.",
+  },
+];
+
+export const roles = [
+  {
+    role: "Batsman",
+    icon: <GiBaseballBat style={{ width: rem(24), height: rem(24) }} />,
+  },
+  {
+    role: "Bowler",
+    icon: <BiSolidCricketBall style={{ width: rem(24), height: rem(24) }} />,
+  },
+  {
+    role: "Wicket Keeper",
+    icon: <GiChopsticks style={{ width: rem(24), height: rem(24) }} />,
+  },
+  {
+    role: "Allrounder",
+    icon: <MdSportsCricket style={{ width: rem(24), height: rem(24) }} />,
   },
 ];
