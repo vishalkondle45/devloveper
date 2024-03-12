@@ -39,8 +39,8 @@ const Page = () => {
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Scorer", href: "/scorer" },
-    { title: "Teams", href: "/teams" },
-    { title: "Create", href: "/create" },
+    { title: "Teams", href: "/scorer/teams" },
+    { title: "Create", href: "/scorer/teams/create" },
   ];
 
   const form = useForm({

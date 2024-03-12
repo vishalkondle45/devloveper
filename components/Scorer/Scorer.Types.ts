@@ -22,3 +22,12 @@ export interface User {
   updatedAt: string;
   __v: number;
 }
+
+export interface TeamType {
+  _id: string;
+  name: string;
+  shortName: string;
+  players: string[];
+  captain: string;
+  __v: number;
+}
