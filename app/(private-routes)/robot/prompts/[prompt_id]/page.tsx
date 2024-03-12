@@ -54,7 +54,7 @@ const CodeRenderer = ({ text }: { text: string }) => {
           />
           <CodeHighlight
             code={remainingLines.join("\n")}
-            language={firstLine}
+            language={firstLine || "tsx"}
           />
         </Box>
       );
