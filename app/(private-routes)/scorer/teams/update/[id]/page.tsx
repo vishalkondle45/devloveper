@@ -19,13 +19,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useValidatedState } from "@mantine/hooks";
-import {
-  IconAt,
-  IconPlus,
-  IconStar,
-  IconStarFilled,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconAt, IconPlus, IconTrash } from "@tabler/icons-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
@@ -89,10 +83,16 @@ const Page = () => {
   };
 
   const removePlayer = async (_id: string) => {
-    form.setValues({
-      players: form.values.players.filter((player) => player._id !== _id),
-      captain: form.values.players[0]._id,
-    });
+    const values = form.values.players;
+    const filtered = values.filter((player) => player._id !== _id);
+    form.setFieldValue("players", filtered);
+    if (form.values.players.length === 1) {
+      form.setFieldValue("captain", "");
+    } else {
+      if (form.values.captain === _id) {
+        form.setFieldValue("captain", filtered[0]._id);
+      }
+    }
   };
 
   const cancel = () => {
