@@ -5,6 +5,7 @@ import { roles } from "@/lib/constants";
 import { errorNotification } from "@/lib/functions";
 import {
   ActionIcon,
+  Badge,
   Button,
   Container,
   Group,
@@ -27,9 +28,13 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Page = () => {
   const { status } = useSession();
+  const params = useParams();
+  const router = useRouter();
   const [{ value: email, valid }, setEmail] = useValidatedState(
     "",
     (val) => /^\S+@\S+$/.test(val),
@@ -40,7 +45,7 @@ const Page = () => {
     { title: "Home", href: "/" },
     { title: "Scorer", href: "/scorer" },
     { title: "Teams", href: "/scorer/teams" },
-    { title: "Create", href: "/scorer/teams/create" },
+    { title: "Update", href: "/scorer/teams/update" },
   ];
 
   const form = useForm({
@@ -90,22 +95,40 @@ const Page = () => {
     });
   };
 
-  const resetForm = () => {
-    form.reset();
-    setEmail("");
+  const cancel = () => {
+    router.push("/scorer/teams");
   };
 
-  const createTeam = async () => {
+  const updateTeam = async () => {
     try {
-      await axios.post("/api/scorer/teams", {
+      await axios.put(`/api/scorer/teams/${params.id}`, {
         ...form.values,
         players: form.values.players.map(({ _id }) => _id),
       });
-      resetForm();
+      cancel();
     } catch (error: any) {
       errorNotification(error.response.data.error);
     }
   };
+
+  const getTeam = async () => {
+    try {
+      const teamId = params.id;
+      if (!teamId) {
+        router.push("/scorer/teams");
+        errorNotification("Invalid Team ID");
+        return;
+      }
+      const { data } = await axios.get(`/api/scorer/teams/${teamId}`);
+      form.setValues(data);
+    } catch (error: any) {
+      errorNotification(error.response.data.error);
+    }
+  };
+
+  useEffect(() => {
+    getTeam();
+  }, []);
 
   if (status === "loading") {
     return <LoadingOverlay visible />;
@@ -116,11 +139,11 @@ const Page = () => {
       <BreadcrumbsComp breadcrumbs={breadcrumbs} />
       <Group justify="space-between">
         <Text fz={rem(30)} fw={700}>
-          New Team
+          Update Team
         </Text>
       </Group>
       <Container px={0} size="xs">
-        <form onSubmit={form.onSubmit(createTeam)}>
+        <form onSubmit={form.onSubmit(updateTeam)}>
           <Stack>
             <Group justify="space-between" wrap="nowrap">
               <TextInput
@@ -152,24 +175,30 @@ const Page = () => {
             <Stack>
               {form.values.players.map((player) => (
                 <Paper key={player?._id} p="xs" withBorder>
-                  <Group wrap="nowrap" justify="space-between">
-                    <Group wrap="nowrap">
+                  <Group justify="space-between">
+                    <Group>
                       <ThemeIcon variant="transparent">
                         {roles.find((role) => role.role === player?.role)?.icon}
                       </ThemeIcon>
                       <Text fw={700}>{player?.user?.name}</Text>
                     </Group>
-                    <Group wrap="nowrap">
+                    <Group>
                       <ActionIcon
                         color="blue"
                         variant="transparent"
                         onClick={() => makeCaptain(player._id)}
                       >
-                        {form.values.captain === player._id ? (
-                          <IconStarFilled size={20} />
-                        ) : (
-                          <IconStar size={20} />
-                        )}
+                        <Badge
+                          variant={
+                            form.values.captain === player._id
+                              ? "filled"
+                              : "outline"
+                          }
+                          size="lg"
+                          circle
+                        >
+                          C
+                        </Badge>
                       </ActionIcon>
                       <ActionIcon
                         onClick={() => removePlayer(player._id)}
@@ -184,11 +213,11 @@ const Page = () => {
               ))}
             </Stack>
             <Group justify="space-between" wrap="nowrap">
-              <Button type="reset" onClick={resetForm} color="red" fullWidth>
-                Reset
+              <Button type="reset" onClick={cancel} color="red" fullWidth>
+                Cancel
               </Button>
               <Button type="submit" fullWidth>
-                Submit
+                Update
               </Button>
             </Group>
           </Stack>

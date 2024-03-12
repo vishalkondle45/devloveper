@@ -58,17 +58,19 @@ const Page = () => {
       </Group>
       <Stack mt="lg">
         {teams.map((team) => (
-          <Paper p="sm" withBorder>
-            <Group justify="space-between">
+          <Paper
+            p="sm"
+            onClick={() => router.push(`/scorer/teams/${team._id}`)}
+            style={{ cursor: "pointer" }}
+            withBorder
+            bg={colors[getDigitByString(String(team.name))]}
+            key={team._id}
+          >
+            <Group wrap="nowrap" justify="space-between">
               <Text>
                 {team.name} - {team.shortName}
               </Text>
-              <Badge
-                variant="outline"
-                color={colors[getDigitByString(team.name)]}
-                circle
-                size="lg"
-              >
+              <Badge variant="white" circle size="lg">
                 {team.players.length}
               </Badge>
             </Group>

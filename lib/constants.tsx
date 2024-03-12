@@ -44,6 +44,7 @@ import { ForwardRefExoticComponent, ReactNode, RefAttributes } from "react";
 
 import { BiSolidCricketBall } from "react-icons/bi";
 import { GiBaseballBat, GiChopsticks } from "react-icons/gi";
+import { FaHandsBound } from "react-icons/fa6";
 import { MdSportsCricket } from "react-icons/md";
 
 export const colors = [
@@ -295,7 +296,7 @@ export const roles = [
   },
   {
     role: "Wicket Keeper",
-    icon: <GiChopsticks style={{ width: rem(24), height: rem(24) }} />,
+    icon: <FaHandsBound style={{ width: rem(24), height: rem(24) }} />,
   },
   {
     role: "Allrounder",
