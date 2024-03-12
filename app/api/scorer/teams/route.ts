@@ -25,7 +25,7 @@ export const POST = async (req: NextRequest): Promise<any> => {
     }
     const user = await TeamModel.create({
       ...body,
-      creator: session?.user?._id,
+      user: session?.user?._id,
     });
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
