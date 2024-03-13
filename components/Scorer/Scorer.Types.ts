@@ -31,3 +31,8 @@ export interface TeamType {
   captain: string;
   __v: number;
 }
+
+export interface PlayerProfileType {
+  player: PlayerType;
+  teams: TeamType[];
+}
