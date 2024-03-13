@@ -32,7 +32,25 @@ export interface TeamType {
   __v: number;
 }
 
+export interface TeamSquadType {
+  _id: string;
+  name: string;
+  shortName: string;
+  players: User[];
+  captain: User;
+  __v: number;
+}
+
 export interface PlayerProfileType {
   player: PlayerType;
   teams: TeamType[];
+}
+
+export interface TeamFullType {
+  _id: string;
+  name: string;
+  shortName: string;
+  players: PlayerType[];
+  captain: PlayerType;
+  __v: number;
 }
