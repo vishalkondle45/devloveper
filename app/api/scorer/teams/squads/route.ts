@@ -1,4 +1,5 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import startDb from "@/lib/db";
 import PlayerModel from "@/models/Player";
 import TeamModel from "@/models/Team";
 import { getServerSession } from "next-auth";
