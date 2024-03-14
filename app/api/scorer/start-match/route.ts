@@ -1,4 +1,5 @@
 import startDb from "@/lib/db";
+import InningModel from "@/models/Inning";
 import MatchModel from "@/models/Match";
 import SquadModel from "@/models/Squad";
 import { getServerSession } from "next-auth";
@@ -20,15 +21,25 @@ export const POST = async (req: NextRequest): Promise<any> => {
       ...body.match,
       user: session?.user?._id,
     });
-    await SquadModel.create({
+    const home = await SquadModel.create({
       ...body.home,
       match: match._id,
       team: body.match.home,
     });
-    await SquadModel.create({
+    const away = await SquadModel.create({
       ...body.away,
       match: match._id,
       team: body.match.away,
+    });
+    const batting =
+      body.inning.batting === body.match.away ? away._id : home._id;
+    const bowling =
+      body.inning.batting === body.match.away ? home._id : away._id;
+    await InningModel.create({
+      ...body.inning,
+      match: match._id,
+      batting,
+      bowling,
     });
     return NextResponse.json(match, { status: 200 });
   } catch (error) {

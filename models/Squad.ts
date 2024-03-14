@@ -15,8 +15,8 @@ const squadSchema = new Schema<SquadDocument>(
       ref: "Player",
       required: true,
     },
-    match: { type: Types.ObjectId, ref: "Player", required: true },
-    team: { type: Types.ObjectId, ref: "Player", required: true },
+    match: { type: Types.ObjectId, ref: "Match", required: true },
+    team: { type: Types.ObjectId, ref: "Team", required: true },
   },
   { timestamps: true }
 );

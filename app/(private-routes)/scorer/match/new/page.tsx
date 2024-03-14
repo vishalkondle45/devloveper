@@ -89,6 +89,16 @@ const Page = () => {
     },
   });
 
+  const formInning = useForm({
+    initialValues: {
+      batting: "",
+      bowling: "",
+      striker: "",
+      nonStriker: "",
+      bowler: "",
+    },
+  });
+
   const breadcrumbs = [
     { title: "Home", href: "/" },
     { title: "Scorer", href: "/scorer" },
@@ -167,6 +177,7 @@ const Page = () => {
         match: formMatch.values,
         home: formHome.values,
         away: formAway.values,
+        inning: formInning.values,
       });
       if (res.data) {
         formMatch.reset();
@@ -178,6 +189,19 @@ const Page = () => {
       errorNotification("Internal server error");
     }
   };
+
+  useEffect(() => {
+    const { toss, choosen, home, away } = formMatch.values;
+    if (toss && choosen) {
+      if (choosen === "Bat") {
+        formInning.setFieldValue("batting", toss === home ? home : away);
+        formInning.setFieldValue("bowling", toss === home ? away : home);
+      } else {
+        formInning.setFieldValue("batting", toss === home ? away : home);
+        formInning.setFieldValue("bowling", toss === home ? home : away);
+      }
+    }
+  }, [formMatch.values.toss, formMatch.values.choosen]);
 
   if (status === "loading" || loading) {
     return <LoadingOverlay visible />;
@@ -204,12 +228,14 @@ const Page = () => {
         >
           <SimpleGrid cols={{ base: 1, sm: 2 }}>
             <Select
+              required
               data={teams.map(({ _id, name }) => ({ value: _id, label: name }))}
               label="Home Team"
               {...formMatch.getInputProps("home")}
               allowDeselect={false}
             />
             <Select
+              required
               data={teams.map(({ _id, name }) => ({ value: _id, label: name }))}
               label="Away Team"
               {...formMatch.getInputProps("away")}
@@ -304,34 +330,47 @@ const Page = () => {
             spacing="xs"
             verticalSpacing="xs"
           >
-            <Select
-              data={teams
-                .find((t) => t._id === formMatch.values.home)
-                ?.players?.filter((p) => formHome.values.squad.includes(p._id))
-                .map((p) => ({ value: p._id, label: p.user.name }))}
-              label={`${
-                teams?.find((t) => t._id === formMatch.values.home)?.name
-              } - Captain`}
-              {...formHome.getInputProps("captain")}
-              allowDeselect={false}
-            />
-            <Select
-              data={teams
-                .find((t) => t._id === formMatch.values.away)
-                ?.players?.filter((p) => formAway.values.squad.includes(p._id))
-                .map((p) => ({ value: p._id, label: p.user.name }))}
-              label={`${
-                teams?.find((t) => t._id === formMatch.values.away)?.name
-              } - Captain`}
-              {...formAway.getInputProps("captain")}
-              allowDeselect={false}
-            />
             <SimpleGrid
               cols={{ base: 1, xs: 2 }}
               spacing="xs"
               verticalSpacing="xs"
             >
               <Select
+                required
+                data={teams
+                  .find((t) => t._id === formMatch.values.home)
+                  ?.players?.filter((p) =>
+                    formHome.values.squad.includes(p._id)
+                  )
+                  .map((p) => ({ value: p._id, label: p.user.name }))}
+                label={`${
+                  teams?.find((t) => t._id === formMatch.values.home)?.name
+                } - Captain`}
+                {...formHome.getInputProps("captain")}
+                allowDeselect={false}
+              />
+              <Select
+                required
+                data={teams
+                  .find((t) => t._id === formMatch.values.away)
+                  ?.players?.filter((p) =>
+                    formAway.values.squad.includes(p._id)
+                  )
+                  .map((p) => ({ value: p._id, label: p.user.name }))}
+                label={`${
+                  teams?.find((t) => t._id === formMatch.values.away)?.name
+                } - Captain`}
+                {...formAway.getInputProps("captain")}
+                allowDeselect={false}
+              />
+            </SimpleGrid>
+            <SimpleGrid
+              cols={{ base: 1, xs: 2 }}
+              spacing="xs"
+              verticalSpacing="xs"
+            >
+              <Select
+                required
                 data={teams
                   .filter(
                     ({ _id }) =>
@@ -344,6 +383,7 @@ const Page = () => {
                 allowDeselect={false}
               />
               <Select
+                required
                 data={["Bat", "Bowl"]}
                 label="Winner of the toss elected to?"
                 {...formMatch.getInputProps("choosen")}
@@ -355,19 +395,67 @@ const Page = () => {
               spacing="xs"
               verticalSpacing="xs"
             >
+              <Select
+                required
+                data={teams
+                  .find((t) => t._id === formInning.values.batting)
+                  ?.players?.filter((p) =>
+                    (formInning.values.batting === formMatch.values.home
+                      ? formHome
+                      : formAway
+                    ).values.squad.includes(p._id)
+                  )
+                  .map((p) => ({ value: p._id, label: p.user.name }))}
+                label="Striker"
+                {...formInning.getInputProps("striker")}
+                allowDeselect={false}
+              />
+              <Select
+                required
+                data={teams
+                  .find((t) => t._id === formInning.values.batting)
+                  ?.players?.filter((p) =>
+                    (formInning.values.batting === formMatch.values.home
+                      ? formHome
+                      : formAway
+                    ).values.squad.includes(p._id)
+                  )
+                  .map((p) => ({ value: p._id, label: p.user.name }))}
+                label="Non striker"
+                {...formInning.getInputProps("nonStriker")}
+                allowDeselect={false}
+              />
+            </SimpleGrid>
+            <SimpleGrid
+              cols={{ base: 1, xs: 2 }}
+              spacing="xs"
+              verticalSpacing="xs"
+            >
+              <Select
+                required
+                data={teams
+                  .find((t) => t._id === formInning.values.batting)
+                  ?.players?.filter((p) =>
+                    (formInning.values.batting === formMatch.values.home
+                      ? formAway
+                      : formHome
+                    ).values.squad.includes(p._id)
+                  )
+                  .map((p) => ({ value: p._id, label: p.user.name }))}
+                label="Bowler"
+                {...formInning.getInputProps("bowler")}
+                allowDeselect={false}
+              />
               <NumberInput
                 label="No. of Overs"
                 {...formMatch.getInputProps("overs")}
                 min={1}
                 required
               />
-              <TextInput
-                label="City / Town"
-                {...formMatch.getInputProps("city")}
-                required
-              />
             </SimpleGrid>
           </SimpleGrid>
+          {JSON.stringify(formMatch.values)}
+          {JSON.stringify(formInning.values)}
         </Stepper.Step>
         <Stepper.Completed>
           <Title ta="center">Overview</Title>
