@@ -19,7 +19,6 @@ import {
   Stack,
   Stepper,
   Text,
-  TextInput,
   ThemeIcon,
   Title,
   rem,
@@ -183,7 +182,7 @@ const Page = () => {
         formMatch.reset();
         formHome.reset();
         formAway.reset();
-        router.push(`/scorer/match/${res.data._id}`);
+        router.push(`/scorer/match/${res.data._id}/scorer`);
       }
     } catch (error) {
       errorNotification("Internal server error");
